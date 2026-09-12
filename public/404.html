@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hair by April | Redirecting...</title>
+    <!-- Single Page App Fallback for Static CDNs (GitHub Pages, S3, etc.) -->
+    <script>
+      (function () {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
+    <meta http-equiv="refresh" content="0;URL='/'" />
+  </head>
+  <body
+    style="
+      font-family:
+        ui-sans-serif,
+        system-ui,
+        -apple-system,
+        sans-serif;
+      text-align: center;
+      padding: 60px 20px;
+      background: #fafaf9;
+      color: #1c1917;
+    "
+  >
+    <h1 style="font-size: 24px; font-weight: 700; margin-bottom: 12px">
+      Hair by April
+    </h1>
+    <p style="font-size: 14px; color: #78716c; margin-bottom: 24px">
+      Redirecting to the salon homepage...
+    </p>
+    <a
+      href="/"
+      style="
+        display: inline-block;
+        background: #1c1917;
+        color: #ffffff;
+        padding: 10px 20px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: 600;
+      "
+    >
+      Click here if not redirected
+    </a>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "name": "Hair by April",
+  "description": "Licensed professional specializing in curly hair cuts, vintage pin-up styling, and on-location events in San Francisco.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

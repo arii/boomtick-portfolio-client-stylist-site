@@ -1,0 +1,22 @@
+# Hashed Assets (immutable, 1 year cache)
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML Documents & SEO Manifests (must revalidate immediately)
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+/404.html
+  Cache-Control: public, max-age=0, must-revalidate
+/robots.txt
+  Cache-Control: public, max-age=0, must-revalidate
+/sitemap.xml
+  Cache-Control: public, max-age=0, must-revalidate
+/llms.txt
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Global CDN Security Headers
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=()
