@@ -168,12 +168,58 @@ This project is pre-configured for static single-page application (SPA) hosting 
 - `vercel.json` is included at the root, configuring SPA rewrites, clean URLs, security headers, and static asset caching policies.
 - Command: `vercel --prod` or link your GitHub repository.
 
-### 2. Cloudflare Pages
+### 2. Cloudflare Pages & Wrangler CLI
 
-- **Framework preset**: `Vite`
-- **Build command**: `npm run build`
-- **Build output directory**: `dist`
-- Cloudflare Pages automatically honors `public/_headers` and `public/_redirects` included in this repository.
+This project is optimized for deployment via Cloudflare Pages using either Git integrations or direct CLI deployment with **Wrangler**. 
+
+#### 📦 Preferred Configuration (Based on Bun)
+Since the project uses Bun as the package manager (`bun.lock`), your deployment settings should be configured as follows:
+
+* **Project Name**: `boomtick-portfolio-client-stylist-site`
+* **Build Command**: `bun run build`
+* **Deploy Command**: `npx wrangler deploy` (or `npx wrangler pages deploy dist --project-name=boomtick-portfolio-client-stylist-site`)
+* **Build Output Directory (Path)**: `dist`
+* **Non-production Branch Deploy Command**: `npx wrangler versions upload` (for staging previews)
+
+#### 🌐 Method A: Cloudflare Dashboard (Git-connected)
+1. Go to your **Cloudflare Dashboard** > **Workers & Pages** > **Pages** > **Create a project** > **Connect to Git**.
+2. Select your repository.
+3. Under **Build settings**, configure:
+   * **Framework preset**: `Vite`
+   * **Build command**: `bun run build` (or `npm run build` if using npm)
+   * **Build output directory**: `dist`
+4. Under **Environment variables**, make sure to add your site URL:
+   * `VITE_SITE_URL` = `https://boomtick-portfolio-client-stylist-site.pages.dev` (or your custom domain)
+
+#### 💻 Method B: Direct Wrangler CLI Deployment
+If you prefer deploying directly via your terminal or a custom CI/CD pipeline using Wrangler:
+
+1. **Login to Cloudflare**:
+   ```bash
+   npx wrangler login
+   ```
+
+2. **Build the Application**:
+   Using Bun:
+   ```bash
+   bun run build
+   ```
+   Or using npm:
+   ```bash
+   npm run build
+   ```
+
+3. **Deploy to Production**:
+   Deploy your static `dist` folder to Cloudflare Pages:
+   ```bash
+   npx wrangler pages deploy dist --project-name=boomtick-portfolio-client-stylist-site
+   ```
+
+4. **Staging / Preview Deploys**:
+   To push a preview deployment for non-production branches:
+   ```bash
+   npx wrangler versions upload
+   ```
 
 ### 3. Netlify
 
