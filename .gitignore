@@ -6,3 +6,17 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Wrangler and Cloudflare Pages
+.wrangler/
+.cloudflare/
+
+# Local IDEs / Editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+

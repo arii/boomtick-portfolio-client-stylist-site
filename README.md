@@ -210,10 +210,21 @@ If you prefer deploying directly via your terminal or a custom CI/CD pipeline us
    ```
 
 3. **Deploy to Production**:
-   Deploy your static `dist` folder to Cloudflare Pages:
+   Deploy your static `dist` folder to Cloudflare Pages (adding `--commit-dirty=true` silences Wrangler warnings regarding any uncommitted files in your workspace):
    ```bash
-   npx wrangler pages deploy dist --project-name=boomtick-portfolio-client-stylist-site
+   npx wrangler pages deploy dist --project-name=boomtick-portfolio-client-stylist-site --commit-dirty=true
    ```
+
+   > [!TIP]
+   > **Troubleshooting Authentication (Error 10000)**:
+   > If you see `Authentication error [code: 10000]` when deploying, your custom `CLOUDFLARE_API_TOKEN` lacks sufficient permissions.
+   > To fix this:
+   > 1. Go to **[Cloudflare Profile -> API Tokens](https://dash.cloudflare.com/profile/api-tokens)**.
+   > 2. Create or edit your API token.
+   > 3. Under **Permissions**, ensure you include:
+   >    - **Account** -> **Cloudflare Pages** -> **Edit**
+   >    - **Account** -> **Members** -> **Read**
+   > 4. Save and retry. Alternatively, clear the `CLOUDFLARE_API_TOKEN` env variable and run `npx wrangler login` to authenticate interactively.
 
 4. **Staging / Preview Deploys**:
    To push a preview deployment for non-production branches:
