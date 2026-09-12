@@ -34,7 +34,30 @@ function getEnvVar(key: string, fallback: string): string {
 // ==========================================
 // 1. INTEGRATIONS & DEPLOYMENT CONFIG (Env-Based)
 // ==========================================
-const rawSiteUrl = getEnvVar("VITE_SITE_URL", "https://hairbyapril.vercel.app");
+/**
+ * Detects the active deployment URL dynamically from standard hosting environments:
+ * - VITE_SITE_URL: User-defined custom production URL
+ * - CF_PAGES_URL: Cloudflare Pages build/deployment URL
+ * - VERCEL_URL: Vercel deployment URL
+ * - URL: Netlify site URL
+ */
+function resolveSiteUrl(): string {
+  const customUrl = getEnvVar("VITE_SITE_URL", "");
+  if (customUrl) return customUrl;
+
+  const cfUrl = getEnvVar("CF_PAGES_URL", "");
+  if (cfUrl) return cfUrl.startsWith("http") ? cfUrl : `https://${cfUrl}`;
+
+  const vercelUrl = getEnvVar("VERCEL_URL", "");
+  if (vercelUrl) return `https://${vercelUrl}`;
+
+  const netlifyUrl = getEnvVar("URL", "");
+  if (netlifyUrl) return netlifyUrl;
+
+  return "https://hairbyapril.dev";
+}
+
+const rawSiteUrl = resolveSiteUrl();
 const cleanSiteUrl = rawSiteUrl.replace(/\/+$/, "");
 const canonicalUrl = `${cleanSiteUrl}/`;
 
@@ -242,19 +265,19 @@ export function generateSiteSchema(
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
-        dayOfWeek: config.openingDays,
+        dayOfWeek: config.openingDays.length === 1 ? config.openingDays[0] : config.openingDays,
         opens: config.openingHours.opens,
         closes: config.openingHours.closes,
       },
     ],
-    areaServed: config.areaServed.map((name, index) => ({
-      "@type": index === 0 ? "City" : "AdministrativeArea",
-      name,
-    })),
+    areaServed: {
+      "@type": "AdministrativeArea",
+      name: "San Francisco, CA",
+    },
     sameAs: [config.instagramUrl],
     hasOfferCatalog: {
       "@type": "OfferCatalog",
-      name: "Hair Services",
+      name: "Styling Services",
       itemListElement,
     },
   };
