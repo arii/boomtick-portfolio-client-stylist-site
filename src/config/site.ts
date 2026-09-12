@@ -64,7 +64,7 @@ if (googleAppDeploymentId) {
 // ==========================================
 // 2. CONTACT SCHEMAS AUTO-GENERATOR
 // ==========================================
-const basePhone = "415.555.0192"; // Edit this single number to change display and tel schemas automatically
+const basePhone = getEnvVar("VITE_PHONE_NUMBER", ""); // Load from environment, default to not configured (empty string)
 const cleanPhoneDigits = basePhone.replace(/[^0-9]/g, "");
 
 const phoneDisplay =
@@ -72,12 +72,16 @@ const phoneDisplay =
     ? `(${cleanPhoneDigits.slice(0, 3)}) ${cleanPhoneDigits.slice(3, 6)}-${cleanPhoneDigits.slice(6)}`
     : basePhone;
 
-const phoneTel = `tel:${cleanPhoneDigits}`;
+const phoneTel = cleanPhoneDigits ? `tel:${cleanPhoneDigits}` : "";
 
 const telephoneSchema =
   cleanPhoneDigits.length === 10
     ? `+1-${cleanPhoneDigits.slice(0, 3)}-${cleanPhoneDigits.slice(3, 6)}-${cleanPhoneDigits.slice(6)}`
-    : `+1-${cleanPhoneDigits}`;
+    : cleanPhoneDigits
+    ? `+1-${cleanPhoneDigits}`
+    : "";
+
+const siteEmail = getEnvVar("VITE_EMAIL", ""); // Load from environment, default to not configured (empty string)
 
 // ==========================================
 // 3. BRAND & STATIC SITE CONTENT CONFIG
@@ -105,7 +109,7 @@ export const SITE_CONFIG = {
   ],
 
   // Contact Information
-  email: "hello@hairbyapril.com",
+  email: siteEmail,
   phone: basePhone,
   phoneDisplay,
   phoneTel,
@@ -220,8 +224,8 @@ export function generateSiteSchema(
     name: config.studioName,
     image: config.ogImage,
     description: config.description,
-    telephone: config.telephoneSchema,
-    email: config.email,
+    ...(config.telephoneSchema ? { telephone: config.telephoneSchema } : {}),
+    ...(config.email ? { email: config.email } : {}),
     url: config.canonicalUrl,
     priceRange: config.priceRange,
     address: {

@@ -26,29 +26,35 @@ export const Footer: React.FC<FooterProps> = ({ onBookAppointment }) => {
 
             {/* Tight vertically stacked contact information block */}
             <div className="flex flex-col gap-2 text-[13px] text-stone-400 font-sans">
-              <a
-                id="footer-email-link"
-                href={`mailto:${CLIENT_BIO.email}`}
-                className="hover:text-white transition w-fit"
-              >
-                {CLIENT_BIO.email}
-              </a>
-              <a
-                id="footer-phone-link"
-                href={`tel:${CLIENT_BIO.phone.replace(/[^0-9]/g, "")}`}
-                className="hover:text-white transition w-fit"
-              >
-                {CLIENT_BIO.phone}
-              </a>
-              <a
-                id="footer-instagram-link"
-                href={CLIENT_BIO.instagramUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-white transition w-fit"
-              >
-                {CLIENT_BIO.instagram}
-              </a>
+              {CLIENT_BIO.email && (
+                <a
+                  id="footer-email-link"
+                  href={`mailto:${CLIENT_BIO.email}`}
+                  className="hover:text-white transition w-fit"
+                >
+                  {CLIENT_BIO.email}
+                </a>
+              )}
+              {CLIENT_BIO.phone && (
+                <a
+                  id="footer-phone-link"
+                  href={`tel:${CLIENT_BIO.phone.replace(/[^0-9]/g, "")}`}
+                  className="hover:text-white transition w-fit"
+                >
+                  {CLIENT_BIO.phone}
+                </a>
+              )}
+              {CLIENT_BIO.instagram && (
+                <a
+                  id="footer-instagram-link"
+                  href={CLIENT_BIO.instagramUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-white transition w-fit"
+                >
+                  {CLIENT_BIO.instagram}
+                </a>
+              )}
             </div>
           </div>
 

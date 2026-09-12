@@ -125,7 +125,7 @@ export const InquiryModule: React.FC = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })
                     }
-                    placeholder={CLIENT_BIO.phoneDisplay}
+                    placeholder={CLIENT_BIO.phoneDisplay || "(123) 456-7890"}
                     className={TOKENS.input.base}
                   />
                 </div>
@@ -256,23 +256,35 @@ export const InquiryModule: React.FC = () => {
                 </button>
               </div>
 
-              <p className="text-xs text-stone-500 text-center font-sans">
-                Prefer direct reach out? Email{" "}
-                <a
-                  href={`mailto:${CLIENT_BIO.email}`}
-                  className="underline text-stone-800 hover:text-stone-950 font-medium transition"
-                >
-                  {CLIENT_BIO.email}
-                </a>{" "}
-                or text{" "}
-                <a
-                  href={CLIENT_BIO.phoneTel}
-                  className="underline text-stone-800 hover:text-stone-950 font-medium transition"
-                >
-                  {CLIENT_BIO.phoneDisplay}
-                </a>
-                .
-              </p>
+              {(CLIENT_BIO.email || CLIENT_BIO.phoneDisplay) && (
+                <p className="text-xs text-stone-500 text-center font-sans">
+                  Prefer direct reach out?{" "}
+                  {CLIENT_BIO.email && (
+                    <>
+                      Email{" "}
+                      <a
+                        href={`mailto:${CLIENT_BIO.email}`}
+                        className="underline text-stone-800 hover:text-stone-950 font-medium transition"
+                      >
+                        {CLIENT_BIO.email}
+                      </a>
+                    </>
+                  )}
+                  {CLIENT_BIO.email && CLIENT_BIO.phoneDisplay && " or "}
+                  {CLIENT_BIO.phoneDisplay && (
+                    <>
+                      text{" "}
+                      <a
+                        href={CLIENT_BIO.phoneTel}
+                        className="underline text-stone-800 hover:text-stone-950 font-medium transition"
+                      >
+                        {CLIENT_BIO.phoneDisplay}
+                      </a>
+                    </>
+                  )}
+                  .
+                </p>
+              )}
 
               <p className="text-[11px] text-stone-400 text-center font-sans">
                 Direct quotes provided with travel estimates, preparation
