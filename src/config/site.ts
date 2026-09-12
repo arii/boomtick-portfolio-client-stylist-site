@@ -38,15 +38,32 @@ function getEnvVar(key: string, fallback: string): string {
  * Detects the active deployment URL dynamically from standard hosting environments:
  * - VITE_SITE_URL: User-defined custom production URL
  * - CF_PAGES_URL: Cloudflare Pages build/deployment URL
+ * - CF_PAGES: Cloudflare Pages build indicator
  * - VERCEL_URL: Vercel deployment URL
  * - URL: Netlify site URL
  */
 function resolveSiteUrl(): string {
+  // If running in browser, check if hosted on Cloudflare Pages or custom domain
+  if (typeof window !== "undefined" && window.location?.origin) {
+    const origin = window.location.origin;
+    if (
+      origin.includes("hairbyapril.pages.dev") ||
+      origin.includes("hairbyapril.dev")
+    ) {
+      return origin;
+    }
+  }
+
   const customUrl = getEnvVar("VITE_SITE_URL", "");
   if (customUrl) return customUrl;
 
   const cfUrl = getEnvVar("CF_PAGES_URL", "");
   if (cfUrl) return cfUrl.startsWith("http") ? cfUrl : `https://${cfUrl}`;
+
+  const cfPages = getEnvVar("CF_PAGES", "");
+  if (cfPages === "1") {
+    return "https://hairbyapril.pages.dev";
+  }
 
   const vercelUrl = getEnvVar("VERCEL_URL", "");
   if (vercelUrl) return `https://${vercelUrl}`;
@@ -54,7 +71,7 @@ function resolveSiteUrl(): string {
   const netlifyUrl = getEnvVar("URL", "");
   if (netlifyUrl) return netlifyUrl;
 
-  return "https://hairbyapril.dev";
+  return "https://hairbyapril.pages.dev";
 }
 
 const rawSiteUrl = resolveSiteUrl();
@@ -173,11 +190,21 @@ export const SITE_CONFIG = {
   heroSubtext:
     "San Francisco stylist specializing in curly cuts and classic vintage hair, with custom on-location styling available for events and productions.",
 
-  // Media Assets
-  ogImage: "/assets/portfolio-4.webp",
-  ogImageWidth: 1200,
-  ogImageHeight: 800,
+  // Media Assets (Updated with April's styling illustrations)
+  ogImage: `${cleanSiteUrl}/assets/portfolio-4.webp`,
+  ogImageFallback: `${cleanSiteUrl}/assets/og-cover.jpg`,
+  ogImageAlt:
+    "Hair by April - Vintage Hair Styling & Curly Hair Specialist in San Francisco",
+  ogImageWidth: 620,
+  ogImageHeight: 758,
   heroPreloadImage: "/assets/portfolio-4.webp",
+  portfolioImages: [
+    `${cleanSiteUrl}/assets/portfolio-4.webp`,
+    `${cleanSiteUrl}/assets/portfolio-1.webp`,
+    `${cleanSiteUrl}/assets/portfolio-2.webp`,
+    `${cleanSiteUrl}/assets/portfolio-3.webp`,
+    `${cleanSiteUrl}/assets/portfolio-5.webp`,
+  ],
 };
 
 export type SiteConfig = typeof SITE_CONFIG;
@@ -190,6 +217,8 @@ export function generateSiteSchema(
   config: SiteConfig = SITE_CONFIG,
   services: ServiceItem[] = []
 ) {
+  const baseUrl = config.canonicalUrl.replace(/\/+$/, "");
+
   // Ensure default catalog services if none passed
   const catalogServices =
     services.length > 0
@@ -211,6 +240,11 @@ export function generateSiteSchema(
           },
         ];
 
+  const serviceImages: Record<string, string> = {
+    "curly-cut-finish": `${baseUrl}/assets/portfolio-2.webp`,
+    "vintage-set-updo": `${baseUrl}/assets/portfolio-1.webp`,
+  };
+
   const itemListElement = catalogServices.map((service) => {
     const rawPrice = service.price.replace(/[^0-9]/g, "");
     return {
@@ -219,6 +253,7 @@ export function generateSiteSchema(
         "@type": "Service",
         name: service.name,
         description: service.description,
+        ...(serviceImages[service.id] ? { image: serviceImages[service.id] } : {}),
       },
       price: rawPrice || "150",
       priceCurrency: "USD",
@@ -233,6 +268,7 @@ export function generateSiteSchema(
       name: "On-Location Events & Collaborations",
       description:
         "Weddings, bridal parties, editorial shoots, swing dance camps, and retro pageants across the Bay Area.",
+      image: `${baseUrl}/assets/portfolio-3.webp`,
     },
     priceSpecification: {
       "@type": "PriceSpecification",
@@ -245,7 +281,13 @@ export function generateSiteSchema(
     "@context": "https://schema.org",
     "@type": "HairSalon",
     name: config.studioName,
-    image: config.ogImage,
+    image: [
+      `${baseUrl}/assets/portfolio-4.webp`,
+      `${baseUrl}/assets/portfolio-1.webp`,
+      `${baseUrl}/assets/portfolio-2.webp`,
+      `${baseUrl}/assets/portfolio-3.webp`,
+      `${baseUrl}/assets/portfolio-5.webp`,
+    ],
     description: config.description,
     ...(config.telephoneSchema ? { telephone: config.telephoneSchema } : {}),
     ...(config.email ? { email: config.email } : {}),

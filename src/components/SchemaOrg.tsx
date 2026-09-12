@@ -20,6 +20,14 @@ export const SchemaOrg: React.FC = () => {
     }
     const schemaData = generateSiteSchema(SITE_CONFIG, SERVICES);
     script.textContent = JSON.stringify(schemaData, null, 2);
+
+    // Keep OpenGraph & Twitter tags aligned with dynamic runtime config
+    if (SITE_CONFIG.ogImage) {
+      const ogImg = document.querySelector('meta[property="og:image"]');
+      if (ogImg) ogImg.setAttribute("content", SITE_CONFIG.ogImage);
+      const twImg = document.querySelector('meta[name="twitter:image"]');
+      if (twImg) twImg.setAttribute("content", SITE_CONFIG.ogImage);
+    }
   }, []);
 
   return null;

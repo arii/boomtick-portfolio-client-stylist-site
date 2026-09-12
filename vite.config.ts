@@ -50,7 +50,31 @@ function dynamicSeoAndCdnPlugin(): Plugin {
         `<meta name="author" content="${SITE_CONFIG.studioName}" />`
       );
 
-      // 5. Dynamic Schema.org JSON-LD injection
+      // 5. Dynamic OpenGraph and Twitter Media Images (Updated illustrations)
+      transformed = transformed.replace(
+        /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/i,
+        `<meta property="og:image" content="${SITE_CONFIG.ogImage}" />`
+      );
+      transformed = transformed.replace(
+        /<meta\s+property="og:image:alt"\s+content="[^"]*"\s*\/?>/i,
+        `<meta property="og:image:alt" content="${SITE_CONFIG.ogImageAlt}" />`
+      );
+      transformed = transformed.replace(
+        /<meta\s+name="twitter:image"\s+content="[^"]*"\s*\/?>/i,
+        `<meta name="twitter:image" content="${SITE_CONFIG.ogImage}" />`
+      );
+      transformed = transformed.replace(
+        /<meta\s+name="twitter:image:alt"\s+content="[^"]*"\s*\/?>/i,
+        `<meta name="twitter:image:alt" content="${SITE_CONFIG.ogImageAlt}" />`
+      );
+
+      // 6. Dynamic High-Priority LCP Preload
+      transformed = transformed.replace(
+        /<link\s+rel="preload"\s+as="image"\s+href="[^"]*"[^>]*\/?>/i,
+        `<link rel="preload" as="image" href="${SITE_CONFIG.heroPreloadImage}" type="image/webp" fetchpriority="high" />`
+      );
+
+      // 7. Dynamic Schema.org JSON-LD injection
       transformed = transformed.replace(
         /<script\s+type="application\/ld\+json"\s+id="schema-org-jsonld">[\s\S]*?<\/script>/i,
         `<script type="application/ld+json" id="schema-org-jsonld">\n${schemaJson}\n    </script>`
