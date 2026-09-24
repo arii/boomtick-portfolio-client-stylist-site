@@ -11,6 +11,11 @@ coverage/
 .wrangler/
 .cloudflare/
 
+# Bun lockfiles (ignored to prevent local/production Bun version lockfile mismatches)
+bun.lock
+bun.lockb
+bun-lockb
+
 # Local IDEs / Editors
 .idea/
 .vscode/

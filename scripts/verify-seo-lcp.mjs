@@ -196,6 +196,14 @@ if (fs.existsSync(sitemapPath)) {
   );
 }
 
+// 6. Lockfile Safety Check (prevents deployment version mismatches)
+const bunLockPath = path.resolve(process.cwd(), "bun.lock");
+const bunLockbPath = path.resolve(process.cwd(), "bun.lockb");
+const yarnLockPath = path.resolve(process.cwd(), "yarn.lock");
+
+check("No Bun lockfile in workspace root (prevents deployment failures)", !fs.existsSync(bunLockPath) && !fs.existsSync(bunLockbPath));
+check("No Yarn lockfile in workspace root", !fs.existsSync(yarnLockPath));
+
 console.log(`\n========================================`);
 console.log(`Summary: ${passes} passed, ${errors} failed.`);
 console.log(
