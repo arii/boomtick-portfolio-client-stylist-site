@@ -194,6 +194,11 @@ function dynamicSeoAndCdnPlugin(): Plugin {
 export default defineConfig(({ command }) => {
   return {
     base: command === "build" ? "./" : "/",
+    define: {
+      "process.env.VITE_TINA_CLIENT_ID": JSON.stringify(process.env.VITE_TINA_CLIENT_ID || null),
+      "process.env.TINA_TOKEN": JSON.stringify(process.env.TINA_TOKEN || null),
+      "process.env.VITE_TINA_BRANCH": JSON.stringify(process.env.VITE_TINA_BRANCH || "main"),
+    },
     plugins: [
       react(),
       tailwindcss(),

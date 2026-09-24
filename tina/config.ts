@@ -1,9 +1,20 @@
 import { defineConfig } from "tinacms";
 
 // Your hosting provider will set these environment variables automatically in production
-const branch = process.env.VITE_TINA_BRANCH || "main";
-const clientId = process.env.VITE_TINA_CLIENT_ID || null; // Obtain from o.tina.io
-const token = process.env.TINA_TOKEN || null; // Obtain from o.tina.io
+const branch =
+  (typeof process !== "undefined" ? process.env?.VITE_TINA_BRANCH : undefined) ||
+  import.meta.env?.VITE_TINA_BRANCH ||
+  "main";
+
+const clientId =
+  (typeof process !== "undefined" ? process.env?.VITE_TINA_CLIENT_ID : undefined) ||
+  import.meta.env?.VITE_TINA_CLIENT_ID ||
+  null; // Obtain from o.tina.io
+
+const token =
+  (typeof process !== "undefined" ? process.env?.TINA_TOKEN : undefined) ||
+  import.meta.env?.VITE_TINA_TOKEN || // Check for VITE_TINA_TOKEN as well
+  null; // Obtain from o.tina.io
 
 export default defineConfig({
   branch,
