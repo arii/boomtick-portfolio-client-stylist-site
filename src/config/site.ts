@@ -5,247 +5,126 @@
  * canonical URLs, scheduling details, and dynamic Schema.org generation.
  */
 
-export interface ServiceItem {
-  id: string;
-  name: string;
-  price: string;
-  description: string;
-  duration?: string;
-  deliverables?: string[];
-}
+import siteContent from "../content/site.json";
+import heroData from "../content/hero.json";
+import eventsData from "../content/events.json";
+import servicesData from "../content/services.json";
+import portfolioData from "../content/portfolio.json";
+import type {
+  SiteContent,
+  HeroContent,
+  EventsContent,
+  ServiceItem,
+  PortfolioItem,
+} from "../types/content";
+
+const SITE_CONTENT: SiteContent = siteContent as SiteContent;
+export const HERO_CONTENT: HeroContent = heroData as HeroContent;
+export const EVENTS_CONTENT: EventsContent = eventsData as EventsContent;
+export const SERVICES_CONTENT: ServiceItem[] = servicesData as ServiceItem[];
+export const PORTFOLIO_CONTENT: PortfolioItem[] =
+  portfolioData as PortfolioItem[];
 
 /**
- * Helper to retrieve environment variables safely.
- */
-function getEnvVar(key: string, fallback: string): string {
-  if (
-    typeof import.meta !== "undefined" &&
-    import.meta.env &&
-    import.meta.env[key]
-  ) {
-    return import.meta.env[key] as string;
-  }
-  if (typeof process !== "undefined" && process.env && process.env[key]) {
-    return process.env[key] as string;
-  }
-  return fallback;
-}
-
-// ==========================================
-// 1. INTEGRATIONS & DEPLOYMENT CONFIG (Env-Based)
-// ==========================================
-/**
- * Detects the active deployment URL dynamically from standard hosting environments:
- * - VITE_SITE_URL: User-defined custom production URL
- * - CF_PAGES_URL: Cloudflare Pages build/deployment URL
- * - CF_PAGES: Cloudflare Pages build indicator
- * - VERCEL_URL: Vercel deployment URL
- * - URL: Netlify site URL
+ * Resolve deployment canonical URL for Cloudflare Pages and local dev.
  */
 function resolveSiteUrl(): string {
-  // If running in browser, check if hosted on Cloudflare Pages or custom domain
   if (typeof window !== "undefined" && window.location?.origin) {
-    const origin = window.location.origin;
-    if (
-      origin.includes("hairbyapril.pages.dev") ||
-      origin.includes("hairbyapril.dev")
-    ) {
-      return origin;
+    return window.location.origin;
+  }
+  if (typeof process !== "undefined" && process.env) {
+    if (process.env.VITE_SITE_URL) return process.env.VITE_SITE_URL;
+    if (process.env.CF_PAGES_URL) {
+      const cf = process.env.CF_PAGES_URL;
+      return cf.startsWith("http") ? cf : `https://${cf}`;
     }
   }
-
-  const customUrl = getEnvVar("VITE_SITE_URL", "");
-  if (customUrl) return customUrl;
-
-  const cfUrl = getEnvVar("CF_PAGES_URL", "");
-  if (cfUrl) return cfUrl.startsWith("http") ? cfUrl : `https://${cfUrl}`;
-
-  const cfPages = getEnvVar("CF_PAGES", "");
-  if (cfPages === "1") {
-    return "https://hairbyapril.pages.dev";
-  }
-
-  const vercelUrl = getEnvVar("VERCEL_URL", "");
-  if (vercelUrl) return `https://${vercelUrl}`;
-
-  const netlifyUrl = getEnvVar("URL", "");
-  if (netlifyUrl) return netlifyUrl;
-
   return "https://hairbyapril.pages.dev";
 }
 
-const rawSiteUrl = resolveSiteUrl();
-const cleanSiteUrl = rawSiteUrl.replace(/\/+$/, "");
+const cleanSiteUrl = resolveSiteUrl().replace(/\/+$/, "");
 const canonicalUrl = `${cleanSiteUrl}/`;
 
-const calUsername = getEnvVar("VITE_CAL_USERNAME", "ariel-anders");
-const calDefaultSlug = getEnvVar("VITE_CAL_DEFAULT_SLUG", "april-demo");
-
-const rawGoogleSheetValue = getEnvVar("VITE_GOOGLE_SHEET_URL", "");
-const googleAppDeploymentId = getEnvVar(
-  "VITE_GOOGLE_APP_DEPLOYMENT_ID",
-  "AKfycbzcKzeTp7qNkMgNk_MJkj9zjPpkkU3CI8QmJsTbIM6eY-SNEcr0V4lUVEE5xwRzdBD7Ag"
-);
-
-let googleSheetUrl = "";
-if (googleAppDeploymentId) {
-  googleSheetUrl = `https://script.google.com/macros/s/${googleAppDeploymentId}/exec`;
-} else if (rawGoogleSheetValue) {
-  if (
-    rawGoogleSheetValue.startsWith("http://") ||
-    rawGoogleSheetValue.startsWith("https://")
-  ) {
-    googleSheetUrl = rawGoogleSheetValue;
-  } else {
-    googleSheetUrl = `https://script.google.com/macros/s/${rawGoogleSheetValue}/exec`;
-  }
-}
-
-// ==========================================
-// 2. CONTACT SCHEMAS AUTO-GENERATOR
-// ==========================================
-const basePhone = getEnvVar("VITE_PHONE_NUMBER", ""); // Load from environment, default to not configured (empty string)
+const basePhone = SITE_CONTENT.phone;
 const cleanPhoneDigits = basePhone.replace(/[^0-9]/g, "");
 
-const phoneDisplay =
-  cleanPhoneDigits.length === 10
-    ? `(${cleanPhoneDigits.slice(0, 3)}) ${cleanPhoneDigits.slice(3, 6)}-${cleanPhoneDigits.slice(6)}`
-    : basePhone;
-
-const phoneTel = cleanPhoneDigits ? `tel:${cleanPhoneDigits}` : "";
-
-const telephoneSchema =
-  cleanPhoneDigits.length === 10
-    ? `+1-${cleanPhoneDigits.slice(0, 3)}-${cleanPhoneDigits.slice(3, 6)}-${cleanPhoneDigits.slice(6)}`
-    : cleanPhoneDigits
-    ? `+1-${cleanPhoneDigits}`
-    : "";
-
-const siteEmail = getEnvVar("VITE_EMAIL", ""); // Load from environment, default to not configured (empty string)
-
 // ==========================================
-// 3. BRAND & STATIC SITE CONTENT CONFIG
+// UNIFIED BRAND & SITE CONFIGURATION
 // ==========================================
 export const SITE_CONFIG = {
-  // Base URLs
+  // URLs & Domains
   siteUrl: cleanSiteUrl,
   canonicalUrl,
 
   // Business Identity
-  studioName: "Hair by April",
-  stylistName: "April",
-  credentials: "Licensed Professional • 15 Years of Experience",
-  title: "Hair by April | Curly Cuts & Vintage Hair Stylist San Francisco",
-  description:
-    "Licensed professional specializing in curly hair cuts, vintage pin-up styling, and on-location events in San Francisco.",
-  keywords: [
-    "curly hair cuts San Francisco",
-    "vintage hair stylist",
-    "victory rolls",
-    "pin-up hair SF",
-    "natural curl specialist",
-    "bridal hair SF",
-    "retro hair styling San Francisco",
-  ],
+  studioName: SITE_CONTENT.studioName,
+  stylistName: SITE_CONTENT.stylistName,
+  credentials: HERO_CONTENT.badge,
+  title: SITE_CONTENT.title,
+  description: SITE_CONTENT.description,
+  keywords: SITE_CONTENT.keywords,
 
-  // Contact Information
-  email: siteEmail,
+  // Contact Info
+  email: SITE_CONTENT.email,
   phone: basePhone,
-  phoneDisplay,
-  phoneTel,
-  telephoneSchema,
+  phoneDisplay: basePhone,
+  phoneTel: `tel:${cleanPhoneDigits}`,
+  telephoneSchema: `+1-${cleanPhoneDigits.slice(0, 3)}-${cleanPhoneDigits.slice(3, 6)}-${cleanPhoneDigits.slice(6)}`,
 
-  // Social Channels
-  instagram: "@hair.by.april_209",
-  instagramUrl: "https://www.instagram.com/hair.by.april_209/",
+  // Social & Profiles
+  instagram: SITE_CONTENT.instagram,
+  instagramUrl: HERO_CONTENT.instagramUrl,
 
-  // Integrations & Scheduling (mapped from environmental variables)
-  calUsername,
-  calDefaultSlug,
-  googleSheetUrl,
+  // Integrations & Logistics
+  calUsername: "ariel-anders",
+  calDefaultSlug: "april-demo",
+  googleSheetUrl:
+    (typeof process !== "undefined" && process.env?.VITE_GOOGLE_SHEET_URL) ||
+    "",
+  locationDisplay: SITE_CONTENT.locationDisplay,
+  logisticsNotice: HERO_CONTENT.availabilityNotice,
 
-  // Location & Local SEO
-  locationDisplay: "San Francisco, CA",
-  logisticsNotice:
-    "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
-  address: {
-    locality: "San Francisco",
-    region: "CA",
-    country: "US",
-  },
-  geo: {
-    latitude: 37.7749,
-    longitude: -122.4194,
-  },
-  areaServed: ["San Francisco", "San Francisco Bay Area"],
-  openingDays: ["Tuesday"],
-  openingHours: {
-    opens: "09:00",
-    closes: "18:00",
-  },
-  priceRange: "$$",
+  // Address & Hours
+  address: SITE_CONTENT.address,
+  geo: SITE_CONTENT.geo,
+  areaServed: SITE_CONTENT.areaServed,
+  openingDays: SITE_CONTENT.openingDays,
+  openingHours: SITE_CONTENT.openingHours,
+  priceRange: SITE_CONTENT.priceRange,
 
-  // Hero Section Copy
-  heroHeading: "Curly hair cuts & authentic vintage styling.",
-  heroSubtext:
-    "San Francisco stylist specializing in curly cuts and classic vintage hair, with custom on-location styling available for events and productions.",
+  // Hero Copy
+  heroHeading: HERO_CONTENT.headline,
+  heroSubtext: HERO_CONTENT.subheading,
 
-  // Media Assets (Updated with April's styling illustrations)
-  ogImage: `${cleanSiteUrl}/assets/portfolio-4.webp`,
-  ogImageFallback: `${cleanSiteUrl}/assets/og-cover.jpg`,
-  ogImageAlt:
-    "Hair by April - Vintage Hair Styling & Curly Hair Specialist in San Francisco",
-  ogImageWidth: 620,
-  ogImageHeight: 758,
-  heroPreloadImage: "/assets/portfolio-4.webp",
-  portfolioImages: [
-    `${cleanSiteUrl}/assets/portfolio-4.webp`,
-    `${cleanSiteUrl}/assets/portfolio-1.webp`,
-    `${cleanSiteUrl}/assets/portfolio-2.webp`,
-    `${cleanSiteUrl}/assets/portfolio-3.webp`,
-    `${cleanSiteUrl}/assets/portfolio-5.webp`,
-  ],
+  // Media
+  ogImage: `${cleanSiteUrl}${SITE_CONTENT.ogImageRelative}`,
+  ogImageFallback: `${cleanSiteUrl}${SITE_CONTENT.ogImageFallbackRelative}`,
+  ogImageAlt: SITE_CONTENT.ogImageAlt,
+  ogImageWidth: SITE_CONTENT.ogImageWidth,
+  ogImageHeight: SITE_CONTENT.ogImageHeight,
+  heroPreloadImage: SITE_CONTENT.heroPreloadImage,
+  portfolioImages: SITE_CONTENT.portfolioImagesRelative.map(
+    (p) => `${cleanSiteUrl}${p}`
+  ),
 };
 
 export type SiteConfig = typeof SITE_CONFIG;
 
 /**
- * Dynamically builds a Schema.org HairSalon / LocalBusiness JSON-LD structure
- * leveraging all unified configuration variables.
+ * Dynamically builds a Schema.org HairSalon / LocalBusiness JSON-LD structure.
  */
 export function generateSiteSchema(
   config: SiteConfig = SITE_CONFIG,
-  services: ServiceItem[] = []
+  services: ServiceItem[] = SERVICES_CONTENT
 ) {
   const baseUrl = config.canonicalUrl.replace(/\/+$/, "");
-
-  // Ensure default catalog services if none passed
-  const catalogServices =
-    services.length > 0
-      ? services
-      : [
-          {
-            id: "curly-cut-finish",
-            name: "Curly Hair Cut & Finish",
-            price: "$175",
-            description:
-              "Customized cutting, shaping, and styling tailored to your natural wave and curl pattern.",
-          },
-          {
-            id: "vintage-set-updo",
-            name: "Vintage Hair & Updos",
-            price: "$145",
-            description:
-              "Classic victory rolls, bumper bangs, waves, and pin-up styling built for longevity.",
-          },
-        ];
 
   const serviceImages: Record<string, string> = {
     "curly-cut-finish": `${baseUrl}/assets/portfolio-2.webp`,
     "vintage-set-updo": `${baseUrl}/assets/portfolio-1.webp`,
   };
 
-  const itemListElement = catalogServices.map((service) => {
+  const itemListElement = services.map((service) => {
     const rawPrice = service.price.replace(/[^0-9]/g, "");
     return {
       "@type": "Offer",
@@ -253,7 +132,9 @@ export function generateSiteSchema(
         "@type": "Service",
         name: service.name,
         description: service.description,
-        ...(serviceImages[service.id] ? { image: serviceImages[service.id] } : {}),
+        ...(serviceImages[service.id]
+          ? { image: serviceImages[service.id] }
+          : {}),
       },
       price: rawPrice || "150",
       priceCurrency: "USD",
@@ -289,8 +170,8 @@ export function generateSiteSchema(
       `${baseUrl}/assets/portfolio-5.webp`,
     ],
     description: config.description,
-    ...(config.telephoneSchema ? { telephone: config.telephoneSchema } : {}),
-    ...(config.email ? { email: config.email } : {}),
+    telephone: config.telephoneSchema,
+    email: config.email,
     url: config.canonicalUrl,
     priceRange: config.priceRange,
     address: {
@@ -307,7 +188,10 @@ export function generateSiteSchema(
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
-        dayOfWeek: config.openingDays.length === 1 ? config.openingDays[0] : config.openingDays,
+        dayOfWeek:
+          config.openingDays.length === 1
+            ? config.openingDays[0]
+            : config.openingDays,
         opens: config.openingHours.opens,
         closes: config.openingHours.closes,
       },

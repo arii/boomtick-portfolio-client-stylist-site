@@ -1,11 +1,12 @@
 import React, { useEffect } from "react";
-import { generateSiteSchema, SITE_CONFIG } from "../config/site";
-import { SERVICES } from "../data/services";
+import {
+  generateSiteSchema,
+  SITE_CONFIG,
+  SERVICES_CONTENT,
+} from "../config/site";
 
 /**
- * Component ensuring Schema.org JSON-LD is dynamically maintained in document head.
- * In production static builds, the schema is pre-rendered into index.html by the Vite plugin,
- * and this component ensures client-side hydration keeps it synchronized with runtime variables.
+ * Ensures Schema.org JSON-LD and OpenGraph tags match unified CMS configuration.
  */
 export const SchemaOrg: React.FC = () => {
   useEffect(() => {
@@ -18,10 +19,9 @@ export const SchemaOrg: React.FC = () => {
       script.type = "application/ld+json";
       document.head.appendChild(script);
     }
-    const schemaData = generateSiteSchema(SITE_CONFIG, SERVICES);
+    const schemaData = generateSiteSchema(SITE_CONFIG, SERVICES_CONTENT);
     script.textContent = JSON.stringify(schemaData, null, 2);
 
-    // Keep OpenGraph & Twitter tags aligned with dynamic runtime config
     if (SITE_CONFIG.ogImage) {
       const ogImg = document.querySelector('meta[property="og:image"]');
       if (ogImg) ogImg.setAttribute("content", SITE_CONFIG.ogImage);

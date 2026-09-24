@@ -1,7 +1,14 @@
 import React, { useState } from "react";
-import { Send, CheckCircle2, MapPin, Users } from "lucide-react";
+import {
+  Send,
+  CheckCircle2,
+  AlertCircle,
+  MapPin,
+  Users,
+  RefreshCw,
+} from "lucide-react";
 import { TOKENS } from "../styles/tokens";
-import { CLIENT_BIO } from "../data/services";
+import { SITE_CONFIG } from "../config/site";
 
 export const InquiryModule: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -15,37 +22,42 @@ export const InquiryModule: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setSubmitError(null);
 
-    const sheetUrl = CLIENT_BIO.googleSheetUrl;
+    const sheetUrl = SITE_CONFIG.googleSheetUrl;
 
     if (sheetUrl) {
-      fetch(sheetUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
-        .then(() => {
-          setIsSubmitting(false);
-          setSubmitted(true);
-        })
-        .catch((err) => {
-          console.error("Error submitting to Google Sheets:", err);
-          setIsSubmitting(false);
-          setSubmitted(true);
+      try {
+        await fetch(sheetUrl, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
         });
+        setIsSubmitting(false);
+        setSubmitted(true);
+      } catch (err: unknown) {
+        const errorMsg =
+          err instanceof Error
+            ? err.message
+            : "Network error transmitting inquiry to Google Sheets.";
+        console.error("Elevated Submission Error:", err);
+        setIsSubmitting(false);
+        setSubmitError(errorMsg);
+      }
     } else {
-      // Simulate swift submission if no URL is set
+      // Simulate fast submission when no webhook URL is configured
       setTimeout(() => {
         setIsSubmitting(false);
         setSubmitted(true);
-      }, 600);
+      }, 500);
     }
   };
 
@@ -55,7 +67,6 @@ export const InquiryModule: React.FC = () => {
       className="pt-8 pb-20 md:pb-24 bg-stone-50 border-b border-stone-200 scroll-mt-16"
     >
       <div className="max-w-3xl mx-auto px-6">
-        {/* Form Container */}
         <div className={TOKENS.card.base}>
           {submitted ? (
             <div className="py-8 text-center space-y-3">
@@ -64,13 +75,16 @@ export const InquiryModule: React.FC = () => {
                 Inquiry Received
               </h3>
               <p className="text-xs text-stone-600 font-sans max-w-md mx-auto leading-relaxed">
-                Thank you, {formData.name || "friend"}. {CLIENT_BIO.name} will
-                review your request and reach out via email or phone (
-                {formData.phone || formData.email}) with availability, schedule
-                details, and custom rate options.
+                Thank you, {formData.name || "friend"}.{" "}
+                {SITE_CONFIG.stylistName} will review your request and reach out
+                via email or phone ({formData.phone || formData.email}) with
+                availability, schedule details, and custom rate options.
               </p>
               <button
-                onClick={() => setSubmitted(false)}
+                onClick={() => {
+                  setSubmitted(false);
+                  setSubmitError(null);
+                }}
                 className={`mt-4 text-xs font-semibold uppercase tracking-wider text-stone-900 underline ${TOKENS.accent.iconHover} cursor-pointer`}
               >
                 Send another inquiry
@@ -78,6 +92,36 @@ export const InquiryModule: React.FC = () => {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Elevated Error Banner if submission failed */}
+              {submitError && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-xs text-red-900 flex items-start gap-3 animate-fade-in">
+                  <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+                  <div className="space-y-1">
+                    <strong className="font-semibold block">
+                      Submission Error: {submitError}
+                    </strong>
+                    <p className="text-stone-600 leading-relaxed">
+                      Your inquiry could not be sent automatically. Please reach
+                      out directly to {SITE_CONFIG.stylistName} at{" "}
+                      <a
+                        href={`mailto:${SITE_CONFIG.email}`}
+                        className="underline font-semibold text-stone-900"
+                      >
+                        {SITE_CONFIG.email}
+                      </a>{" "}
+                      or text{" "}
+                      <a
+                        href={SITE_CONFIG.phoneTel}
+                        className="underline font-semibold text-stone-900"
+                      >
+                        {SITE_CONFIG.phoneDisplay}
+                      </a>
+                      .
+                    </p>
+                  </div>
+                </div>
+              )}
+
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
                   <label htmlFor="inquiry-name" className={TOKENS.input.label}>
@@ -125,7 +169,7 @@ export const InquiryModule: React.FC = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })
                     }
-                    placeholder={CLIENT_BIO.phoneDisplay || "(123) 456-7890"}
+                    placeholder={SITE_CONFIG.phoneDisplay}
                     className={TOKENS.input.base}
                   />
                 </div>
@@ -247,44 +291,37 @@ export const InquiryModule: React.FC = () => {
                   disabled={isSubmitting}
                   className={TOKENS.button.primaryFull}
                 >
-                  <Send className="w-4 h-4" />
-                  <span>
-                    {isSubmitting
-                      ? "Sending Inquiry..."
-                      : "Submit Custom Booking Inquiry"}
-                  </span>
+                  {isSubmitting ? (
+                    <>
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <span>Sending Inquiry...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      <span>Submit Custom Booking Inquiry</span>
+                    </>
+                  )}
                 </button>
               </div>
 
-              {(CLIENT_BIO.email || CLIENT_BIO.phoneDisplay) && (
-                <p className="text-xs text-stone-500 text-center font-sans">
-                  Prefer direct reach out?{" "}
-                  {CLIENT_BIO.email && (
-                    <>
-                      Email{" "}
-                      <a
-                        href={`mailto:${CLIENT_BIO.email}`}
-                        className="underline text-stone-800 hover:text-stone-950 font-medium transition"
-                      >
-                        {CLIENT_BIO.email}
-                      </a>
-                    </>
-                  )}
-                  {CLIENT_BIO.email && CLIENT_BIO.phoneDisplay && " or "}
-                  {CLIENT_BIO.phoneDisplay && (
-                    <>
-                      text{" "}
-                      <a
-                        href={CLIENT_BIO.phoneTel}
-                        className="underline text-stone-800 hover:text-stone-950 font-medium transition"
-                      >
-                        {CLIENT_BIO.phoneDisplay}
-                      </a>
-                    </>
-                  )}
-                  .
-                </p>
-              )}
+              <p className="text-xs text-stone-500 text-center font-sans">
+                Prefer direct reach out? Email{" "}
+                <a
+                  href={`mailto:${SITE_CONFIG.email}`}
+                  className="underline text-stone-800 hover:text-stone-950 font-medium transition"
+                >
+                  {SITE_CONFIG.email}
+                </a>{" "}
+                or text{" "}
+                <a
+                  href={SITE_CONFIG.phoneTel}
+                  className="underline text-stone-800 hover:text-stone-950 font-medium transition"
+                >
+                  {SITE_CONFIG.phoneDisplay}
+                </a>
+                .
+              </p>
 
               <p className="text-[11px] text-stone-400 text-center font-sans">
                 Direct quotes provided with travel estimates, preparation

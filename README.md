@@ -1,266 +1,178 @@
-# Hair Salon & Stylist Web Application
+# Hair by April – Stylist & Salon Web Application
 
-A high-performance, SEO-optimized, and fully configurable web application crafted for hairstylists, salons, and beauty studios. Built with **React 18+**, **TypeScript**, **Tailwind CSS**, and **Vite**, this project is engineered for easy future reuse and zero-friction deployment to any static CDN or edge platform.
+A high-performance, SEO-optimized, and fully configurable web application crafted for hairstylists, salons, and beauty studios. Built with **React 19**, **TypeScript**, **Tailwind CSS v4**, **TinaCMS**, and **Vite**, engineered for frictionless deployment to **Cloudflare Pages** and static edge CDNs.
 
 ---
 
 ## 📋 Table of Contents
 
-1. [Architecture & Configurability](#-architecture--configurability)
-2. [Environment Variables Reference](#-environment-variables-reference)
-3. [Customizing Services & Portfolio](#-customizing-services--portfolio)
-4. [Design System & Styling Tokens](#-design-system--styling-tokens)
-5. [Connecting Inquiries to Google Sheets](#-connecting-inquiries-to-google-sheets)
-6. [Deployment to Static Hosting / CDNs](#-deployment-to-static-hosting--cdns)
-7. [Automated Verification & Audits](#-automated-verification--audits)
+1. [Architecture & Single Source of Truth](#-architecture--single-source-of-truth)
+2. [Error Elevation & Resiliency](#-error-elevation--resiliency)
+3. [Environment Variables Reference](#-environment-variables-reference)
+4. [CMS Content Management (TinaCMS)](#-cms-content-management-tinacms)
+5. [Automated SEO & Structured Data Generation](#-automated-seo--structured-data-generation)
+6. [Design System & Styling Tokens](#-design-system--styling-tokens)
+7. [Inquiry Lead Capture](#-inquiry-lead-capture)
+8. [Cloudflare Pages Deployment Guide](#-cloudflare-pages-deployment-guide)
+9. [Automated Verification & Audits](#-automated-verification--audits)
 
 ---
 
-## ⚙️ Architecture & Configurability
+## ⚙️ Architecture & Single Source of Truth
 
-The project features a **centralized configuration architecture** designed to be cloned and customized for any stylist or salon without modifying component code:
+The project features a **centralized configuration and content architecture** designed for easy client customization without modifying component code:
 
-- **Single Source of Truth (`src/config/site.ts`)**: Consolidates all business identity, direct contact information, geographical coordinates, social links, and SEO metadata.
-- **Dynamic SEO & Schema.org**: The Vite build pipeline (`vite.config.ts`) dynamically injects canonical tags, OpenGraph data, and a pre-rendered Schema.org `HairSalon` JSON-LD payload directly into the static HTML bundle.
-- **Modular Data Collections**:
-  - Services catalog: `src/data/services.ts`
-  - Portfolio showcase images: `src/data/portfolio.ts`
-  - Design tokens: `src/styles/tokens.ts`
+- **Single Source of Truth (`src/config/site.ts` & `src/content/`)**:
+  All content is decoupled into structured JSON files under `src/content/`:
+  - `site.json`: Business identity, contact details, geo coordinates, opening hours, address, and metadata.
+  - `hero.json`: Credentials badge, primary headline, subheading, availability notice, and Instagram links.
+  - `services.json`: Array of service offerings, durations, pricing, deliverables, and Cal.com slugs.
+  - `portfolio.json`: Showcase gallery images, alt texts, and style category tags.
+  - `events.json`: On-location collaborations, bridal party, and event styling descriptions.
+- **Unified Config Module (`src/config/site.ts`)**:
+  Exports typed configurations (`SITE_CONFIG`, `HERO_CONTENT`, `EVENTS_CONTENT`, `SERVICES_CONTENT`, `PORTFOLIO_CONTENT`) and dynamically constructs Schema.org `HairSalon` JSON-LD payloads without arbitrary fallbacks or multiple `||` chains.
+- **Vite Performance Best Practices**:
+  - Modal code-splitting via `React.lazy` (`BookingModal` and `AdminMockup`) to ensure a lean initial JavaScript bundle.
+  - High-priority LCP preloading for the hero image (`fetchpriority="high"`, WebP format).
+  - Modern typography preconnecting to Google Fonts with `font-display: swap`.
+
+---
+
+## 🛡️ Error Elevation & Resiliency
+
+To prevent silent failures and ensure issues are immediately visible during development and production:
+
+1. **React Error Boundary (`src/components/ErrorBoundary.tsx`)**:
+   - Wraps the application root to capture render and lifecycle crashes.
+   - Elevates clear error messages, expandable component hierarchy stacks, a one-click reload button, and a clipboard copy tool for rapid debugging.
+2. **Global Error Notifier (`src/components/GlobalErrorNotifier.tsx`)**:
+   - Listens to global `window.onerror` and `unhandledrejection` events for asynchronous script and network crashes.
+   - Displays a visible, non-blocking toast banner with the exact error details.
+3. **Form Error Elevation (`src/components/InquiryModule.tsx`)**:
+   - If Google Sheets lead transmission encounters a network failure, the error is elevated directly in the UI with instant direct email and telephone fallbacks.
+4. **Build Pipeline Diagnostics (`scripts/build.js`)**:
+   - Validates each compilation step (dynamic SEO generation, TinaCMS compilation, and Vite bundle generation) and formats any failure with high-visibility terminal banners.
 
 ---
 
 ## 🔑 Environment Variables Reference
 
-To make deployment and branding incredibly clean, all visual styling, copy, contact numbers, hours, and descriptions are defined directly in code as a unified static config inside `src/config/site.ts`.
+Visual styling, branding, contact info, hours, and descriptions are stored in `src/content/site.json`. Technical integrations and hosting settings remain in `.env`:
 
-Only technical integrations, API endpoints, and platform-specific environment settings remain in your `.env` or hosting provider dashboards:
-
-| Variable Name           | Default Value                    | Description                                                            |
-| :---------------------- | :------------------------------- | :--------------------------------------------------------------------- |
-| `VITE_SITE_URL`         | `https://hairbyapril.vercel.app` | Production root URL (used for canonical links, sitemap, and OpenGraph) |
-| `VITE_CAL_USERNAME`     | `ariel-anders`                   | Cal.com username for embedded booking modal                            |
-| `VITE_CAL_DEFAULT_SLUG` | `april-demo`                     | Default Cal.com event type slug                                        |
-| `VITE_GOOGLE_SHEET_URL` | `""`                             | Google Apps Script webhook for form lead capture                       |
-
-To deploy for a new client, duplicate `.env.example` to `.env` and customize these integration values. All content edits should be made directly in `src/config/site.ts`.
+| Variable Name           | Default / Example                | Purpose                                                            |
+| :---------------------- | :------------------------------- | :----------------------------------------------------------------- |
+| `VITE_SITE_URL`         | `https://hairbyapril.pages.dev/` | Production root URL for canonical tags, XML sitemap, and OpenGraph |
+| `VITE_GOOGLE_SHEET_URL` | `""`                             | Google Apps Script webhook URL for inquiry lead capture            |
+| `VITE_TINA_CLIENT_ID`   | `""`                             | Tina Cloud Client ID (from [tina.io](https://tina.io))             |
+| `TINA_TOKEN`            | `""`                             | Tina Cloud Content API Token                                       |
+| `VITE_TINA_BRANCH`      | `"main"`                         | Git branch for TinaCMS cloud synchronization                       |
 
 ---
 
-## 💇 Customizing Services & Portfolio
+## 💇 CMS Content Management (TinaCMS)
 
-### 1. Updating the Service Catalog (`src/data/services.ts`)
+This project integrates TinaCMS for full visual and headless content management:
 
-Services are defined as typed objects in `SERVICES`. Each item supports custom deliverables, pricing, duration, and individual Cal.com booking slugs:
+- **Tina Dashboard**: Navigate to `/admin/index.html` to access the live Tina Cloud editor.
+- **Collections**:
+  - `hero`: Headline, credentials badge, availability notice, subheading, Instagram.
+  - `services`: Complete list of services, prices, durations, and deliverables.
+  - `portfolio`: Showcase gallery images, alt text, and tags.
+  - `events`: Title and copy for collaborations.
+  - `site`: Studio name, stylist name, browser title, meta description, contact email/phone, and address.
+- **Sandbox Preview**: Add `?admin=true` or `#admin` to the site URL to preview content adjustments in real time with interactive controls.
 
-```typescript
-export const SERVICES: Service[] = [
-  {
-    id: "curly-cut-finish",
-    category: "curly",
-    name: "Curly Hair Cut & Finish",
-    price: "$175",
-    duration: "90 mins",
-    description: "Customized cutting and shaping for your curl pattern.",
-    deliverables: [
-      "Customized haircut & curl styling",
-      "Cleansing & conditioning wash",
-      "At-home routine guidance",
-    ],
-    calSlug: "curly-cut", // routes modal directly to this Cal.com event
-  },
-  // Add additional services here...
-];
-```
+---
 
-### 2. Updating Showcase Photos (`src/data/portfolio.ts`)
+## 🌐 Automated SEO & Structured Data Generation
 
-The style gallery loads photos from `SHOWCASE_IMAGES`. Replace image URLs and descriptions to showcase real client work:
+SEO files are generated dynamically from the single source of truth during `npm run build` via `scripts/generate-seo.mjs`:
 
-```typescript
-export const SHOWCASE_IMAGES: ShowcaseImage[] = [
-  {
-    id: "showcase-curly-cut",
-    image: "/images/portfolio-curly.webp", // Local file or remote CDN URL
-    alt: "Dry curly haircut and shape definition by April",
-    tag: "Curly Cut",
-  },
-  // ...
-];
-```
+1. **`public/sitemap.xml` & `dist/sitemap.xml`**:
+   Dynamically generated containing the active canonical domain and today's ISO date.
+2. **`public/robots.txt` & `dist/robots.txt`**:
+   Configures search engine crawlers and explicitly references the dynamic sitemap location.
+3. **`public/llms.txt` & `dist/llms.txt`**:
+   Provides an up-to-date Markdown digest of services, pricing, credentials, and booking instructions for AI search agents and LLM indexers.
+4. **Schema.org Structured Data (`index.html`)**:
+   Injects a full `HairSalon` LocalBusiness JSON-LD payload into the `<head>` with accurate service catalogs, coordinates, and contact details.
 
 ---
 
 ## 🎨 Design System & Styling Tokens
 
-The application strictly avoids arbitrary inline CSS by leveraging semantic design tokens in `src/styles/tokens.ts`:
+Styling utilizes Tailwind CSS v4 design tokens in `src/styles/tokens.ts`:
 
-- `TOKENS.button.primary`: Standard pill CTA button
-- `TOKENS.button.navAction`: Polished header navigation action
-- `TOKENS.card.base`: Standard surface card with responsive border radius
-- `TOKENS.input.text`: Styled form inputs with focus rings
-- `TOKENS.badge.credentials`: Subtle brand credential pill
-
-To adjust the primary brand aesthetic (e.g. switching from rose to emerald or copper), modify the `@theme` block in `src/index.css` and the color tokens in `src/styles/tokens.ts`.
+- `TOKENS.button.primary`: Primary high-emphasis CTA button.
+- `TOKENS.button.navAction`: Polished header navigation action.
+- `TOKENS.card.base`: Standard elevated surface with rounded corners.
+- `TOKENS.card.service`: Dedicated service card styling.
+- `TOKENS.badge.credentials`: Subtle brand credential pill.
 
 ---
 
-## 📊 Connecting Inquiries to Google Sheets
+## 📊 Inquiry Lead Capture
 
-The **Inquiry Module** allows clients to request wedding parties and event styling. Submissions can be piped directly into a Google Sheet without setting up a database:
+The **Inquiry Module** allows clients to submit event bookings and styling requests.
 
-### Step 1: Create Your Google Sheet
+### Setup Instructions for Google Sheets:
 
-Create a new Google Sheet and set the first row (A1 to G1) as:
-`Timestamp`, `Name`, `Email`, `Phone`, `EventType`, `PartySize`, `DateLocation`, `Notes`
-
-### Step 2: Add Google Apps Script
-
-1. Navigate to **Extensions** > **Apps Script** in the spreadsheet menu.
-2. Paste the following script into `Code.gs`:
-
-```javascript
-function doPost(e) {
-  try {
-    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-    var data = JSON.parse(e.postData.contents);
-    sheet.appendRow([
-      new Date(),
-      data.name,
-      data.email,
-      data.phone,
-      data.eventType,
-      data.partySize,
-      data.dateLocation,
-      data.notes,
-    ]);
-    return ContentService.createTextOutput(
-      JSON.stringify({ status: "success" })
-    ).setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(
-      JSON.stringify({ status: "error", message: err.toString() })
-    ).setMimeType(ContentService.MimeType.JSON);
-  }
-}
-```
-
-3. Click **Deploy** > **New Deployment** > Select **Web app**.
-4. Set **Execute as** to `Me`, and **Who has access** to `Anyone`.
-5. Deploy and copy the Web App URL.
-
-### Step 3: Set Environment Variable
-
-Add the URL to your deployment environment:
-
-```env
-VITE_GOOGLE_SHEET_URL="https://script.google.com/macros/s/.../exec"
-```
+1. Create a Google Sheet with columns: `Timestamp`, `Name`, `Email`, `Phone`, `EventType`, `PartySize`, `DateLocation`, `Notes`.
+2. Go to **Extensions** > **Apps Script** and deploy a Web App with `doPost(e)` returning JSON.
+3. Set the Web App access to **Anyone**.
+4. Add the URL to `VITE_GOOGLE_SHEET_URL` in your Cloudflare Pages dashboard or `.env`.
 
 ---
 
-## 🚀 Deployment to Static Hosting / CDNs
+## 🚀 Cloudflare Pages Deployment Guide
 
-This project is pre-configured for static single-page application (SPA) hosting across all major providers. Build output is generated in `dist/`.
+This project is tailored specifically for **Cloudflare Pages**.
 
-### 1. Vercel
+### Static Assets & Routing:
 
-- Zero-config deployment.
-- `vercel.json` is included at the root, configuring SPA rewrites, clean URLs, security headers, and static asset caching policies.
-- Command: `vercel --prod` or link your GitHub repository.
+- `public/_headers`: Pre-configured with 1-year immutable caching for `/assets/*`, immediate revalidation (`max-age=0, must-revalidate`) for HTML/XML/JSON manifests, and strict security headers (`X-Content-Type-Options: nosniff`, `X-Frame-Options: SAMEORIGIN`, `Referrer-Policy: strict-origin-when-cross-origin`).
+- `public/_redirects`: Configures SPA routing (`/* /index.html 200`) and TinaCMS admin dashboard access (`/admin/* /admin/index.html 200`).
+- `public/404.html`: Fallback redirect script for deep-linked direct visits.
 
-### 2. Cloudflare Pages & Wrangler CLI
+### Deployment Method A: Cloudflare Dashboard (Git Integration)
 
-This project is optimized for deployment via Cloudflare Pages using either Git integrations or direct CLI deployment with **Wrangler**. 
-
-#### 📦 Preferred Configuration (Based on Bun)
-Since the project uses Bun as the package manager (`bun.lock`), your deployment settings should be configured as follows:
-
-* **Project Name**: `boomtick-portfolio-client-stylist-site`
-* **Build Command**: `bun run build`
-* **Deploy Command**: `npx wrangler deploy` (or `npx wrangler pages deploy dist --project-name=boomtick-portfolio-client-stylist-site`)
-* **Build Output Directory (Path)**: `dist`
-* **Non-production Branch Deploy Command**: `npx wrangler versions upload` (for staging previews)
-
-#### 🌐 Method A: Cloudflare Dashboard (Git-connected)
-1. Go to your **Cloudflare Dashboard** > **Workers & Pages** > **Pages** > **Create a project** > **Connect to Git**.
+1. In the **Cloudflare Dashboard**, navigate to **Workers & Pages** > **Create application** > **Pages** > **Connect to Git**.
 2. Select your repository.
-3. Under **Build settings**, configure:
-   * **Framework preset**: `Vite`
-   * **Build command**: `bun run build` (or `npm run build` if using npm)
-   * **Build output directory**: `dist`
-4. Under **Environment variables**, make sure to add your site URL:
-   * `VITE_SITE_URL` = `https://boomtick-portfolio-client-stylist-site.pages.dev` (or your custom domain)
+3. Configure build settings:
+   - **Framework preset**: `None` or `Vite`
+   - **Build command**: `npm run build`
+   - **Build output directory**: `dist`
+4. Add Environment Variables:
+   - `VITE_SITE_URL` = `https://hairbyapril.pages.dev` (or your custom domain)
+   - `VITE_TINA_CLIENT_ID`, `TINA_TOKEN`, `VITE_TINA_BRANCH` (if connecting Tina Cloud)
+5. Deploy!
 
-#### 💻 Method B: Direct Wrangler CLI Deployment
-If you prefer deploying directly via your terminal or a custom CI/CD pipeline using Wrangler:
+### Deployment Method B: Wrangler CLI
 
-1. **Login to Cloudflare**:
-   ```bash
-   npx wrangler login
-   ```
+```bash
+# 1. Build the production application
+npm run build
 
-2. **Build the Application**:
-   Using Bun:
-   ```bash
-   bun run build
-   ```
-   Or using npm:
-   ```bash
-   npm run build
-   ```
-
-3. **Deploy to Production**:
-   Deploy your static `dist` folder to Cloudflare Pages (adding `--commit-dirty=true` silences Wrangler warnings regarding any uncommitted files in your workspace):
-   ```bash
-   npx wrangler pages deploy dist --project-name=boomtick-portfolio-client-stylist-site --commit-dirty=true
-   ```
-
-   > [!TIP]
-   > **Troubleshooting Authentication (Error 10000)**:
-   > If you see `Authentication error [code: 10000]` when deploying, your custom `CLOUDFLARE_API_TOKEN` lacks sufficient permissions.
-   > To fix this:
-   > 1. Go to **[Cloudflare Profile -> API Tokens](https://dash.cloudflare.com/profile/api-tokens)**.
-   > 2. Create or edit your API token.
-   > 3. Under **Permissions**, ensure you include:
-   >    - **Account** -> **Cloudflare Pages** -> **Edit**
-   >    - **Account** -> **Members** -> **Read**
-   > 4. Save and retry. Alternatively, clear the `CLOUDFLARE_API_TOKEN` env variable and run `npx wrangler login` to authenticate interactively.
-
-4. **Staging / Preview Deploys**:
-   To push a preview deployment for non-production branches:
-   ```bash
-   npx wrangler versions upload
-   ```
-
-### 3. Netlify
-
-- **Build command**: `npm run build`
-- **Publish directory**: `dist`
-- The bundled `public/_redirects` ensures all client-side routes fallback cleanly to `index.html`.
-
-### 4. GitHub Pages / AWS S3 / CloudFront
-
-- The build produces `dist/404.html` (an automatic redirect script) ensuring deep links resolve properly on static servers without rewrite rules.
+# 2. Deploy directly via Wrangler
+npx wrangler pages deploy dist --project-name=hairbyapril
+```
 
 ---
 
 ## 🧪 Automated Verification & Audits
 
-Run the quality suites before committing or deploying:
+Run the full audit suite to ensure code health, build integrity, and SEO compliance:
 
 ```bash
-# 1. Full static build (injects dynamic canonical URL, sitemap, and Schema.org)
-npm run build
-
-# 2. Run the 35-point SEO, LCP, and CDN configuration audit
+# Run the 35-point SEO, LCP, and CDN configuration audit
 npm run test:seo
 
-# 3. Run ESLint and TypeScript checks
+# Run Knip unused file, export, and dependency auditor
+npm run knip
+
+# Run ESLint and TypeScript compilation checks
 npm run lint
 
-# 4. Run Knip unused dependency & export auditor
-npm run audit:knip
-
-# 5. Format all project files
-npm run format
+# Run all quality audits together
+npm run audit
 ```

@@ -1,5 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@5/overview/configuration-schema.json",
-  "entry": ["scripts/**/*.mjs"],
-  "project": ["src/**/*.{ts,tsx,css}", "scripts/**/*.mjs"]
+  "entry": ["tina/config.ts", "scripts/**/*.{js,mjs}"],
+  "project": ["src/**/*.{ts,tsx,css}", "scripts/**/*.{js,mjs}"]
 }

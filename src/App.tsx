@@ -6,27 +6,73 @@ import { EventsCollaboration } from "./components/EventsCollaboration";
 import { InquiryModule } from "./components/InquiryModule";
 import { Footer } from "./components/Footer";
 import { SchemaOrg } from "./components/SchemaOrg";
-import { SERVICES, CLIENT_BIO, Service } from "./data/services";
+import {
+  SITE_CONFIG,
+  HERO_CONTENT,
+  EVENTS_CONTENT,
+  SERVICES_CONTENT,
+  PORTFOLIO_CONTENT,
+} from "./config/site";
 import { TOKENS } from "./styles/tokens";
 import { Clock, ArrowRight, Check, Calendar } from "lucide-react";
+import type {
+  HeroContent,
+  ServiceItem,
+  PortfolioItem,
+  EventsContent,
+} from "./types/content";
 
-// Code-split BookingModal to reduce initial bundle size for faster LCP
+// Code-split heavy modals to optimize initial bundle and LCP
 const BookingModal = lazy(() =>
   import("./components/BookingModal").then((mod) => ({
     default: mod.BookingModal,
   }))
 );
 
-export default function App() {
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const [isBookingOpen, setIsBookingOpen] = useState(false);
+const AdminMockup = lazy(() =>
+  import("./components/AdminMockup").then((mod) => ({
+    default: mod.AdminMockup,
+  }))
+);
 
-  const handleOpenBooking = (service?: Service) => {
-    setSelectedService(service || null);
+export default function App() {
+  const [selectedService, setSelectedService] = useState<ServiceItem | null>(
+    null
+  );
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      return (
+        params.get("admin") === "true" || window.location.hash === "#admin"
+      );
+    }
+    return false;
+  });
+
+  // Dynamic Content States
+  const [heroState, setHeroState] = useState<HeroContent>(HERO_CONTENT);
+  const [eventsState, setEventsState] = useState<EventsContent>(EVENTS_CONTENT);
+  const [servicesState, setServicesState] =
+    useState<ServiceItem[]>(SERVICES_CONTENT);
+  const [portfolioState, setPortfolioState] =
+    useState<PortfolioItem[]>(PORTFOLIO_CONTENT);
+  const [emailState, setEmailState] = useState(SITE_CONFIG.email);
+  const [phoneState, setPhoneState] = useState(SITE_CONFIG.phone);
+  const [instagramState, setInstagramState] = useState(SITE_CONFIG.instagram);
+  const [instagramUrlState, setInstagramUrlState] = useState(
+    SITE_CONFIG.instagramUrl
+  );
+  const [heroImageState, setHeroImageState] = useState(
+    SITE_CONFIG.heroPreloadImage
+  );
+
+  const handleOpenBooking = (service?: ServiceItem) => {
+    setSelectedService(service ?? null);
     setIsBookingOpen(true);
   };
 
-  return (
+  const mainSiteContent = (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-rose-100 selection:text-rose-900">
       {/* Dynamic Schema.org JSON-LD Controller */}
       <SchemaOrg />
@@ -35,10 +81,14 @@ export default function App() {
       <Navbar onBookAppointment={() => handleOpenBooking()} />
 
       {/* 1. Primary Hero Section (LCP Optimized) */}
-      <Hero onBookAppointment={() => handleOpenBooking()} />
+      <Hero
+        onBookAppointment={() => handleOpenBooking()}
+        heroContent={heroState}
+        heroImage={heroImageState}
+      />
 
       {/* 2. Signature Disciplines: Pin-Up & Curly Cuts Showcase Grid */}
-      <StyleShowcase />
+      <StyleShowcase images={portfolioState} />
 
       {/* 3. Services Menu (Two Core Disciplines) */}
       <section
@@ -46,26 +96,24 @@ export default function App() {
         className="py-20 md:py-28 bg-white scroll-mt-20 border-b border-stone-200"
       >
         <div className="max-w-6xl mx-auto px-6">
-          {/* Header */}
           <div className="max-w-2xl mx-auto text-center mb-10">
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 tracking-tight">
               Services & Pricing
             </h2>
           </div>
 
-          {/* Consolidated Single Scheduling Callout Banner */}
+          {/* Consolidated Scheduling Callout Banner */}
           <div className={`mb-10 max-w-2xl mx-auto ${TOKENS.card.callout}`}>
             <Calendar className={`w-4 h-4 ${TOKENS.accent.icon} shrink-0`} />
             <span>
-              <strong>Scheduling Logistics:</strong> Main appointment
-              availability is on <strong>Tuesdays</strong>. On-location hair
-              stylist appointments in San Francisco.
+              <strong>Scheduling Logistics:</strong>{" "}
+              {heroState.availabilityNotice}
             </span>
           </div>
 
           {/* 2 Clean Core Services Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 items-stretch">
-            {SERVICES.map((service) => (
+            {servicesState.map((service) => (
               <div
                 id={`service-card-${service.id}`}
                 key={service.id}
@@ -126,26 +174,73 @@ export default function App() {
         </div>
       </section>
 
-      {/* 3. Flexible Events & Productions (Brief Lead-in) */}
-      <EventsCollaboration />
+      {/* 4. Flexible Events & Productions */}
+      <EventsCollaboration content={eventsState} />
 
-      {/* 4. Custom Booking & Event Inquiry Form */}
+      {/* 5. Custom Booking & Event Inquiry Form */}
       <InquiryModule />
 
-      {/* Footer Branding & Standard Navigation */}
-      <Footer onBookAppointment={() => handleOpenBooking()} />
+      {/* Footer Branding & Navigation */}
+      <Footer
+        onBookAppointment={() => handleOpenBooking()}
+        onToggleAdmin={() => {
+          setIsAdminOpen(true);
+        }}
+        email={emailState}
+        phone={phoneState}
+        instagram={instagramState}
+        instagramUrl={instagramUrlState}
+      />
 
-      {/* Lazy-loaded Cal.com Embed Modal */}
+      {/* Code-split Cal.com Embed Modal */}
       {isBookingOpen && (
         <Suspense fallback={null}>
           <BookingModal
             isOpen={isBookingOpen}
             onClose={() => setIsBookingOpen(false)}
             eventSlug={selectedService?.calSlug}
-            calUsername={CLIENT_BIO.calUsername}
+            calUsername={SITE_CONFIG.calUsername}
           />
         </Suspense>
       )}
     </div>
   );
+
+  if (isAdminOpen) {
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-stone-950 text-stone-200 flex items-center justify-center font-mono text-sm">
+            Loading CMS Portal...
+          </div>
+        }
+      >
+        <AdminMockup
+          heroContent={heroState}
+          setHeroContent={setHeroState}
+          eventsContent={eventsState}
+          setEventsContent={setEventsState}
+          servicesContent={servicesState}
+          setServicesContent={setServicesState}
+          portfolioContent={portfolioState}
+          setPortfolioContent={setPortfolioState}
+          onClose={() => setIsAdminOpen(false)}
+          email={emailState}
+          setEmail={setEmailState}
+          phone={phoneState}
+          setPhone={setPhoneState}
+          instagram={instagramState}
+          setInstagram={setInstagramState}
+          instagramUrl={instagramUrlState}
+          setInstagramUrl={setInstagramUrlState}
+          heroImage={heroImageState}
+          setHeroImage={setHeroImageState}
+        >
+          {mainSiteContent}
+        </AdminMockup>
+      </Suspense>
+    );
+  }
+
+  return mainSiteContent;
 }

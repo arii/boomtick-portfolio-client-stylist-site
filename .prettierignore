@@ -2,3 +2,5 @@ dist
 node_modules
 bun.lock
 package-lock.json
+tina/__generated__
+tina/tina-lock.json

@@ -3,15 +3,80 @@ import react from "@vitejs/plugin-react";
 import fs from "fs";
 import path from "path";
 import { defineConfig, Plugin } from "vite";
-import { SITE_CONFIG, generateSiteSchema } from "./src/config/site";
-import { SERVICES } from "./src/data/services";
+import {
+  SITE_CONFIG,
+  SERVICES_CONTENT,
+  generateSiteSchema,
+} from "./src/config/site";
+
+function adminRedirectPlugin(): Plugin {
+  return {
+    name: "admin-redirect-middleware",
+    configureServer(server) {
+      server.middlewares.use((req, res, next) => {
+        if (
+          req.url &&
+          (req.url === "/admin" ||
+            req.url === "/admin/" ||
+            req.url.startsWith("/admin/index.html"))
+        ) {
+          const indexPath = path.resolve(__dirname, "public/admin/index.html");
+          if (fs.existsSync(indexPath)) {
+            let html = fs.readFileSync(indexPath, "utf8");
+
+            const monkeyPatch = `
+  <script>
+    (function() {
+      const originalFetch = window.fetch;
+      window.fetch = function(input, init) {
+        if (typeof input === 'string') {
+          if (input.includes('localhost:4001/graphql')) {
+            input = input.replace('http://localhost:4001/graphql', '/tina-graphql');
+          } else if (input.includes('localhost:4001')) {
+            input = input.replace('http://localhost:4001', '/tina-admin-backend');
+          }
+        }
+        return originalFetch.call(this, input, init);
+      };
+
+      const OriginalWebSocket = window.WebSocket;
+      window.WebSocket = function(url, protocols) {
+        if (typeof url === 'string' && url.includes('localhost:4001')) {
+          const secure = window.location.protocol === 'https:';
+          const newHost = window.location.host;
+          url = url.replace('ws://localhost:4001', (secure ? 'wss://' : 'ws://') + newHost + '/tina-admin-backend');
+          url = url.replace('http://localhost:4001', (secure ? 'https://' : 'http://') + newHost + '/tina-admin-backend');
+        }
+        return new OriginalWebSocket(url, protocols);
+      };
+      window.WebSocket.prototype = OriginalWebSocket.prototype;
+    })();
+  </script>
+            `;
+
+            html = html.replace(
+              /http:\/\/localhost:4001/g,
+              "/tina-admin-backend"
+            );
+            html = html.replace("<head>", "<head>" + monkeyPatch);
+
+            res.writeHead(200, { "Content-Type": "text/html" });
+            res.end(html);
+            return;
+          }
+        }
+        next();
+      });
+    },
+  };
+}
 
 function dynamicSeoAndCdnPlugin(): Plugin {
   return {
     name: "dynamic-seo-and-cdn",
     transformIndexHtml(html: string) {
       const schemaJson = JSON.stringify(
-        generateSiteSchema(SITE_CONFIG, SERVICES),
+        generateSiteSchema(SITE_CONFIG, SERVICES_CONTENT),
         null,
         2
       );
@@ -50,7 +115,7 @@ function dynamicSeoAndCdnPlugin(): Plugin {
         `<meta name="author" content="${SITE_CONFIG.studioName}" />`
       );
 
-      // 5. Dynamic OpenGraph and Twitter Media Images (Updated illustrations)
+      // 5. Dynamic OpenGraph and Twitter Media Images
       transformed = transformed.replace(
         /<meta\s+property="og:image"\s+content="[^"]*"\s*\/?>/i,
         `<meta property="og:image" content="${SITE_CONFIG.ogImage}" />`
@@ -106,7 +171,7 @@ function dynamicSeoAndCdnPlugin(): Plugin {
             fs.writeFileSync(robotsPath, robots, "utf8");
           }
 
-          // 3. Ensure 404.html exists in dist for static CDN fallbacks (e.g. GitHub Pages / S3)
+          // 3. Ensure 404.html exists in dist for static CDN fallbacks
           const notFoundPath = path.join(distDir, "404.html");
           if (!fs.existsSync(notFoundPath)) {
             const public404 = path.resolve(__dirname, "public/404.html");
@@ -114,29 +179,13 @@ function dynamicSeoAndCdnPlugin(): Plugin {
               fs.copyFileSync(public404, notFoundPath);
             }
           }
-
-          // 4. Dynamically generate llms.txt based on SITE_CONFIG and SERVICES
-          const servicesList = SERVICES.map(
-            (s) =>
-              `- **${s.name}** — ${s.price} (${s.duration || "N/A"})\n  - ${s.description}`
-          ).join("\n");
-
-          const llmsContent = `# ${SITE_CONFIG.studioName}\n\n> ${SITE_CONFIG.description}\n\n## Overview\n- **Stylist:** ${SITE_CONFIG.stylistName}\n- **Experience:** ${SITE_CONFIG.credentials}\n- **Service Area:** ${SITE_CONFIG.locationDisplay} (${SITE_CONFIG.logisticsNotice})\n- **Website:** ${SITE_CONFIG.canonicalUrl}\n\n## Contact Information\n- **Email:** ${SITE_CONFIG.email}\n- **Phone / SMS:** ${SITE_CONFIG.phoneDisplay}\n- **Instagram:** ${SITE_CONFIG.instagramUrl} (${SITE_CONFIG.instagram})\n\n## Services & Pricing\n${servicesList}\n- **Weddings, Productions & Events** — Custom Quote\n  - On-location hair styling for bridal parties, commercial shoots, vintage events, and theatrical productions.\n\n## How to Book\n- **Direct Appointments:** Book individual appointments online directly on the website via Cal.com.\n- **Events & Collaborations:** Submit event specifics via the on-site inquiry form, or email ${SITE_CONFIG.email} / text ${SITE_CONFIG.phoneDisplay}.\n`;
-
-          fs.writeFileSync(path.join(distDir, "llms.txt"), llmsContent, "utf8");
-          fs.writeFileSync(
-            path.resolve(__dirname, "public/llms.txt"),
-            llmsContent,
-            "utf8"
-          );
-          fs.writeFileSync(
-            path.resolve(__dirname, "llms.txt"),
-            llmsContent,
-            "utf8"
-          );
         }
       } catch (err) {
-        console.warn("CDN post-build sync notice:", err);
+        console.error(
+          "🚨 [VITE BUILD HOOK ERROR] Failed during CDN post-build sync:",
+          err
+        );
+        throw err;
       }
     },
   };
@@ -145,7 +194,12 @@ function dynamicSeoAndCdnPlugin(): Plugin {
 export default defineConfig(({ command }) => {
   return {
     base: command === "build" ? "./" : "/",
-    plugins: [react(), tailwindcss(), dynamicSeoAndCdnPlugin()],
+    plugins: [
+      react(),
+      tailwindcss(),
+      dynamicSeoAndCdnPlugin(),
+      adminRedirectPlugin(),
+    ],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "."),
@@ -168,11 +222,23 @@ export default defineConfig(({ command }) => {
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
+      port: 3000,
+      host: "0.0.0.0",
       hmr: process.env.DISABLE_HMR !== "true",
-      // Disable file watching when DISABLE_HMR is true to save CPU during agent edits.
       watch: process.env.DISABLE_HMR === "true" ? null : {},
+      proxy: {
+        "/tina-admin-backend": {
+          target: "http://localhost:4001",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/tina-admin-backend/, ""),
+          ws: true,
+        },
+        "/tina-graphql": {
+          target: "http://localhost:4001",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/tina-graphql/, "/graphql"),
+        },
+      },
     },
   };
 });

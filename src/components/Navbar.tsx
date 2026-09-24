@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Menu, X, Scissors, Instagram } from "lucide-react";
 import { TOKENS } from "../styles/tokens";
-import { CLIENT_BIO } from "../data/services";
+import { SITE_CONFIG } from "../config/site";
 
 interface NavbarProps {
   onBookAppointment: () => void;
@@ -29,12 +29,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookAppointment }) => {
               <Scissors className="w-3.5 h-3.5" />
             </span>
             <span className="font-serif text-lg font-bold tracking-tight text-stone-900">
-              {CLIENT_BIO.studioName}
+              {SITE_CONFIG.studioName}
             </span>
           </a>
         </div>
 
-        {/* Center Pillar: Desktop Nav Items (Complementary Serif/Sans Alignment) */}
+        {/* Center Pillar: Desktop Nav Items */}
         <div className="hidden md:flex items-center justify-center gap-8">
           {navItems.map((item) => (
             <a
@@ -47,15 +47,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookAppointment }) => {
           ))}
         </div>
 
-        {/* Right Pillar: Action Button & IG (Clean group spacing) */}
+        {/* Right Pillar: Action Button & IG */}
         <div className="hidden md:flex items-center justify-end flex-1 gap-4">
           <a
-            href={CLIENT_BIO.instagramUrl}
+            href={SITE_CONFIG.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={TOKENS.button.icon}
-            aria-label={`Instagram ${CLIENT_BIO.instagram}`}
-            referrerPolicy="no-referrer"
+            aria-label={`Instagram ${SITE_CONFIG.instagram}`}
           >
             <Instagram className="w-4.5 h-4.5" />
           </a>
@@ -68,15 +67,14 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookAppointment }) => {
           </button>
         </div>
 
-        {/* Mobile menu button (Fat-finger & Overflow protection) */}
+        {/* Mobile menu button */}
         <div className="md:hidden flex items-center gap-4">
           <a
-            href={CLIENT_BIO.instagramUrl}
+            href={SITE_CONFIG.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={TOKENS.button.iconMobile}
             aria-label="Instagram"
-            referrerPolicy="no-referrer"
           >
             <Instagram className="w-4.5 h-4.5" />
           </a>

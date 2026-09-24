@@ -14,4 +14,4 @@ Allow: /
 User-agent: PerplexityBot
 Allow: /
 
-Sitemap: https://hairbyapril.vercel.app/sitemap.xml
+Sitemap: https://hairbyapril.pages.dev/sitemap.xml

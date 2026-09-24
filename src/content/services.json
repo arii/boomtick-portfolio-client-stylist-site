@@ -1,0 +1,30 @@
+[
+  {
+    "id": "curly-cut-finish",
+    "name": "Curly Hair Cut & Finish",
+    "price": "$175",
+    "duration": "90 mins",
+    "description": "Customized cutting, shaping, and styling tailored to your natural wave and curl pattern.",
+    "deliverables": [
+      "Customized haircut & curl styling",
+      "Cleansing & conditioning wash",
+      "Natural curl styling & finish",
+      "At-home routine guidance"
+    ],
+    "calSlug": "april-demo"
+  },
+  {
+    "id": "vintage-set-updo",
+    "name": "Vintage Hair & Updos",
+    "price": "$145",
+    "duration": "90 mins",
+    "description": "Classic victory rolls, bumper bangs, waves, and pin-up styling built for longevity.",
+    "deliverables": [
+      "Classic victory rolls, bumper bangs, or retro waves",
+      "Secure pin placement built for all-day hold",
+      "Vintage updo or brush-out",
+      "Accessories & hair flower placement"
+    ],
+    "calSlug": "april-demo"
+  }
+]

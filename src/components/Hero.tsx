@@ -2,13 +2,20 @@ import React from "react";
 import { ArrowRight, Calendar, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
 import { TOKENS } from "../styles/tokens";
-import { CLIENT_BIO } from "../data/services";
+import { HERO_CONTENT, SITE_CONFIG } from "../config/site";
+import type { HeroContent } from "../types/content";
 
 interface HeroProps {
   onBookAppointment: () => void;
+  heroContent?: HeroContent;
+  heroImage?: string;
 }
 
-export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
+export const Hero: React.FC<HeroProps> = ({
+  onBookAppointment,
+  heroContent = HERO_CONTENT,
+  heroImage = SITE_CONFIG.heroPreloadImage,
+}) => {
   return (
     <section
       id="hero"
@@ -28,17 +35,17 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
               <ShieldCheck
                 className={`w-4 h-4 ${TOKENS.accent.icon} shrink-0`}
               />
-              <span>{CLIENT_BIO.credentials}</span>
+              <span>{heroContent.badge}</span>
             </div>
 
             {/* Primary Heading */}
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-stone-900 tracking-tight leading-[1.12]">
-              {CLIENT_BIO.heroHeading}
+              {heroContent.headline}
             </h1>
 
             {/* Subtext */}
             <p className="text-base md:text-lg text-stone-600 font-sans leading-relaxed max-w-xl">
-              {CLIENT_BIO.heroSubtext}
+              {heroContent.subheading}
             </p>
 
             {/* Primary CTA */}
@@ -56,7 +63,7 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
             {/* Scheduling Availability Note */}
             <div className="pt-1 flex items-center gap-1.5 text-xs text-stone-500 font-sans">
               <Calendar className={`w-3.5 h-3.5 ${TOKENS.accent.icon}`} />
-              <span>{CLIENT_BIO.logisticsNotice}</span>
+              <span>{heroContent.availabilityNotice}</span>
             </div>
           </motion.div>
 
@@ -71,8 +78,8 @@ export const Hero: React.FC<HeroProps> = ({ onBookAppointment }) => {
               <div className="relative rounded-2xl overflow-hidden bg-stone-200 border border-stone-200/80 shadow-md aspect-[4/5]">
                 <img
                   id="hero-lcp-image"
-                  src={CLIENT_BIO.heroImage}
-                  alt={`${CLIENT_BIO.studioName} styling portfolio`}
+                  src={heroImage}
+                  alt={`${SITE_CONFIG.studioName} styling portfolio`}
                   width={480}
                   height={600}
                   fetchPriority="high"

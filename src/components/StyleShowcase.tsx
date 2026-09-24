@@ -1,8 +1,15 @@
 import React from "react";
-import { SHOWCASE_IMAGES } from "../data/portfolio";
+import { PORTFOLIO_CONTENT } from "../config/site";
 import { TOKENS } from "../styles/tokens";
+import type { PortfolioItem } from "../types/content";
 
-export const StyleShowcase: React.FC = () => {
+interface StyleShowcaseProps {
+  images?: PortfolioItem[];
+}
+
+export const StyleShowcase: React.FC<StyleShowcaseProps> = ({
+  images = PORTFOLIO_CONTENT,
+}) => {
   return (
     <section
       id="showcase"
@@ -10,7 +17,7 @@ export const StyleShowcase: React.FC = () => {
     >
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
-          {SHOWCASE_IMAGES.map((item) => (
+          {images.map((item) => (
             <div key={item.id} id={item.id} className={TOKENS.card.showcase}>
               <img
                 src={item.image}
@@ -19,7 +26,6 @@ export const StyleShowcase: React.FC = () => {
                 height={600}
                 loading="lazy"
                 decoding="async"
-                referrerPolicy="no-referrer"
                 className="w-full h-full object-cover object-top transition duration-300 group-hover:scale-102"
               />
             </div>

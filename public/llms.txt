@@ -6,7 +6,7 @@
 - **Stylist:** April
 - **Experience:** Licensed Professional • 15 Years of Experience
 - **Service Area:** San Francisco, CA (On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.)
-- **Website:** https://hairbyapril.vercel.app/
+- **Website:** https://hairbyapril.pages.dev/
 
 ## Contact Information
 - **Email:** hello@hairbyapril.com

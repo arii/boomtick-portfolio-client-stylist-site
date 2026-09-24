@@ -1,0 +1,55 @@
+{
+  "studioName": "Hair by April",
+  "stylistName": "April",
+  "credentials": "Licensed Professional • 15 Years of Experience",
+  "title": "Hair by April | Curly Cuts & Vintage Hair Stylist San Francisco",
+  "description": "Licensed professional specializing in curly hair cuts, vintage pin-up styling, and on-location events in San Francisco.",
+  "keywords": [
+    "curly hair cuts San Francisco",
+    "vintage hair stylist",
+    "victory rolls",
+    "pin-up hair SF",
+    "natural curl specialist",
+    "bridal hair SF",
+    "retro hair styling San Francisco"
+  ],
+  "email": "hello@hairbyapril.com",
+  "phone": "(415) 555-0192",
+  "emailFallback": "hello@hairbyapril.com",
+  "phoneFallback": "(415) 555-0192",
+  "instagram": "@hair.by.april_209",
+  "instagramUrl": "https://www.instagram.com/hair.by.april_209/",
+  "locationDisplay": "San Francisco, CA",
+  "logisticsNotice": "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
+  "address": {
+    "locality": "San Francisco",
+    "region": "CA",
+    "country": "US"
+  },
+  "geo": {
+    "latitude": 37.7749,
+    "longitude": -122.4194
+  },
+  "areaServed": ["San Francisco", "San Francisco Bay Area"],
+  "openingDays": ["Tuesday"],
+  "openingHours": {
+    "opens": "09:00",
+    "closes": "18:00"
+  },
+  "priceRange": "$$",
+  "heroHeading": "Curly hair cuts & authentic vintage styling.",
+  "heroSubtext": "San Francisco stylist specializing in curly cuts and classic vintage hair, with custom on-location styling available for events and productions.",
+  "ogImageRelative": "/assets/portfolio-4.webp",
+  "ogImageFallbackRelative": "/assets/og-cover.jpg",
+  "ogImageAlt": "Hair by April - Vintage Hair Styling & Curly Hair Specialist in San Francisco",
+  "ogImageWidth": 620,
+  "ogImageHeight": 758,
+  "heroPreloadImage": "/assets/portfolio-4.webp",
+  "portfolioImagesRelative": [
+    "/assets/portfolio-4.webp",
+    "/assets/portfolio-1.webp",
+    "/assets/portfolio-2.webp",
+    "/assets/portfolio-3.webp",
+    "/assets/portfolio-5.webp"
+  ]
+}

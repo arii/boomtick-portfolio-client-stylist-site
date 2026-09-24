@@ -1,27 +1,25 @@
 import React from "react";
 import { Calendar, ExternalLink, X } from "lucide-react";
 import { TOKENS } from "../styles/tokens";
-import { CLIENT_BIO } from "../data/services";
+import { SITE_CONFIG } from "../config/site";
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
   eventSlug?: string;
-  calUsername: string;
+  calUsername?: string;
 }
 
 export const BookingModal: React.FC<BookingModalProps> = ({
   isOpen,
   onClose,
-  eventSlug,
-  calUsername,
+  eventSlug = SITE_CONFIG.calDefaultSlug,
+  calUsername = SITE_CONFIG.calUsername,
 }) => {
   if (!isOpen) return null;
 
-  const activeSlug = eventSlug || CLIENT_BIO.calDefaultSlug;
-
-  const calUrl = `https://cal.com/${calUsername}/${activeSlug}?embed=true&theme=light`;
-  const directUrl = `https://cal.com/${calUsername}/${activeSlug}`;
+  const calUrl = `https://cal.com/${calUsername}/${eventSlug}?embed=true&theme=light`;
+  const directUrl = `https://cal.com/${calUsername}/${eventSlug}`;
 
   return (
     <div
@@ -38,7 +36,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               Book Your Appointment
             </h3>
             <p className="text-stone-500 text-xs sm:text-sm mt-1 font-sans">
-              {CLIENT_BIO.logisticsNotice} Select your preferred slot below.
+              {SITE_CONFIG.logisticsNotice} Select your preferred slot below.
             </p>
           </div>
           <button
@@ -54,7 +52,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         <div className="flex-1 border border-stone-200 rounded-xl overflow-hidden bg-stone-50 relative min-h-[480px]">
           <iframe
             src={calUrl}
-            title={`Book an appointment with ${CLIENT_BIO.name}`}
+            title={`Book an appointment with ${SITE_CONFIG.stylistName}`}
             className="w-full h-full min-h-[480px] border-0"
             loading="lazy"
           />
@@ -63,7 +61,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-stone-100 text-xs text-stone-500">
           <div className="flex items-center gap-1.5">
             <Calendar className={`w-3.5 h-3.5 ${TOKENS.accent.icon}`} />
-            <span>On-location appointments in San Francisco</span>
+            <span>
+              On-location appointments in {SITE_CONFIG.locationDisplay}
+            </span>
           </div>
           <a
             href={directUrl}

@@ -1,13 +1,25 @@
 import React from "react";
 import { Scissors } from "lucide-react";
 import { TOKENS } from "../styles/tokens";
-import { CLIENT_BIO } from "../data/services";
+import { SITE_CONFIG } from "../config/site";
 
 interface FooterProps {
   onBookAppointment: () => void;
+  onToggleAdmin?: () => void;
+  email?: string;
+  phone?: string;
+  instagram?: string;
+  instagramUrl?: string;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onBookAppointment }) => {
+export const Footer: React.FC<FooterProps> = ({
+  onBookAppointment,
+  onToggleAdmin,
+  email = SITE_CONFIG.email,
+  phone = SITE_CONFIG.phone,
+  instagram = SITE_CONFIG.instagram,
+  instagramUrl = SITE_CONFIG.instagramUrl,
+}) => {
   return (
     <footer className="bg-stone-900 text-stone-300 py-16 md:py-20 border-t border-stone-800">
       <div className="max-w-6xl mx-auto px-6">
@@ -20,48 +32,42 @@ export const Footer: React.FC<FooterProps> = ({ onBookAppointment }) => {
                 <Scissors className={`w-4 h-4 ${TOKENS.accent.icon}`} />
               </span>
               <span className="font-serif text-lg font-bold tracking-tight">
-                {CLIENT_BIO.studioName}
+                {SITE_CONFIG.studioName}
               </span>
             </div>
 
             {/* Tight vertically stacked contact information block */}
             <div className="flex flex-col gap-2 text-[13px] text-stone-400 font-sans">
-              {CLIENT_BIO.email && (
-                <a
-                  id="footer-email-link"
-                  href={`mailto:${CLIENT_BIO.email}`}
-                  className="hover:text-white transition w-fit"
-                >
-                  {CLIENT_BIO.email}
-                </a>
-              )}
-              {CLIENT_BIO.phone && (
-                <a
-                  id="footer-phone-link"
-                  href={`tel:${CLIENT_BIO.phone.replace(/[^0-9]/g, "")}`}
-                  className="hover:text-white transition w-fit"
-                >
-                  {CLIENT_BIO.phone}
-                </a>
-              )}
-              {CLIENT_BIO.instagram && (
-                <a
-                  id="footer-instagram-link"
-                  href={CLIENT_BIO.instagramUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="hover:text-white transition w-fit"
-                >
-                  {CLIENT_BIO.instagram}
-                </a>
-              )}
+              <a
+                id="footer-email-link"
+                href={`mailto:${email}`}
+                className="hover:text-white transition w-fit"
+              >
+                {email}
+              </a>
+              <a
+                id="footer-phone-link"
+                href={SITE_CONFIG.phoneTel}
+                className="hover:text-white transition w-fit"
+              >
+                {phone}
+              </a>
+              <a
+                id="footer-instagram-link"
+                href={instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:text-white transition w-fit"
+              >
+                {instagram}
+              </a>
             </div>
           </div>
 
           {/* Right Zone: Balanced Primary Navigation Links */}
           <nav
             aria-label="Footer navigation"
-            className="flex flex-col md:flex-row gap-4 md:gap-8 text-[13px] text-stone-400 font-sans"
+            className="flex flex-col md:flex-row gap-4 md:gap-8 text-[13px] text-stone-400 font-sans items-start md:items-center"
           >
             <button
               id="footer-book-appointment-link"
@@ -92,10 +98,24 @@ export const Footer: React.FC<FooterProps> = ({ onBookAppointment }) => {
 
         {/* Bottom Bar: Copyright and developer credit */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-500 font-sans">
-          <p>
-            &copy; {new Date().getFullYear()} {CLIENT_BIO.studioName}. All
-            rights reserved.
-          </p>
+          <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
+            <span>
+              &copy; {new Date().getFullYear()} {SITE_CONFIG.studioName}. All
+              rights reserved.
+            </span>
+            {onToggleAdmin && (
+              <>
+                <span className="text-stone-700 select-none">•</span>
+                <button
+                  id="footer-admin-link"
+                  onClick={onToggleAdmin}
+                  className="text-stone-500 hover:text-stone-300 transition cursor-pointer bg-transparent border-0 p-0 font-sans text-[11px]"
+                >
+                  Admin Login
+                </button>
+              </>
+            )}
+          </div>
           <p>
             Developed by{" "}
             <a

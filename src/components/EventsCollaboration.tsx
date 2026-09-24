@@ -1,6 +1,14 @@
 import React from "react";
+import { EVENTS_CONTENT } from "../config/site";
+import type { EventsContent } from "../types/content";
 
-export const EventsCollaboration: React.FC = () => {
+interface EventsCollaborationProps {
+  content?: EventsContent;
+}
+
+export const EventsCollaboration: React.FC<EventsCollaborationProps> = ({
+  content = EVENTS_CONTENT,
+}) => {
   return (
     <section
       id="events"
@@ -8,12 +16,10 @@ export const EventsCollaboration: React.FC = () => {
     >
       <div className="max-w-4xl mx-auto px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 tracking-tight">
-          Events & Collaborations
+          {content.title}
         </h2>
         <p className="mt-3 text-stone-600 font-sans text-sm md:text-base max-w-2xl mx-auto leading-relaxed">
-          Custom on-location styling available for weddings and bridal parties,
-          editorial and commercial shoots, swing dance camps, and classic car
-          show pageants across San Francisco and the wider Bay Area.
+          {content.description}
         </p>
       </div>
     </section>

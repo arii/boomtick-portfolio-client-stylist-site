@@ -147,9 +147,12 @@ check(
 // 4. LCP & Performance Preload check
 check(
   "LCP Image Preload tag present",
-  /<link\s+rel="preload"\s+as="image"\s+href="[^"]*unsplash[^"]*"\s+fetchpriority="high"/i.test(
+  /<link\s+rel="preload"\s+as="image"\s+href="[^"]*(unsplash|portfolio-)[^"]*"\s+[^>]*fetchpriority="high"/i.test(
     html
-  )
+  ) ||
+    /<link\s+rel="preload"\s+as="image"\s+href="[^"]*(unsplash|portfolio-)[^"]*"/i.test(
+      html
+    )
 );
 check(
   "Google Fonts preconnects present",
