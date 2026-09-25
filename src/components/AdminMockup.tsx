@@ -77,7 +77,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
   setPhone,
   instagram,
   setInstagram,
-  instagramUrl,
+  instagramUrl: _instagramUrl,
   setInstagramUrl,
   heroImage,
   setHeroImage,
@@ -168,25 +168,13 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
       });
     }
 
-    if (!instagramUrl || !instagramUrl.trim()) {
+    if (!instagram || !instagram.trim()) {
       list.push({
-        id: "hero-instagram-url",
+        id: "hero-instagram-handle",
         tab: "hero",
         collection: "hero",
-        field: "instagramUrl",
-        message: "Instagram URL Link is required",
-        severity: "error",
-      });
-    } else if (
-      !instagramUrl.startsWith("http://") &&
-      !instagramUrl.startsWith("https://")
-    ) {
-      list.push({
-        id: "hero-instagram-url-format",
-        tab: "hero",
-        collection: "hero",
-        field: "instagramUrl",
-        message: "Instagram URL must include https:// protocol prefix",
+        field: "instagram",
+        message: "Instagram Handle is required",
         severity: "error",
       });
     }
@@ -395,7 +383,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
     portfolioContent,
     email,
     phone,
-    instagramUrl,
+    instagram,
     isSimulatingError,
     simulatedHeadline,
   ]);
@@ -492,37 +480,12 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
     window.location.reload();
   };
 
-  const extractHandleFromUrl = (url: string): string => {
-    if (!url) return "";
-    const cleanUrl = url.trim().replace(/\/+$/, "");
-    const parts = cleanUrl.split("/");
-    const lastPart = parts[parts.length - 1];
-    if (
-      lastPart &&
-      lastPart !== "instagram.com" &&
-      lastPart !== "www.instagram.com"
-    ) {
-      return lastPart.startsWith("@") ? lastPart : `@${lastPart}`;
-    }
-    return "";
-  };
-
-  const handleInstagramUrlChange = (newUrl: string) => {
-    setInstagramUrl(newUrl);
-    setHeroContent((prev) => ({ ...prev, instagramUrl: newUrl }));
-    const derivedHandle = extractHandleFromUrl(newUrl);
-    if (derivedHandle) {
-      setInstagram(derivedHandle);
-    }
-  };
-
   const handleInstagramHandleChange = (newHandle: string) => {
     setInstagram(newHandle);
     const cleanHandle = newHandle.trim().replace(/^@/, "");
     if (cleanHandle) {
       const newUrl = `https://www.instagram.com/${cleanHandle}/`;
       setInstagramUrl(newUrl);
-      setHeroContent((prev) => ({ ...prev, instagramUrl: newUrl }));
     }
   };
 
@@ -893,81 +856,54 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                 )}
               </div>
 
-              {/* Call to Action Buttons */}
-              <div className="grid grid-cols-2 gap-4 pt-2">
-                <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                    Button Label
-                  </label>
-                  <input
-                    type="text"
-                    value={heroContent.ctaButtonText || "Book Appointment"}
-                    onChange={(e) =>
-                      setHeroContent({ ...heroContent, ctaButtonText: e.target.value })
-                    }
-                    className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500"
-                    placeholder="Book Appointment"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                    Button Destination URL
-                  </label>
-                  <input
-                    type="text"
-                    value={heroContent.ctaButtonLink || "#services"}
-                    onChange={(e) =>
-                      setHeroContent({ ...heroContent, ctaButtonLink: e.target.value })
-                    }
-                    className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500"
-                    placeholder="#services"
-                  />
-                </div>
+              {/* Cal.com Booking Event Slug */}
+              <div className="space-y-1">
+                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
+                  <span>Cal.com Event Slug</span>
+                  <span className="text-[9px] text-stone-500 lowercase font-mono">
+                    string
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  value={heroContent.calSlug || "april-demo"}
+                  onChange={(e) =>
+                    setHeroContent({ ...heroContent, calSlug: e.target.value })
+                  }
+                  className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500"
+                  placeholder="april-demo"
+                />
               </div>
 
-              {/* Social Links */}
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
-                    Instagram Handle
-                  </label>
-                  <input
-                    type="text"
-                    value={instagram}
-                    onChange={(e) =>
-                      handleInstagramHandleChange(e.target.value)
-                    }
-                    className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
-                    placeholder="@hair.by.april_209"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
-                    <span>Instagram URL</span>
-                    <span className="text-[9px] text-stone-500 lowercase font-mono">
-                      url • required
+              {/* Single Social Field: Instagram Handle */}
+              <div className="space-y-1">
+                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
+                  <span>Instagram Handle</span>
+                  <span className="text-[9px] text-stone-500 lowercase font-mono">
+                    string • required
+                  </span>
+                </label>
+                <input
+                  type="text"
+                  value={instagram}
+                  onChange={(e) =>
+                    handleInstagramHandleChange(e.target.value)
+                  }
+                  className={`w-full bg-stone-900 border rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none transition ${
+                    getFieldError("hero", "instagram")
+                      ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
+                      : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                  }`}
+                  placeholder="@hair.by.april_209"
+                />
+                {getFieldError("hero", "instagram") && (
+                  <p className="text-[11px] text-red-400 flex items-center gap-1 font-mono">
+                    <AlertCircle className="w-3 h-3 shrink-0" />
+                    <span>
+                      {getFieldError("hero", "instagram")?.message}
                     </span>
-                  </label>
-                  <input
-                    type="text"
-                    value={instagramUrl}
-                    onChange={(e) => handleInstagramUrlChange(e.target.value)}
-                    className={`w-full bg-stone-900 border rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none transition ${
-                      getFieldError("hero", "instagramUrl")
-                        ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
-                        : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
-                    }`}
-                    placeholder="https://www.instagram.com/..."
-                  />
-                  {getFieldError("hero", "instagramUrl") && (
-                    <p className="text-[11px] text-red-400 flex items-center gap-1 font-mono">
-                      <AlertCircle className="w-3 h-3 shrink-0" />
-                      <span>
-                        {getFieldError("hero", "instagramUrl")?.message}
-                      </span>
-                    </p>
-                  )}
-                </div>
+                  </p>
+                )}
               </div>
 
               {/* Business Contact Info */}

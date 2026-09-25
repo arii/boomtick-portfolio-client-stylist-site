@@ -1,4 +1,4 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { StyleShowcase } from "./components/StyleShowcase";
@@ -66,6 +66,79 @@ export default function App() {
   const [heroImageState, setHeroImageState] = useState(
     SITE_CONFIG.heroPreloadImage
   );
+  const [calUsernameState, setCalUsernameState] = useState(
+    SITE_CONFIG.calUsername
+  );
+  const [calDefaultSlugState, setCalDefaultSlugState] = useState(
+    SITE_CONFIG.calDefaultSlug
+  );
+
+  // TinaCMS Live Preview Data Re-hydration Hook
+  useEffect(() => {
+    // Notify parent window (TinaCMS editor) that preview iframe is ready
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: "tina:ready" }, "*");
+    }
+
+    const handleTinaMessage = (event: MessageEvent) => {
+      if (!event.data) return;
+
+      // Handle direct document updates from Tina CMS live preview
+      const { type, data, collection, values } = event.data;
+      const payload = values || data;
+
+      if (!payload) return;
+
+      if (collection === "hero" || type?.includes("hero") || payload.headline) {
+        setHeroState((prev) => ({
+          ...prev,
+          ...payload,
+        }));
+      }
+
+      if (
+        collection === "services" ||
+        type?.includes("services") ||
+        payload.servicesList
+      ) {
+        if (Array.isArray(payload.servicesList)) {
+          setServicesState(payload.servicesList);
+        }
+      }
+
+      if (
+        collection === "portfolio" ||
+        type?.includes("portfolio") ||
+        payload.portfolioList
+      ) {
+        if (Array.isArray(payload.portfolioList)) {
+          setPortfolioState(payload.portfolioList);
+        }
+      }
+
+      if (collection === "events" || type?.includes("events") || payload.title) {
+        setEventsState((prev) => ({
+          ...prev,
+          ...payload,
+        }));
+      }
+
+      if (collection === "site" || type?.includes("site")) {
+        if (payload.email) setEmailState(payload.email);
+        if (payload.phone) setPhoneState(payload.phone);
+        if (payload.calUsername) setCalUsernameState(payload.calUsername);
+        if (payload.calDefaultSlug) setCalDefaultSlugState(payload.calDefaultSlug);
+        if (payload.instagramHandle) {
+          const clean = payload.instagramHandle.replace(/^@/, "");
+          setInstagramState(`@${clean}`);
+          setInstagramUrlState(`https://www.instagram.com/${clean}/`);
+        }
+      }
+    };
+
+    window.addEventListener("message", handleTinaMessage);
+    return () => window.removeEventListener("message", handleTinaMessage);
+  }, []);
 
   const handleOpenBooking = (service?: ServiceItem) => {
     setSelectedService(service ?? null);
@@ -198,8 +271,8 @@ export default function App() {
           <BookingModal
             isOpen={isBookingOpen}
             onClose={() => setIsBookingOpen(false)}
-            eventSlug={selectedService?.calSlug}
-            calUsername={SITE_CONFIG.calUsername}
+            eventSlug={selectedService?.calSlug || heroState.calSlug || calDefaultSlugState}
+            calUsername={calUsernameState}
           />
         </Suspense>
       )}

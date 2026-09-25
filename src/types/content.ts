@@ -3,6 +3,7 @@ export interface HeroContent {
   headline: string;
   subheading: string;
   availabilityNotice: string;
+  calSlug?: string;
   ctaButtonText?: string;
   ctaButtonLink?: string;
   instagramUrl: string;
@@ -57,9 +58,7 @@ export interface SiteContent {
   phone: string;
   emailFallback?: string;
   phoneFallback?: string;
-  instagram: string;
-  instagramHandle?: string;
-  instagramUrl: string;
+  instagramHandle: string;
   locationDisplay: string;
   logisticsNotice: string;
   availabilityBanner?: string;

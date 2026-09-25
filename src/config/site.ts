@@ -75,8 +75,8 @@ export const SITE_CONFIG = {
   telephoneSchema: `+1-${cleanPhoneDigits.slice(0, 3)}-${cleanPhoneDigits.slice(3, 6)}-${cleanPhoneDigits.slice(6)}`,
 
   // Social & Profiles
-  instagram: SITE_CONTENT.instagramHandle || SITE_CONTENT.instagram,
-  instagramUrl: `https://www.instagram.com/${(SITE_CONTENT.instagramHandle || SITE_CONTENT.instagram || "").replace("@", "")}/`,
+  instagram: `@${(SITE_CONTENT.instagramHandle || "").replace(/^@/, "")}`,
+  instagramUrl: `https://www.instagram.com/${(SITE_CONTENT.instagramHandle || "").replace(/^@/, "")}/`,
 
   // Integrations & Logistics
   calUsername: SITE_CONTENT.calUsername || "ariel-anders",

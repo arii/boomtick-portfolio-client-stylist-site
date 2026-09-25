@@ -59,6 +59,7 @@ export default defineConfig({
         match: { include: "site" },
         format: "json",
         ui: {
+          router: () => "/",
           allowedActions: { create: false, delete: false },
         },
         fields: [
@@ -114,6 +115,7 @@ export default defineConfig({
         match: { include: "hero" },
         format: "json",
         ui: {
+          router: () => "/#hero",
           allowedActions: { create: false, delete: false },
         },
         fields: [
@@ -121,8 +123,7 @@ export default defineConfig({
           { type: "string", name: "headline", label: "Main Headline", required: true },
           { type: "string", name: "subheading", label: "Subheading Copy", ui: { component: "textarea" } },
           { type: "string", name: "availabilityNotice", label: "Availability Notice Banner", required: true, ui: { component: "textarea" } },
-          { type: "string", name: "ctaButtonText", label: "Button Label" },
-          { type: "string", name: "ctaButtonLink", label: "Button Destination URL" },
+          { type: "string", name: "calSlug", label: "Cal.com Booking Event Slug", description: "Specific Cal.com event slug for the Hero button (e.g. april-demo)" },
         ],
       },
 
@@ -134,6 +135,7 @@ export default defineConfig({
         match: { include: "portfolio" },
         format: "json",
         ui: {
+          router: () => "/#portfolio",
           allowedActions: { create: false, delete: false },
         },
         fields: [
@@ -168,6 +170,7 @@ export default defineConfig({
         match: { include: "services" },
         format: "json",
         ui: {
+          router: () => "/#services",
           allowedActions: { create: false, delete: false },
         },
         fields: [
@@ -207,6 +210,7 @@ export default defineConfig({
         match: { include: "events" },
         format: "json",
         ui: {
+          router: () => "/#events",
           allowedActions: { create: false, delete: false },
         },
         fields: [

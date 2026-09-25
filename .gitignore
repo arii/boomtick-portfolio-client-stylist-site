@@ -11,7 +11,11 @@ coverage/
 .wrangler/
 .cloudflare/
 
-# Bun lockfiles (ignored to prevent local/production Bun version lockfile mismatches)
+# TinaCMS generated build files
+public/admin
+tina/__generated__
+.tina/
+
 bun.lock
 bun.lockb
 bun-lockb
