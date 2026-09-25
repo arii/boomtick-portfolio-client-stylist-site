@@ -35,6 +35,7 @@ export interface FormFieldItem {
 export interface EventsContent {
   title: string;
   description: string;
+  showForm?: boolean;
   formFields?: FormFieldItem[];
   formOptions?: {
     submitButtonText?: string;

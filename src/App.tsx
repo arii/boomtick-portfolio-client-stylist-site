@@ -178,7 +178,7 @@ export default function App() {
       <EventsCollaboration content={eventsState} />
 
       {/* 5. Custom Booking & Event Inquiry Form */}
-      <InquiryModule />
+      {eventsState.showForm !== false && <InquiryModule />}
 
       {/* Footer Branding & Navigation */}
       <Footer

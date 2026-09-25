@@ -53,7 +53,7 @@ export default defineConfig({
     collections: [
       // 1. GLOBAL SETTINGS (Single Source of Truth)
       {
-        name: "siteSettings",
+        name: "site",
         label: "Site Settings & SEO",
         path: "src/content",
         match: { include: "site" },
@@ -120,6 +120,7 @@ export default defineConfig({
           { type: "string", name: "badge", label: "Credentials Badge" },
           { type: "string", name: "headline", label: "Main Headline", required: true },
           { type: "string", name: "subheading", label: "Subheading Copy", ui: { component: "textarea" } },
+          { type: "string", name: "availabilityNotice", label: "Availability Notice Banner", required: true, ui: { component: "textarea" } },
           { type: "string", name: "ctaButtonText", label: "Button Label" },
           { type: "string", name: "ctaButtonLink", label: "Button Destination URL" },
         ],
@@ -211,6 +212,7 @@ export default defineConfig({
         fields: [
           { type: "string", name: "title", label: "Section Title" },
           { type: "string", name: "description", label: "Description Copy", ui: { component: "textarea" } },
+          { type: "boolean", name: "showForm", label: "Display Inquiry Form on Site?", description: "Toggle off to completely remove the inquiry form from the public website" },
           {
             type: "object",
             name: "formFields",
