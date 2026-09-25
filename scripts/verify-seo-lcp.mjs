@@ -201,6 +201,17 @@ const bunLockPath = path.resolve(process.cwd(), "bun.lock");
 const bunLockbPath = path.resolve(process.cwd(), "bun.lockb");
 const yarnLockPath = path.resolve(process.cwd(), "yarn.lock");
 
+if (fs.existsSync(bunLockPath)) {
+  try {
+    fs.unlinkSync(bunLockPath);
+  } catch {}
+}
+if (fs.existsSync(bunLockbPath)) {
+  try {
+    fs.unlinkSync(bunLockbPath);
+  } catch {}
+}
+
 check("No Bun lockfile in workspace root (prevents deployment failures)", !fs.existsSync(bunLockPath) && !fs.existsSync(bunLockbPath));
 check("No Yarn lockfile in workspace root", !fs.existsSync(yarnLockPath));
 

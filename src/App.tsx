@@ -13,6 +13,7 @@ import {
   SERVICES_CONTENT,
   PORTFOLIO_CONTENT,
 } from "./config/site";
+import { tinaClient } from "./lib/tinaClient";
 import { TOKENS } from "./styles/tokens";
 import { Clock, ArrowRight, Check, Calendar } from "lucide-react";
 import type {
@@ -20,6 +21,7 @@ import type {
   ServiceItem,
   PortfolioItem,
   EventsContent,
+  FormFieldItem,
 } from "./types/content";
 
 // Code-split heavy modals to optimize initial bundle and LCP
@@ -50,7 +52,7 @@ export default function App() {
     return false;
   });
 
-  // Dynamic Content States
+  // Dynamic Content States (Initialized with SSOT static defaults)
   const [heroState, setHeroState] = useState<HeroContent>(HERO_CONTENT);
   const [eventsState, setEventsState] = useState<EventsContent>(EVENTS_CONTENT);
   const [servicesState, setServicesState] =
@@ -73,12 +75,113 @@ export default function App() {
     SITE_CONFIG.calDefaultSlug
   );
 
-  // TinaCMS Live Preview Data Re-hydration Hook
+  // 1. Live Querying via TinaCMS Content API (when available)
   useEffect(() => {
-    // Notify parent window (TinaCMS editor) that preview iframe is ready
+    let isMounted = true;
+
+    async function loadContentFromTinaApi() {
+      try {
+        if (!tinaClient?.queries) return;
+
+        const results = await Promise.allSettled([
+          tinaClient.queries.hero({ relativePath: "hero.json" }),
+          tinaClient.queries.site({ relativePath: "site.json" }),
+          tinaClient.queries.services({ relativePath: "services.json" }),
+          tinaClient.queries.portfolio({ relativePath: "portfolio.json" }),
+          tinaClient.queries.events({ relativePath: "events.json" }),
+        ]);
+
+        if (!isMounted) return;
+
+        const [heroRes, siteRes, servicesRes, portfolioRes, eventsRes] = results;
+
+        if (heroRes.status === "fulfilled" && heroRes.value?.data?.hero) {
+          const h = heroRes.value.data.hero;
+          setHeroState((prev) => ({
+            ...prev,
+            badge: h.badge || prev.badge,
+            headline: h.headline || prev.headline,
+            subheading: h.subheading || prev.subheading,
+            availabilityNotice: h.availabilityNotice || prev.availabilityNotice,
+            calSlug: h.calSlug || prev.calSlug,
+          }));
+        }
+
+        if (siteRes.status === "fulfilled" && siteRes.value?.data?.site) {
+          const s = siteRes.value.data.site;
+          if (s.email) setEmailState(s.email);
+          if (s.phone) setPhoneState(s.phone);
+          if (s.calUsername) setCalUsernameState(s.calUsername);
+          if (s.calDefaultSlug) setCalDefaultSlugState(s.calDefaultSlug);
+          if (s.instagramHandle) {
+            const clean = s.instagramHandle.replace(/^@/, "");
+            setInstagramState(`@${clean}`);
+            setInstagramUrlState(`https://www.instagram.com/${clean}/`);
+          }
+        }
+
+        if (
+          servicesRes.status === "fulfilled" &&
+          servicesRes.value?.data?.services?.servicesList
+        ) {
+          setServicesState(
+            servicesRes.value.data.services.servicesList as ServiceItem[]
+          );
+        }
+
+        if (
+          portfolioRes.status === "fulfilled" &&
+          portfolioRes.value?.data?.portfolio?.portfolioList
+        ) {
+          setPortfolioState(
+            portfolioRes.value.data.portfolio.portfolioList as PortfolioItem[]
+          );
+        }
+
+        if (eventsRes.status === "fulfilled" && eventsRes.value?.data?.events) {
+          const ev = eventsRes.value.data.events;
+          setEventsState((prev) => ({
+            ...prev,
+            title: ev.title || prev.title,
+            description: ev.description || prev.description,
+            showForm:
+              typeof ev.showForm === "boolean" ? ev.showForm : prev.showForm,
+            formFields:
+              (ev.formFields as unknown as FormFieldItem[]) || prev.formFields,
+          }));
+        }
+      } catch {
+        // Silently preserve SSOT static content
+      }
+    }
+
+    loadContentFromTinaApi();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // 2. TinaCMS Live Preview Data Re-hydration & Iframe Bridge
+  useEffect(() => {
+    // Notify parent window (TinaCMS live editor) that preview iframe is ready
     if (window.parent && window.parent !== window) {
       window.parent.postMessage({ type: "tina:ready" }, "*");
+      window.parent.postMessage({ type: "url-changed" }, "*");
     }
+
+    // Scroll to section hash when navigating via TinaCMS router
+    const handleHashScroll = () => {
+      if (window.location.hash) {
+        const id = window.location.hash.replace("#", "");
+        const target = document.getElementById(id);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    };
+
+    handleHashScroll();
+    window.addEventListener("hashchange", handleHashScroll);
 
     const handleTinaMessage = (event: MessageEvent) => {
       if (!event.data) return;
@@ -127,7 +230,8 @@ export default function App() {
         if (payload.email) setEmailState(payload.email);
         if (payload.phone) setPhoneState(payload.phone);
         if (payload.calUsername) setCalUsernameState(payload.calUsername);
-        if (payload.calDefaultSlug) setCalDefaultSlugState(payload.calDefaultSlug);
+        if (payload.calDefaultSlug)
+          setCalDefaultSlugState(payload.calDefaultSlug);
         if (payload.instagramHandle) {
           const clean = payload.instagramHandle.replace(/^@/, "");
           setInstagramState(`@${clean}`);
@@ -137,7 +241,10 @@ export default function App() {
     };
 
     window.addEventListener("message", handleTinaMessage);
-    return () => window.removeEventListener("message", handleTinaMessage);
+    return () => {
+      window.removeEventListener("message", handleTinaMessage);
+      window.removeEventListener("hashchange", handleHashScroll);
+    };
   }, []);
 
   const handleOpenBooking = (service?: ServiceItem) => {

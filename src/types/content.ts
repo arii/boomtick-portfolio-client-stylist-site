@@ -4,9 +4,7 @@ export interface HeroContent {
   subheading: string;
   availabilityNotice: string;
   calSlug?: string;
-  ctaButtonText?: string;
-  ctaButtonLink?: string;
-  instagramUrl: string;
+  instagramUrl?: string;
 }
 
 export interface ServiceItem {
