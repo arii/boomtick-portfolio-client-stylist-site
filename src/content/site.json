@@ -2,6 +2,8 @@
   "studioName": "Hair by April",
   "stylistName": "April",
   "credentials": "Licensed Professional • 15 Years of Experience",
+  "browserTitle": "Hair by April | Curly Cuts & Vintage Hair Stylist San Francisco",
+  "metaDescription": "Licensed professional specializing in curly hair cuts, vintage pin-up styling, and on-location events in San Francisco.",
   "title": "Hair by April | Curly Cuts & Vintage Hair Stylist San Francisco",
   "description": "Licensed professional specializing in curly hair cuts, vintage pin-up styling, and on-location events in San Francisco.",
   "keywords": [
@@ -17,10 +19,14 @@
   "phone": "(415) 555-0192",
   "emailFallback": "hello@hairbyapril.com",
   "phoneFallback": "(415) 555-0192",
+  "instagramHandle": "hair.by.april_209",
   "instagram": "@hair.by.april_209",
   "instagramUrl": "https://www.instagram.com/hair.by.april_209/",
   "locationDisplay": "San Francisco, CA",
+  "availabilityBanner": "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
   "logisticsNotice": "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
+  "calUsername": "ariel-anders",
+  "calDefaultSlug": "april-demo",
   "address": {
     "locality": "San Francisco",
     "region": "CA",
@@ -37,8 +43,6 @@
     "closes": "18:00"
   },
   "priceRange": "$$",
-  "calUsername": "ariel-anders",
-  "calDefaultSlug": "april-demo",
   "heroHeading": "Curly hair cuts & authentic vintage styling.",
   "heroSubtext": "San Francisco stylist specializing in curly cuts and classic vintage hair, with custom on-location styling available for events and productions.",
   "ogImageRelative": "/assets/portfolio-4.webp",

@@ -218,11 +218,6 @@ export default defineConfig({
             name: "formFields",
             label: "Inquiry Form Fields",
             list: true,
-            ui: {
-              itemProps: (item: any) => ({
-                label: `${item?.label || "New Field"} (${item?.fieldType || item?._template || "field"})${item?.required ? " *" : ""}`,
-              }),
-            },
             templates: [
               {
                 name: "inputField",

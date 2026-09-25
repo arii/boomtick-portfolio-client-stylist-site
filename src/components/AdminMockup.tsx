@@ -88,8 +88,6 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
     }
     return false;
   });
-  const [passwordInput, setPasswordInput] = useState("");
-  const [authError, setAuthError] = useState("");
 
   const [activeTab, setActiveTab] = useState<TabType>("hero");
   const [selectedServiceIndex, setSelectedServiceIndex] = useState<number>(0);
@@ -438,7 +436,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900 p-6">
         <div className="w-full max-w-md bg-stone-950 rounded-2xl border border-stone-800 p-8 shadow-2xl text-stone-100">
-          <div className="text-center space-y-4 mb-8">
+          <div className="text-center space-y-4 mb-6">
             <div className="w-12 h-12 rounded-xl bg-orange-500 flex items-center justify-center mx-auto shadow-md">
               <Sliders className="w-6 h-6 text-stone-950" />
             </div>
@@ -447,70 +445,43 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                 Tina Config Portal
               </h1>
               <p className="text-xs text-stone-400 mt-1">
-                Authorized site administration & live schema diagnostics
+                Authorized site administration & schema verification
               </p>
             </div>
           </div>
 
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const trimmed = passwordInput.trim();
-              if (trimmed === "hairbyapril2026" || trimmed === "admin") {
-                sessionStorage.setItem("admin_session_auth", "true");
-                setIsAuthenticated(true);
-                setAuthError("");
-              } else {
-                setAuthError("Invalid access passcode. Please try again.");
-              }
-            }}
-            className="space-y-4"
-          >
-            <div className="space-y-1.5">
-              <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
-                Access Passcode
-              </label>
-              <input
-                type="password"
-                value={passwordInput}
-                onChange={(e) => setPasswordInput(e.target.value)}
-                placeholder="Enter admin passcode"
-                className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2.5 text-sm text-stone-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
-                autoFocus
-              />
-            </div>
-
-            {authError && (
-              <p className="text-xs text-red-400 bg-red-500/10 border border-red-500/20 p-2.5 rounded-lg text-center font-medium">
-                {authError}
-              </p>
-            )}
+          <div className="space-y-3">
+            <a
+              href="/admin/index.html"
+              className="w-full py-3 px-4 bg-orange-500 hover:bg-orange-400 text-stone-950 font-bold rounded-lg text-sm transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer text-center"
+            >
+              <ExternalLink className="w-4 h-4" />
+              <span>Verify Config & Open TinaCMS Auth</span>
+            </a>
 
             <button
-              type="submit"
-              className="w-full py-2.5 px-4 bg-orange-500 hover:bg-orange-400 text-stone-950 font-bold rounded-lg text-sm transition duration-200 shadow-md cursor-pointer"
+              type="button"
+              onClick={() => {
+                sessionStorage.setItem("admin_session_auth", "true");
+                setIsAuthenticated(true);
+              }}
+              className="w-full py-2.5 px-4 bg-stone-850 hover:bg-stone-800 text-stone-200 hover:text-white border border-stone-750 text-xs font-semibold rounded-lg transition duration-200 flex items-center justify-center gap-2 cursor-pointer"
             >
-              Sign In to Live Config Portal
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>Enter Local Config Portal (Bypass Passcode)</span>
             </button>
-          </form>
+          </div>
 
-          <div className="mt-8 pt-6 border-t border-stone-900 text-center space-y-3">
+          <div className="mt-6 pt-6 border-t border-stone-900 text-center space-y-3">
             <div className="p-3 bg-stone-900/80 rounded-lg border border-stone-800 text-left space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Tina Schema Verified: 5 Collections</span>
               </div>
               <p className="text-[11px] text-stone-400">
-                Passcode shortcut for quick verification:{" "}
-                <code>hairbyapril2026</code> or <code>admin</code>
+                Directly authenticated via TinaCMS Git & Auth server layer.
               </p>
             </div>
-            <a
-              href="/admin/index.html"
-              className="inline-block w-full py-2 px-4 bg-stone-850 hover:bg-stone-800 text-stone-200 hover:text-white border border-stone-800 text-xs font-semibold rounded-lg transition duration-200"
-            >
-              Tina Server Diagnostics
-            </a>
           </div>
         </div>
       </div>
@@ -920,6 +891,38 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                     </span>
                   </p>
                 )}
+              </div>
+
+              {/* Call to Action Buttons */}
+              <div className="grid grid-cols-2 gap-4 pt-2">
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                    Button Label
+                  </label>
+                  <input
+                    type="text"
+                    value={heroContent.ctaButtonText || "Book Appointment"}
+                    onChange={(e) =>
+                      setHeroContent({ ...heroContent, ctaButtonText: e.target.value })
+                    }
+                    className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500"
+                    placeholder="Book Appointment"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
+                    Button Destination URL
+                  </label>
+                  <input
+                    type="text"
+                    value={heroContent.ctaButtonLink || "#services"}
+                    onChange={(e) =>
+                      setHeroContent({ ...heroContent, ctaButtonLink: e.target.value })
+                    }
+                    className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500"
+                    placeholder="#services"
+                  />
+                </div>
               </div>
 
               {/* Social Links */}
@@ -1553,7 +1556,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                               const newFields = [...(eventsContent.formFields || [])];
                               newFields[fIdx] = { 
                                 ...newFields[fIdx], 
-                                _template: e.target.value as any,
+                                _template: e.target.value as "inputField" | "selectField" | "textareaField",
                                 fieldType: e.target.value === "inputField" ? "text" : undefined,
                               };
                               setEventsContent({ ...eventsContent, formFields: newFields });

@@ -3,19 +3,13 @@ import net from "net";
 
 function isPortBusy(port) {
   return new Promise((resolve) => {
-    const server = net.createServer();
-    server.once("error", (err) => {
-      if (err.code === "EADDRINUSE") {
-        resolve(true);
-      } else {
-        resolve(false);
-      }
+    const socket = net.createConnection({ port, host: "127.0.0.1" }, () => {
+      socket.end();
+      resolve(true);
     });
-    server.once("listening", () => {
-      server.close();
+    socket.on("error", () => {
       resolve(false);
     });
-    server.listen(port, "127.0.0.1");
   });
 }
 

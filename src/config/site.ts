@@ -21,9 +21,12 @@ import type {
 const SITE_CONTENT: SiteContent = siteContent as SiteContent;
 export const HERO_CONTENT: HeroContent = heroData as HeroContent;
 export const EVENTS_CONTENT: EventsContent = eventsData as EventsContent;
-export const SERVICES_CONTENT: ServiceItem[] = (servicesData as any).servicesList || (servicesData as ServiceItem[]);
+export const SERVICES_CONTENT: ServiceItem[] =
+  (servicesData as unknown as { servicesList: ServiceItem[] }).servicesList ||
+  (servicesData as unknown as ServiceItem[]);
 export const PORTFOLIO_CONTENT: PortfolioItem[] =
-  (portfolioData as any).portfolioList || (portfolioData as PortfolioItem[]);
+  (portfolioData as unknown as { portfolioList: PortfolioItem[] }).portfolioList ||
+  (portfolioData as unknown as PortfolioItem[]);
 
 /**
  * Resolve deployment canonical URL for Cloudflare Pages and local dev.
