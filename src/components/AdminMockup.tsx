@@ -1,9 +1,7 @@
 import React, { useState, useMemo } from "react";
 import {
   FileText,
-  Save,
   LogOut,
-  Check,
   RefreshCw,
   Plus,
   Trash2,
@@ -93,12 +91,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
   const [selectedServiceIndex, setSelectedServiceIndex] = useState<number>(0);
   const [selectedPortfolioIndex, setSelectedPortfolioIndex] =
     useState<number>(0);
-  const [saveSuccess, setSaveSuccess] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const [saveBlockedMessage, setSaveBlockedMessage] = useState<string | null>(
-    null
-  );
 
   // Diagnostic states
   const [isSimulatingError, setIsSimulatingError] = useState(false);
@@ -433,7 +426,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                 Tina Config Portal
               </h1>
               <p className="text-xs text-stone-400 mt-1">
-                Authorized site administration & schema verification
+                Site Administration & Interactive Client Demo
               </p>
             </div>
           </div>
@@ -444,7 +437,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
               className="w-full py-3 px-4 bg-orange-500 hover:bg-orange-400 text-stone-950 font-bold rounded-lg text-sm transition duration-200 shadow-md flex items-center justify-center gap-2 cursor-pointer text-center"
             >
               <ExternalLink className="w-4 h-4" />
-              <span>Verify Config & Open TinaCMS Auth</span>
+              <span>Admin Login: Edit Live Site</span>
             </a>
 
             <button
@@ -456,8 +449,12 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
               className="w-full py-2.5 px-4 bg-stone-850 hover:bg-stone-800 text-stone-200 hover:text-white border border-stone-750 text-xs font-semibold rounded-lg transition duration-200 flex items-center justify-center gap-2 cursor-pointer"
             >
               <ShieldCheck className="w-4 h-4 text-emerald-400" />
-              <span>Enter Local Config Portal (Bypass Passcode)</span>
+              <span>Client Demo: Try the Interactive Editor</span>
             </button>
+
+            <p className="text-[11px] text-stone-400 leading-relaxed text-center px-1">
+              Safely test the live interactive preview editor and schema controls in sandbox mode without altering production data.
+            </p>
           </div>
 
           <div className="mt-6 pt-6 border-t border-stone-900 text-center space-y-3">
@@ -487,31 +484,6 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
       const newUrl = `https://www.instagram.com/${cleanHandle}/`;
       setInstagramUrl(newUrl);
     }
-  };
-
-  const handleTriggerSave = () => {
-    setSaveBlockedMessage(null);
-
-    // Guard: Prevent saving if schema errors exist
-    if (errorCount > 0) {
-      setSaveBlockedMessage(
-        `Commit blocked: ${errorCount} schema violation(s) detected. Please correct the highlighted errors before saving.`
-      );
-      setActiveTab("diagnostics");
-      return;
-    }
-
-    setIsSaving(true);
-    setTimeout(() => {
-      setIsSaving(false);
-      setSaveSuccess(true);
-      const now = new Date().toLocaleTimeString();
-      setAuditConsoleLogs((prev) => [
-        ...prev,
-        `[${now}] 💾 JSON Content committed to Git data layer (5 collections verified).`,
-      ]);
-      setTimeout(() => setSaveSuccess(false), 4000);
-    }, 1000);
   };
 
   const handleServiceChange = (
@@ -667,7 +639,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
               { id: "hero", label: "Hero" },
               { id: "services", label: "Services" },
               { id: "images", label: "Images" },
-              { id: "events", label: "Events" },
+              { id: "events", label: "Form" },
               { id: "diagnostics", label: "Diagnostics" },
             ] as { id: TabType; label: string }[]
           ).map((tab) => {
@@ -1330,23 +1302,22 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
             </div>
           )}
 
-          {/* TAB 4: EVENTS COPY */}
+          {/* TAB 4: INQUIRY & MAILING LIST FORM */}
           {activeTab === "events" && (
             <div className="space-y-4">
               <div className="border-b border-stone-800/80 pb-3 mb-2">
                 <h2 className="text-sm font-semibold text-orange-400 flex items-center gap-1.5">
                   <FileText className="w-4 h-4 text-orange-500" />
-                  Events & Collaborations
+                  Inquiry & Mailing List Form
                 </h2>
                 <p className="text-[10px] text-stone-500 mt-1">
-                  Maps directly to src/content/events.json (Tina collection:
-                  events)
+                  Configure section title, header description, and dynamic input fields for client inquiries or mailing list signups (stored in src/content/events.json)
                 </p>
               </div>
 
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
-                  <span>Section Title</span>
+                  <span>Form Section Title</span>
                   <span className="text-[9px] text-stone-500 lowercase font-mono">
                     string • required
                   </span>
@@ -1370,7 +1341,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
 
               <div className="space-y-1">
                 <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
-                  <span>Description Copy</span>
+                  <span>Form Section Description</span>
                   <span className="text-[9px] text-stone-500 lowercase font-mono">
                     textarea • required
                   </span>
@@ -1868,64 +1839,23 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
           )}
         </div>
 
-        {/* Sidebar Footer Commit Trigger */}
-        <div className="p-4 bg-stone-950 border-t border-stone-800/80 space-y-3">
-          {saveBlockedMessage && (
-            <div className="p-3 bg-red-950/70 border border-red-800 text-red-300 text-xs rounded-lg flex items-start gap-2 animate-fadeIn">
-              <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+        {/* Sidebar Footer Info */}
+        <div className="p-4 bg-stone-900/90 border-t border-stone-800 shrink-0">
+          <div className="p-3 bg-stone-900 rounded-lg border border-stone-800 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-orange-400 shrink-0" />
               <div>
-                <strong className="block">Commit Guard Triggered</strong>
-                <span className="text-[10px] opacity-85">
-                  {saveBlockedMessage}
-                </span>
+                <span className="font-semibold text-stone-200 block">Live Sandbox Demo Active</span>
+                <span className="text-[10px] text-stone-400 block">Edits re-hydrate live React state instantly</span>
               </div>
             </div>
-          )}
-
-          {saveSuccess && (
-            <div className="p-3 bg-emerald-950/70 border border-emerald-800 text-emerald-300 text-xs rounded-lg flex items-start gap-2 animate-fadeIn">
-              <Check className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-              <div>
-                <strong className="block">Git JSON Commit Created!</strong>
-                <span className="text-[10px] opacity-85">
-                  Changes committed to Git content files (src/content/*.json).
-                  All schema rules verified.
-                </span>
-              </div>
-            </div>
-          )}
-
-          <button
-            onClick={handleTriggerSave}
-            disabled={isSaving}
-            className={`w-full py-2.5 px-4 rounded-lg font-medium text-xs flex items-center justify-center gap-1.5 transition cursor-pointer ${
-              isSaving
-                ? "bg-stone-800 text-stone-400 cursor-not-allowed"
-                : errorCount > 0
-                  ? "bg-red-600 hover:bg-red-500 text-white"
-                  : "bg-orange-500 hover:bg-orange-400 text-stone-950 active:scale-98"
-            }`}
-          >
-            {isSaving ? (
-              <>
-                <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                <span>Simulating commit push...</span>
-              </>
-            ) : errorCount > 0 ? (
-              <>
-                <AlertCircle className="w-3.5 h-3.5" />
-                <span>
-                  Resolve {errorCount} Error{errorCount > 1 ? "s" : ""} to
-                  Commit
-                </span>
-              </>
-            ) : (
-              <>
-                <Save className="w-3.5 h-3.5" />
-                <span>Save & Commit JSON</span>
-              </>
-            )}
-          </button>
+            <button
+              onClick={() => setShowResetConfirm(true)}
+              className="text-[10px] text-stone-400 hover:text-stone-200 underline cursor-pointer shrink-0 ml-2"
+            >
+              Reset
+            </button>
+          </div>
         </div>
       </div>
 

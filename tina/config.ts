@@ -202,10 +202,10 @@ export default defineConfig({
         ],
       },
 
-      // 5. EVENTS & COLLABORATIONS + DYNAMIC FORM SETUP
+      // 5. INQUIRY & MAILING LIST FORM SETUP
       {
         name: "events",
-        label: "Events & Booking Form",
+        label: "Inquiry & Mailing List Form",
         path: "src/content",
         match: { include: "events" },
         format: "json",
@@ -214,9 +214,9 @@ export default defineConfig({
           allowedActions: { create: false, delete: false },
         },
         fields: [
-          { type: "string", name: "title", label: "Section Title" },
-          { type: "string", name: "description", label: "Description Copy", ui: { component: "textarea" } },
-          { type: "boolean", name: "showForm", label: "Display Inquiry Form on Site?", description: "Toggle off to completely remove the inquiry form from the public website" },
+          { type: "string", name: "title", label: "Form Section Title", description: "Main section heading for inquiry & mailing list form" },
+          { type: "string", name: "description", label: "Form Section Description", description: "Header copy explaining inquiry or mailing list details", ui: { component: "textarea" } },
+          { type: "boolean", name: "showForm", label: "Display Inquiry Form on Site?", description: "Toggle off to completely remove the form from the public website" },
           {
             type: "object",
             name: "formFields",

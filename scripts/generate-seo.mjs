@@ -81,6 +81,9 @@ fs.writeFileSync(
   "utf8"
 );
 
+const instaHandle = (site.instagramHandle || "hair.by.april_209").replace(/^@/, "");
+const instagramUrl = `https://www.instagram.com/${instaHandle}/`;
+
 // 3. Generate llms.txt
 const servicesList = services
   .map(
@@ -102,7 +105,7 @@ const llmsContent = `# ${site.studioName}
 ## Contact Information
 - **Email:** ${site.email}
 - **Phone / SMS:** ${site.phone}
-- **Instagram:** ${hero.instagramUrl} (${site.instagram})
+- **Instagram:** ${instagramUrl} (@${instaHandle})
 
 ## Services & Pricing
 ${servicesList}
