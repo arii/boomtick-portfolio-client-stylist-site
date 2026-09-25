@@ -59,11 +59,11 @@ async function run() {
     );
     runTinaBuild = false;
   } else {
-    console.log(
-      hasEnv
-        ? "Tina Cloud credentials found, compiling cloud build..."
-        : "Compiling local TinaCMS build..."
-    );
+    if (hasEnv) {
+      console.log("✅ [Build Info] Tina Cloud credentials found (VITE_TINA_CLIENT_ID & TINA_TOKEN present), compiling cloud build...");
+    } else {
+      console.warn("⚠️ [Build Warning] Tina Cloud credentials NOT fully found! Missing VITE_TINA_CLIENT_ID or TINA_TOKEN. Falling back to local TinaCMS build where clientId will be null.");
+    }
   }
 
   if (runTinaBuild) {

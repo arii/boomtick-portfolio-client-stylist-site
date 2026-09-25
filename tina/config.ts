@@ -16,6 +16,22 @@ const token =
   import.meta.env?.VITE_TINA_TOKEN || // Check for VITE_TINA_TOKEN as well
   null; // Obtain from o.tina.io
 
+if (!clientId) {
+  console.warn(
+    "⚠️ [TinaCMS Warning] VITE_TINA_CLIENT_ID is not set or is null! Admin login will redirect with clientId=null. Please configure VITE_TINA_CLIENT_ID in your environment variables."
+  );
+} else {
+  console.log("✅ [TinaCMS Info] VITE_TINA_CLIENT_ID loaded successfully.");
+}
+
+if (!token) {
+  console.warn(
+    "⚠️ [TinaCMS Warning] TINA_TOKEN is not set or is null! Content queries may fail in production. Please configure TINA_TOKEN in your environment variables."
+  );
+} else {
+  console.log("✅ [TinaCMS Info] TINA_TOKEN loaded successfully.");
+}
+
 export default defineConfig({
   branch,
   clientId,
