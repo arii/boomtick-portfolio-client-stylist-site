@@ -1,4 +1,66 @@
 {
   "title": "Events & Collaborations",
-  "description": "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance camps, and retro pageants across the Bay Area."
+  "description": "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance camps, and retro pageants across the Bay Area.",
+  "formFields": [
+    {
+      "_template": "inputField",
+      "label": "Your Name",
+      "fieldType": "text",
+      "placeholder": "Jane Doe",
+      "required": true
+    },
+    {
+      "_template": "inputField",
+      "label": "Email Address",
+      "fieldType": "email",
+      "placeholder": "jane@example.com",
+      "required": true
+    },
+    {
+      "_template": "inputField",
+      "label": "Phone Number",
+      "fieldType": "tel",
+      "placeholder": "(415) 555-0192",
+      "required": true
+    },
+    {
+      "_template": "selectField",
+      "label": "Event / Inquiry Type",
+      "options": [
+        "Wedding / Bridal Party",
+        "Editorial & Commercial Photoshoot",
+        "Swing Dance Camp / Festival",
+        "Retro Pageant / Special Event",
+        "Private Group Styling Session"
+      ],
+      "required": true
+    },
+    {
+      "_template": "selectField",
+      "label": "Estimated Party Size",
+      "options": [
+        "1 Person",
+        "2-4 People",
+        "5-8 People",
+        "9+ People (Large Bridal / Production Group)"
+      ],
+      "required": true
+    },
+    {
+      "_template": "inputField",
+      "label": "Target Date & Location (City or Venue)",
+      "fieldType": "text",
+      "placeholder": "e.g., October 14, 2026 • San Francisco or Bay Area venue",
+      "required": true
+    },
+    {
+      "_template": "textareaField",
+      "label": "Styling Notes / Desired Aesthetics",
+      "placeholder": "Mention desired styles (e.g. vintage victory rolls, natural curl styling, 1940s waves), call-times, or group details...",
+      "required": false
+    }
+  ],
+  "formOptions": {
+    "submitButtonText": "Submit Booking Inquiry"
+  }
 }

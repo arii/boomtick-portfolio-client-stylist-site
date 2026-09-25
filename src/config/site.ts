@@ -21,9 +21,9 @@ import type {
 const SITE_CONTENT: SiteContent = siteContent as SiteContent;
 export const HERO_CONTENT: HeroContent = heroData as HeroContent;
 export const EVENTS_CONTENT: EventsContent = eventsData as EventsContent;
-export const SERVICES_CONTENT: ServiceItem[] = servicesData as ServiceItem[];
+export const SERVICES_CONTENT: ServiceItem[] = (servicesData as any).servicesList || (servicesData as ServiceItem[]);
 export const PORTFOLIO_CONTENT: PortfolioItem[] =
-  portfolioData as PortfolioItem[];
+  (portfolioData as any).portfolioList || (portfolioData as PortfolioItem[]);
 
 /**
  * Resolve deployment canonical URL for Cloudflare Pages and local dev.
@@ -49,7 +49,7 @@ const basePhone = SITE_CONTENT.phone;
 const cleanPhoneDigits = basePhone.replace(/[^0-9]/g, "");
 
 // ==========================================
-// UNIFIED BRAND & SITE CONFIGURATION
+// UNIFIED BRAND & SITE CONFIGURATION (SSOT)
 // ==========================================
 export const SITE_CONFIG = {
   // URLs & Domains
@@ -60,8 +60,8 @@ export const SITE_CONFIG = {
   studioName: SITE_CONTENT.studioName,
   stylistName: SITE_CONTENT.stylistName,
   credentials: HERO_CONTENT.badge,
-  title: SITE_CONTENT.title,
-  description: SITE_CONTENT.description,
+  title: SITE_CONTENT.browserTitle || SITE_CONTENT.title,
+  description: SITE_CONTENT.metaDescription || SITE_CONTENT.description,
   keywords: SITE_CONTENT.keywords,
 
   // Contact Info
@@ -72,17 +72,17 @@ export const SITE_CONFIG = {
   telephoneSchema: `+1-${cleanPhoneDigits.slice(0, 3)}-${cleanPhoneDigits.slice(3, 6)}-${cleanPhoneDigits.slice(6)}`,
 
   // Social & Profiles
-  instagram: SITE_CONTENT.instagram,
-  instagramUrl: HERO_CONTENT.instagramUrl,
+  instagram: SITE_CONTENT.instagramHandle || SITE_CONTENT.instagram,
+  instagramUrl: `https://www.instagram.com/${(SITE_CONTENT.instagramHandle || SITE_CONTENT.instagram || "").replace("@", "")}/`,
 
   // Integrations & Logistics
-  calUsername: "ariel-anders",
-  calDefaultSlug: "april-demo",
+  calUsername: SITE_CONTENT.calUsername || "ariel-anders",
+  calDefaultSlug: SITE_CONTENT.calDefaultSlug || "april-demo",
   googleSheetUrl:
     (typeof process !== "undefined" && process.env?.VITE_GOOGLE_SHEET_URL) ||
     "",
   locationDisplay: SITE_CONTENT.locationDisplay,
-  logisticsNotice: HERO_CONTENT.availabilityNotice,
+  logisticsNotice: SITE_CONTENT.availabilityBanner || "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
 
   // Address & Hours
   address: SITE_CONTENT.address,
@@ -97,15 +97,19 @@ export const SITE_CONFIG = {
   heroSubtext: HERO_CONTENT.subheading,
 
   // Media
-  ogImage: `${cleanSiteUrl}${SITE_CONTENT.ogImageRelative}`,
-  ogImageFallback: `${cleanSiteUrl}${SITE_CONTENT.ogImageFallbackRelative}`,
-  ogImageAlt: SITE_CONTENT.ogImageAlt,
-  ogImageWidth: SITE_CONTENT.ogImageWidth,
-  ogImageHeight: SITE_CONTENT.ogImageHeight,
-  heroPreloadImage: SITE_CONTENT.heroPreloadImage,
-  portfolioImages: SITE_CONTENT.portfolioImagesRelative.map(
-    (p) => `${cleanSiteUrl}${p}`
-  ),
+  ogImage: `${cleanSiteUrl}/assets/portfolio-4.webp`,
+  ogImageFallback: `${cleanSiteUrl}/assets/og-cover.jpg`,
+  ogImageAlt: SITE_CONTENT.title,
+  ogImageWidth: 620,
+  ogImageHeight: 758,
+  heroPreloadImage: "/assets/portfolio-4.webp",
+  portfolioImages: [
+    `${cleanSiteUrl}/assets/portfolio-4.webp`,
+    `${cleanSiteUrl}/assets/portfolio-1.webp`,
+    `${cleanSiteUrl}/assets/portfolio-2.webp`,
+    `${cleanSiteUrl}/assets/portfolio-3.webp`,
+    `${cleanSiteUrl}/assets/portfolio-5.webp`,
+  ],
 };
 
 export type SiteConfig = typeof SITE_CONFIG;

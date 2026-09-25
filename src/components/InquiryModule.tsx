@@ -8,21 +8,52 @@ import {
   RefreshCw,
 } from "lucide-react";
 import { TOKENS } from "../styles/tokens";
-import { SITE_CONFIG } from "../config/site";
+import { SITE_CONFIG, EVENTS_CONTENT } from "../config/site";
+import type { FormFieldItem } from "../types/content";
 
 export const InquiryModule: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    eventType: "Wedding / Bridal Party",
-    partySize: "3-5 People",
-    dateLocation: "",
-    notes: "",
-  });
+  const defaultFields: FormFieldItem[] = [
+    { _template: "inputField", label: "Your Name", fieldType: "text", placeholder: "Jane Doe", required: true },
+    { _template: "inputField", label: "Email Address", fieldType: "email", placeholder: "jane@example.com", required: true },
+    { _template: "inputField", label: "Phone Number", fieldType: "tel", placeholder: SITE_CONFIG.phoneDisplay, required: true },
+    { 
+      _template: "selectField", 
+      label: "Event / Inquiry Type", 
+      options: [
+        "Wedding / Bridal Party", 
+        "Editorial / Commercial Photoshoot", 
+        "Swing Dance Camp / Festival", 
+        "Retro Pageant / Special Event", 
+        "Private Group Styling Session"
+      ], 
+      required: true 
+    },
+    { 
+      _template: "selectField", 
+      label: "Estimated Party Size", 
+      options: [
+        "1 Person", 
+        "2-4 People", 
+        "5-8 People", 
+        "9+ People (Large Bridal / Production Group)"
+      ], 
+      required: true 
+    },
+    { _template: "inputField", label: "Target Date & Location (City or Venue)", fieldType: "text", placeholder: "e.g., October 14, 2026 • San Francisco or Bay Area venue", required: true },
+    { _template: "textareaField", label: "Styling Notes / Desired Aesthetics", placeholder: "Mention desired styles (e.g. vintage victory rolls, natural curl styling, 1940s waves), call-times, or group details...", required: false }
+  ];
+
+  const formFields: FormFieldItem[] = EVENTS_CONTENT.formFields?.length ? EVENTS_CONTENT.formFields : defaultFields;
+  const submitButtonText = EVENTS_CONTENT.formOptions?.submitButtonText || "Submit Booking Inquiry";
+
+  const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const handleFieldChange = (label: string, value: string) => {
+    setFieldValues((prev) => ({ ...prev, [label]: value }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,15 +62,23 @@ export const InquiryModule: React.FC = () => {
 
     const sheetUrl = SITE_CONFIG.googleSheetUrl;
 
+    const payload = {
+      recipient: SITE_CONFIG.email,
+      submittedAt: new Date().toISOString(),
+      fields: formFields.map((field) => ({
+        label: field.label,
+        value: fieldValues[field.label] || "N/A",
+      })),
+    };
+
     if (sheetUrl) {
       try {
         await fetch(sheetUrl, {
           method: "POST",
-          mode: "no-cors",
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "text/plain;charset=utf-8",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(payload),
         });
         setIsSubmitting(false);
         setSubmitted(true);
@@ -47,7 +86,7 @@ export const InquiryModule: React.FC = () => {
         const errorMsg =
           err instanceof Error
             ? err.message
-            : "Network error transmitting inquiry to Google Sheets.";
+            : "Network error transmitting inquiry to Apps Script endpoint.";
         console.error("Elevated Submission Error:", err);
         setIsSubmitting(false);
         setSubmitError(errorMsg);
@@ -60,6 +99,12 @@ export const InquiryModule: React.FC = () => {
       }, 500);
     }
   };
+
+  // Find client name if possible for confirmation message
+  const clientNameField = Object.entries(fieldValues).find(([label]) => 
+    label.toLowerCase().includes("name")
+  );
+  const clientName = clientNameField ? clientNameField[1] : "";
 
   return (
     <section
@@ -75,15 +120,15 @@ export const InquiryModule: React.FC = () => {
                 Inquiry Received
               </h3>
               <p className="text-xs text-stone-600 font-sans max-w-md mx-auto leading-relaxed">
-                Thank you, {formData.name || "friend"}.{" "}
+                Thank you, {clientName || "friend"}.{" "}
                 {SITE_CONFIG.stylistName} will review your request and reach out
-                via email or phone ({formData.phone || formData.email}) with
-                availability, schedule details, and custom rate options.
+                with availability, schedule details, and custom rate options.
               </p>
               <button
                 onClick={() => {
                   setSubmitted(false);
                   setSubmitError(null);
+                  setFieldValues({});
                 }}
                 className={`mt-4 text-xs font-semibold uppercase tracking-wider text-stone-900 underline ${TOKENS.accent.iconHover} cursor-pointer`}
               >
@@ -122,167 +167,83 @@ export const InquiryModule: React.FC = () => {
                 </div>
               )}
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div>
-                  <label htmlFor="inquiry-name" className={TOKENS.input.label}>
-                    Your Name *
-                  </label>
-                  <input
-                    id="inquiry-name"
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    placeholder="Jane Doe"
-                    className={TOKENS.input.base}
-                  />
-                </div>
+              {formFields.map((field, idx) => {
+                const fieldKey = `field_${idx}`;
+                const isRequired = field.required !== false;
 
-                <div>
-                  <label htmlFor="inquiry-email" className={TOKENS.input.label}>
-                    Email Address *
-                  </label>
-                  <input
-                    id="inquiry-email"
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    placeholder="jane@example.com"
-                    className={TOKENS.input.base}
-                  />
-                </div>
+                if (field._template === "selectField") {
+                  return (
+                    <div key={fieldKey}>
+                      <label htmlFor={`field-input-${idx}`} className={TOKENS.input.label}>
+                        {field.label} {isRequired && "*"}
+                      </label>
+                      <div className="relative">
+                        <Users className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                        <select
+                          id={`field-input-${idx}`}
+                          required={isRequired}
+                          value={fieldValues[field.label] || ""}
+                          onChange={(e) => handleFieldChange(field.label, e.target.value)}
+                          className={TOKENS.input.selectWithIcon}
+                        >
+                          <option value="" disabled>Select an option...</option>
+                          {field.options?.map((opt, oIdx) => (
+                            <option key={oIdx} value={opt}>
+                              {opt}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  );
+                }
 
-                <div>
-                  <label htmlFor="inquiry-phone" className={TOKENS.input.label}>
-                    Phone Number *
-                  </label>
-                  <input
-                    id="inquiry-phone"
-                    type="tel"
-                    required
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    placeholder={SITE_CONFIG.phoneDisplay}
-                    className={TOKENS.input.base}
-                  />
-                </div>
-              </div>
+                if (field._template === "textareaField") {
+                  return (
+                    <div key={fieldKey}>
+                      <label htmlFor={`field-input-${idx}`} className={TOKENS.input.label}>
+                        {field.label} {isRequired && "*"}
+                      </label>
+                      <textarea
+                        id={`field-input-${idx}`}
+                        rows={3}
+                        required={isRequired}
+                        value={fieldValues[field.label] || ""}
+                        onChange={(e) => handleFieldChange(field.label, e.target.value)}
+                        placeholder={field.placeholder || ""}
+                        className={TOKENS.input.base}
+                      />
+                    </div>
+                  );
+                }
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="inquiry-event-type"
-                    className={TOKENS.input.label}
-                  >
-                    Event / Inquiry Type
-                  </label>
-                  <select
-                    id="inquiry-event-type"
-                    value={formData.eventType}
-                    onChange={(e) =>
-                      setFormData({ ...formData, eventType: e.target.value })
-                    }
-                    className={TOKENS.input.select}
-                  >
-                    <option value="Wedding / Bridal Party">
-                      Wedding / Bridal Party
-                    </option>
-                    <option value="Editorial / Modeling Shoot">
-                      Editorial / Modeling Shoot
-                    </option>
-                    <option value="Swing Dance Camp / Troupe">
-                      Swing Dance Camp / Troupe Prep
-                    </option>
-                    <option value="Car Show / Pin-Up Pageant">
-                      Car Show / Pin-Up Pageant
-                    </option>
-                    <option value="Private Gala / Special Event">
-                      Private Gala / Milestone Party
-                    </option>
-                    <option value="Other Custom Booking">
-                      Other Custom Production
-                    </option>
-                  </select>
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="inquiry-party-size"
-                    className={TOKENS.input.label}
-                  >
-                    Estimated Party Size
-                  </label>
-                  <div className="relative">
-                    <Users className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                    <select
-                      id="inquiry-party-size"
-                      value={formData.partySize}
-                      onChange={(e) =>
-                        setFormData({ ...formData, partySize: e.target.value })
-                      }
-                      className={TOKENS.input.selectWithIcon}
-                    >
-                      <option value="Individual (Single Client)">
-                        Individual (Single Client)
-                      </option>
-                      <option value="2-3 People">2-3 People</option>
-                      <option value="4-6 People">4-6 People</option>
-                      <option value="7+ People (Full Wedding / Troupe)">
-                        7+ People (Full Wedding / Troupe)
-                      </option>
-                      <option value="Full-Day Production / Shoot">
-                        Full-Day Production / Shoot
-                      </option>
-                    </select>
+                // Default inputField
+                return (
+                  <div key={fieldKey}>
+                    <label htmlFor={`field-input-${idx}`} className={TOKENS.input.label}>
+                      {field.label} {isRequired && "*"}
+                    </label>
+                    <div className="relative">
+                      {field.label.toLowerCase().includes("location") || field.label.toLowerCase().includes("venue") ? (
+                        <MapPin className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                      ) : null}
+                      <input
+                        id={`field-input-${idx}`}
+                        type={field.fieldType || "text"}
+                        required={isRequired}
+                        value={fieldValues[field.label] || ""}
+                        onChange={(e) => handleFieldChange(field.label, e.target.value)}
+                        placeholder={field.placeholder || ""}
+                        className={
+                          field.label.toLowerCase().includes("location") || field.label.toLowerCase().includes("venue")
+                            ? TOKENS.input.iconWrapper
+                            : TOKENS.input.base
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="inquiry-date-location"
-                  className={TOKENS.input.label}
-                >
-                  Target Date & Location (City or Venue) *
-                </label>
-                <div className="relative">
-                  <MapPin className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  <input
-                    id="inquiry-date-location"
-                    type="text"
-                    required
-                    value={formData.dateLocation}
-                    onChange={(e) =>
-                      setFormData({ ...formData, dateLocation: e.target.value })
-                    }
-                    placeholder="e.g., October 14, 2026 • San Francisco or Bay Area venue"
-                    className={TOKENS.input.iconWrapper}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="inquiry-notes" className={TOKENS.input.label}>
-                  Styling Notes / Desired Aesthetics (Optional)
-                </label>
-                <textarea
-                  id="inquiry-notes"
-                  rows={3}
-                  value={formData.notes}
-                  onChange={(e) =>
-                    setFormData({ ...formData, notes: e.target.value })
-                  }
-                  placeholder="Mention desired styles (e.g. vintage victory rolls, natural curl styling, 1940s waves), call-times, or group details..."
-                  className={TOKENS.input.base}
-                />
-              </div>
+                );
+              })}
 
               <div className="pt-2">
                 <button
@@ -299,7 +260,7 @@ export const InquiryModule: React.FC = () => {
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      <span>Submit Custom Booking Inquiry</span>
+                      <span>{submitButtonText}</span>
                     </>
                   )}
                 </button>

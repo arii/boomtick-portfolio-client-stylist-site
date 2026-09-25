@@ -37,6 +37,8 @@
     "closes": "18:00"
   },
   "priceRange": "$$",
+  "calUsername": "ariel-anders",
+  "calDefaultSlug": "april-demo",
   "heroHeading": "Curly hair cuts & authentic vintage styling.",
   "heroSubtext": "San Francisco stylist specializing in curly cuts and classic vintage hair, with custom on-location styling available for events and productions.",
   "ogImageRelative": "/assets/portfolio-4.webp",

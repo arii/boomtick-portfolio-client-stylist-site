@@ -23,9 +23,22 @@ export interface PortfolioItem {
   tag: string;
 }
 
+export interface FormFieldItem {
+  _template: "inputField" | "selectField" | "textareaField";
+  label: string;
+  fieldType?: string;
+  placeholder?: string;
+  required?: boolean;
+  options?: string[];
+}
+
 export interface EventsContent {
   title: string;
   description: string;
+  formFields?: FormFieldItem[];
+  formOptions?: {
+    submitButtonText?: string;
+  };
 }
 
 export interface SiteContent {

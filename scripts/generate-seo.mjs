@@ -21,7 +21,8 @@ if (
 
 const site = JSON.parse(fs.readFileSync(sitePath, "utf8"));
 const hero = JSON.parse(fs.readFileSync(heroPath, "utf8"));
-const services = JSON.parse(fs.readFileSync(servicesPath, "utf8"));
+const servicesRaw = JSON.parse(fs.readFileSync(servicesPath, "utf8"));
+const services = Array.isArray(servicesRaw) ? servicesRaw : (servicesRaw.servicesList || []);
 
 const siteUrl = (
   process.env.VITE_SITE_URL ||
@@ -186,7 +187,7 @@ const schemaOrgData = {
     "@type": "AdministrativeArea",
     name: "San Francisco, CA",
   },
-  sameAs: [hero.instagramUrl],
+  sameAs: [`https://www.instagram.com/${(site.instagramHandle || site.instagram || "hair.by.april_209").replace("@", "")}/`],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Styling Services",
