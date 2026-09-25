@@ -1,4 +1,5 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense, useCallback } from "react";
+import { useTina, tinaField } from "tinacms/dist/react";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { StyleShowcase } from "./components/StyleShowcase";
@@ -6,13 +7,7 @@ import { EventsCollaboration } from "./components/EventsCollaboration";
 import { InquiryModule } from "./components/InquiryModule";
 import { Footer } from "./components/Footer";
 import { SchemaOrg } from "./components/SchemaOrg";
-import {
-  SITE_CONFIG,
-  HERO_CONTENT,
-  EVENTS_CONTENT,
-  SERVICES_CONTENT,
-  PORTFOLIO_CONTENT,
-} from "./config/site";
+import { SITE_CONFIG } from "./config/site";
 import { tinaClient } from "./lib/tinaClient";
 import { TOKENS } from "./styles/tokens";
 import { Clock, ArrowRight, Check, Calendar } from "lucide-react";
@@ -21,8 +16,20 @@ import type {
   ServiceItem,
   PortfolioItem,
   EventsContent,
-  FormFieldItem,
+  SiteContent,
 } from "./types/content";
+import {
+  HeroDocument,
+  SiteDocument,
+  ServicesDocument,
+  PortfolioDocument,
+  EventsDocument,
+} from "../tina/__generated__/types.js";
+import heroContentJson from "./content/hero.json";
+import siteContentJson from "./content/site.json";
+import servicesContentJson from "./content/services.json";
+import portfolioContentJson from "./content/portfolio.json";
+import eventsContentJson from "./content/events.json";
 
 // Code-split heavy modals to optimize initial bundle and LCP
 const BookingModal = lazy(() =>
@@ -37,10 +44,250 @@ const AdminMockup = lazy(() =>
   }))
 );
 
+// 1. Hero Section Container with TinaCMS data registration
+function HeroSectionContainer({
+  payload,
+  heroImage,
+  onBookAppointment,
+}: {
+  payload: { query: string; variables: { relativePath: string }; data: { hero: HeroContent } };
+  heroImage: string;
+  onBookAppointment: (slug?: string) => void;
+}) {
+  const { data } = useTina({
+    query: payload.query,
+    variables: payload.variables,
+    data: payload.data,
+    experimental___selectFormByFormId: () => "src/content/hero.json",
+  });
+
+  const heroContent = data?.hero || payload.data.hero;
+
+  return (
+    <Hero
+      onBookAppointment={() => onBookAppointment(heroContent.calSlug)}
+      heroContent={heroContent}
+      heroImage={heroImage}
+    />
+  );
+}
+
+// 2. Services Section Container with TinaCMS data registration
+function ServicesSectionContainer({
+  payload,
+  availabilityNotice,
+  onSelectService,
+}: {
+  payload: {
+    query: string;
+    variables: { relativePath: string };
+    data: { services: { sectionTitle?: string; servicesList: ServiceItem[] } };
+  };
+  availabilityNotice: string;
+  onSelectService: (service: ServiceItem) => void;
+}) {
+  const { data } = useTina({
+    query: payload.query,
+    variables: payload.variables,
+    data: payload.data,
+    experimental___selectFormByFormId: () => "src/content/services.json",
+  });
+
+  const services = data?.services || payload.data.services;
+  const sectionTitle = services?.sectionTitle || "Services & Pricing";
+  const servicesList: ServiceItem[] = services?.servicesList || [];
+
+  return (
+    <section
+      id="services"
+      className="py-20 md:py-28 bg-white scroll-mt-20 border-b border-stone-200"
+    >
+      <div className="max-w-6xl mx-auto px-6">
+        <div className="max-w-2xl mx-auto text-center mb-10">
+          <h2
+            data-tina-field={tinaField(services, "sectionTitle")}
+            className="text-3xl md:text-4xl font-serif font-bold text-stone-900 tracking-tight"
+          >
+            {sectionTitle}
+          </h2>
+        </div>
+
+        {/* Consolidated Scheduling Callout Banner */}
+        <div className={`mb-10 max-w-2xl mx-auto ${TOKENS.card.callout}`}>
+          <Calendar className={`w-4 h-4 ${TOKENS.accent.icon} shrink-0`} />
+          <span>
+            <strong>Scheduling Logistics:</strong> {availabilityNotice}
+          </span>
+        </div>
+
+        {/* 2 Clean Core Services Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 items-stretch">
+          {servicesList.map((service) => (
+            <div
+              id={`service-card-${service.id}`}
+              key={service.id}
+              className={TOKENS.card.service}
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-end">
+                  <div
+                    data-tina-field={tinaField(service, "duration")}
+                    className="flex items-center gap-1 text-[11px] text-stone-500 shrink-0"
+                  >
+                    <Clock className="w-3 h-3 text-stone-400" />
+                    <span>{service.duration}</span>
+                  </div>
+                </div>
+
+                <div>
+                  <h3
+                    data-tina-field={tinaField(service, "name")}
+                    className="font-serif font-bold text-2xl text-stone-900 leading-snug"
+                  >
+                    {service.name}
+                  </h3>
+                  <div
+                    data-tina-field={tinaField(service, "price")}
+                    className="font-serif font-bold text-3xl text-stone-900 mt-1"
+                  >
+                    {service.price}
+                  </div>
+                </div>
+
+                <p
+                  data-tina-field={tinaField(service, "description")}
+                  className="text-stone-600 text-xs font-sans leading-relaxed"
+                >
+                  {service.description}
+                </p>
+
+                <div className="pt-4 border-t border-stone-200/70">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 block mb-2.5 font-sans">
+                    Included Deliverables:
+                  </span>
+                  <ul className="space-y-2.5">
+                    {service.deliverables.map((item, i) => (
+                      <li
+                        key={i}
+                        className="flex items-start gap-2 text-xs text-stone-600 font-sans"
+                      >
+                        <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-8 pt-4 border-t border-stone-200/70">
+                <button
+                  id={`book-service-btn-${service.id}`}
+                  onClick={() => onSelectService(service)}
+                  className={TOKENS.button.primaryFull}
+                >
+                  <span>Book Appointment</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// 3. Portfolio Section Container with TinaCMS data registration
+function PortfolioSectionContainer({
+  payload,
+}: {
+  payload: {
+    query: string;
+    variables: { relativePath: string };
+    data: { portfolio: { portfolioList: PortfolioItem[] } };
+  };
+}) {
+  const { data } = useTina({
+    query: payload.query,
+    variables: payload.variables,
+    data: payload.data,
+    experimental___selectFormByFormId: () => "src/content/portfolio.json",
+  });
+
+  const portfolio = data?.portfolio || payload.data.portfolio;
+  return <StyleShowcase images={portfolio?.portfolioList} />;
+}
+
+// 4. Events Section Container with TinaCMS data registration
+function EventsSectionContainer({
+  payload,
+  recipientEmail,
+}: {
+  payload: {
+    query: string;
+    variables: { relativePath: string };
+    data: { events: EventsContent };
+  };
+  recipientEmail: string;
+}) {
+  const { data } = useTina({
+    query: payload.query,
+    variables: payload.variables,
+    data: payload.data,
+    experimental___selectFormByFormId: () => "src/content/events.json",
+  });
+
+  const events = data?.events || payload.data.events;
+
+  return (
+    <>
+      <EventsCollaboration content={events} />
+      {events?.showForm !== false && (
+        <InquiryModule
+          formFields={events?.formFields}
+          submitButtonText={events?.formOptions?.submitButtonText}
+          recipientEmail={recipientEmail}
+        />
+      )}
+    </>
+  );
+}
+
+// 5. Site Settings Bridge with TinaCMS data registration
+function SiteSettingsBridge({
+  payload,
+  onSiteUpdate,
+}: {
+  payload: {
+    query: string;
+    variables: { relativePath: string };
+    data: { site: SiteContent };
+  };
+  onSiteUpdate: (site: Partial<SiteContent>) => void;
+}) {
+  const { data } = useTina({
+    query: payload.query,
+    variables: payload.variables,
+    data: payload.data,
+    experimental___selectFormByFormId: () => "src/content/site.json",
+  });
+
+  const site = data?.site || payload.data.site;
+
+  useEffect(() => {
+    if (site) {
+      onSiteUpdate(site);
+    }
+  }, [site, onSiteUpdate]);
+
+  return null;
+}
+
 export default function App() {
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(
     null
   );
+  const [customCalSlug, setCustomCalSlug] = useState<string | null>(null);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [isAdminOpen, setIsAdminOpen] = useState(() => {
     if (typeof window !== "undefined") {
@@ -52,30 +299,72 @@ export default function App() {
     return false;
   });
 
-  // Dynamic Content States (Initialized with SSOT static defaults)
-  const [heroState, setHeroState] = useState<HeroContent>(HERO_CONTENT);
-  const [eventsState, setEventsState] = useState<EventsContent>(EVENTS_CONTENT);
-  const [servicesState, setServicesState] =
-    useState<ServiceItem[]>(SERVICES_CONTENT);
-  const [portfolioState, setPortfolioState] =
-    useState<PortfolioItem[]>(PORTFOLIO_CONTENT);
-  const [emailState, setEmailState] = useState(SITE_CONFIG.email);
-  const [phoneState, setPhoneState] = useState(SITE_CONFIG.phone);
-  const [instagramState, setInstagramState] = useState(SITE_CONFIG.instagram);
-  const [instagramUrlState, setInstagramUrlState] = useState(
-    SITE_CONFIG.instagramUrl
-  );
-  const [heroImageState, setHeroImageState] = useState(
-    SITE_CONFIG.heroPreloadImage
-  );
-  const [calUsernameState, setCalUsernameState] = useState(
-    SITE_CONFIG.calUsername
-  );
-  const [calDefaultSlugState, setCalDefaultSlugState] = useState(
-    SITE_CONFIG.calDefaultSlug
-  );
+  // Dynamic Site Layout Settings (Driven by TinaCMS site.json)
+  const [siteState, setSiteState] = useState({
+    studioName: SITE_CONFIG.studioName,
+    stylistName: SITE_CONFIG.stylistName,
+    email: SITE_CONFIG.email,
+    phone: SITE_CONFIG.phone,
+    instagram: SITE_CONFIG.instagram,
+    instagramUrl: SITE_CONFIG.instagramUrl,
+    calUsername: SITE_CONFIG.calUsername,
+    calDefaultSlug: SITE_CONFIG.calDefaultSlug,
+    availabilityBanner: SITE_CONFIG.logisticsNotice,
+  });
 
-  // 1. Live Querying via TinaCMS Content API (when available)
+  const handleSiteUpdate = useCallback((site: Partial<SiteContent>) => {
+    if (!site) return;
+    setSiteState((prev) => {
+      const updated = { ...prev };
+      if (site.studioName) updated.studioName = site.studioName;
+      if (site.stylistName) updated.stylistName = site.stylistName;
+      if (site.email) updated.email = site.email;
+      if (site.phone) updated.phone = site.phone;
+      if (site.calUsername) updated.calUsername = site.calUsername;
+      if (site.calDefaultSlug) updated.calDefaultSlug = site.calDefaultSlug;
+      if (site.availabilityBanner)
+        updated.availabilityBanner = site.availabilityBanner;
+      if (site.instagramHandle) {
+        const clean = site.instagramHandle.replace(/^@/, "");
+        updated.instagram = `@${clean}`;
+        updated.instagramUrl = `https://www.instagram.com/${clean}/`;
+      }
+      return updated;
+    });
+  }, []);
+
+  // TinaCMS Individual Document Payloads (Single-Document Queries Passed directly to useTina)
+  const [heroPayload, setHeroPayload] = useState({
+    query: HeroDocument,
+    variables: { relativePath: "hero.json" },
+    data: { hero: heroContentJson as unknown as HeroContent },
+  });
+
+  const [servicesPayload, setServicesPayload] = useState({
+    query: ServicesDocument,
+    variables: { relativePath: "services.json" },
+    data: { services: servicesContentJson as unknown as { sectionTitle?: string; servicesList: ServiceItem[] } },
+  });
+
+  const [portfolioPayload, setPortfolioPayload] = useState({
+    query: PortfolioDocument,
+    variables: { relativePath: "portfolio.json" },
+    data: { portfolio: portfolioContentJson as unknown as { portfolioList: PortfolioItem[] } },
+  });
+
+  const [eventsPayload, setEventsPayload] = useState({
+    query: EventsDocument,
+    variables: { relativePath: "events.json" },
+    data: { events: eventsContentJson as unknown as EventsContent },
+  });
+
+  const [sitePayload, setSitePayload] = useState({
+    query: SiteDocument,
+    variables: { relativePath: "site.json" },
+    data: { site: siteContentJson as unknown as SiteContent },
+  });
+
+  // 1. Initial live query via TinaCMS API (local dev server or TinaCloud)
   useEffect(() => {
     let isMounted = true;
 
@@ -96,62 +385,46 @@ export default function App() {
         const [heroRes, siteRes, servicesRes, portfolioRes, eventsRes] = results;
 
         if (heroRes.status === "fulfilled" && heroRes.value?.data?.hero) {
-          const h = heroRes.value.data.hero;
-          setHeroState((prev) => ({
-            ...prev,
-            badge: h.badge || prev.badge,
-            headline: h.headline || prev.headline,
-            subheading: h.subheading || prev.subheading,
-            availabilityNotice: h.availabilityNotice || prev.availabilityNotice,
-            calSlug: h.calSlug || prev.calSlug,
-          }));
+          setHeroPayload({
+            query: heroRes.value.query || HeroDocument,
+            variables: heroRes.value.variables || { relativePath: "hero.json" },
+            data: heroRes.value.data as { hero: HeroContent },
+          });
         }
 
         if (siteRes.status === "fulfilled" && siteRes.value?.data?.site) {
-          const s = siteRes.value.data.site;
-          if (s.email) setEmailState(s.email);
-          if (s.phone) setPhoneState(s.phone);
-          if (s.calUsername) setCalUsernameState(s.calUsername);
-          if (s.calDefaultSlug) setCalDefaultSlugState(s.calDefaultSlug);
-          if (s.instagramHandle) {
-            const clean = s.instagramHandle.replace(/^@/, "");
-            setInstagramState(`@${clean}`);
-            setInstagramUrlState(`https://www.instagram.com/${clean}/`);
-          }
+          setSitePayload({
+            query: siteRes.value.query || SiteDocument,
+            variables: siteRes.value.variables || { relativePath: "site.json" },
+            data: siteRes.value.data as unknown as { site: SiteContent },
+          });
         }
 
-        if (
-          servicesRes.status === "fulfilled" &&
-          servicesRes.value?.data?.services?.servicesList
-        ) {
-          setServicesState(
-            servicesRes.value.data.services.servicesList as ServiceItem[]
-          );
+        if (servicesRes.status === "fulfilled" && servicesRes.value?.data?.services) {
+          setServicesPayload({
+            query: servicesRes.value.query || ServicesDocument,
+            variables: servicesRes.value.variables || { relativePath: "services.json" },
+            data: servicesRes.value.data as unknown as { services: { sectionTitle?: string; servicesList: ServiceItem[] } },
+          });
         }
 
-        if (
-          portfolioRes.status === "fulfilled" &&
-          portfolioRes.value?.data?.portfolio?.portfolioList
-        ) {
-          setPortfolioState(
-            portfolioRes.value.data.portfolio.portfolioList as PortfolioItem[]
-          );
+        if (portfolioRes.status === "fulfilled" && portfolioRes.value?.data?.portfolio) {
+          setPortfolioPayload({
+            query: portfolioRes.value.query || PortfolioDocument,
+            variables: portfolioRes.value.variables || { relativePath: "portfolio.json" },
+            data: portfolioRes.value.data as unknown as { portfolio: { portfolioList: PortfolioItem[] } },
+          });
         }
 
         if (eventsRes.status === "fulfilled" && eventsRes.value?.data?.events) {
-          const ev = eventsRes.value.data.events;
-          setEventsState((prev) => ({
-            ...prev,
-            title: ev.title || prev.title,
-            description: ev.description || prev.description,
-            showForm:
-              typeof ev.showForm === "boolean" ? ev.showForm : prev.showForm,
-            formFields:
-              (ev.formFields as unknown as FormFieldItem[]) || prev.formFields,
-          }));
+          setEventsPayload({
+            query: eventsRes.value.query || EventsDocument,
+            variables: eventsRes.value.variables || { relativePath: "events.json" },
+            data: eventsRes.value.data as unknown as { events: EventsContent },
+          });
         }
       } catch {
-        // Silently preserve SSOT static content
+        // Silently preserve initial SSOT static content
       }
     }
 
@@ -161,15 +434,8 @@ export default function App() {
     };
   }, []);
 
-  // 2. TinaCMS Live Preview Data Re-hydration & Iframe Bridge
+  // 2. Hash scroll navigation for section links
   useEffect(() => {
-    // Notify parent window (TinaCMS live editor) that preview iframe is ready
-    if (window.parent && window.parent !== window) {
-      window.parent.postMessage({ type: "tina:ready" }, "*");
-      window.parent.postMessage({ type: "url-changed" }, "*");
-    }
-
-    // Scroll to section hash when navigating via TinaCMS router
     const handleHashScroll = () => {
       if (window.location.hash) {
         const id = window.location.hash.replace("#", "");
@@ -182,73 +448,14 @@ export default function App() {
 
     handleHashScroll();
     window.addEventListener("hashchange", handleHashScroll);
-
-    const handleTinaMessage = (event: MessageEvent) => {
-      if (!event.data) return;
-
-      // Handle direct document updates from Tina CMS live preview
-      const { type, data, collection, values } = event.data;
-      const payload = values || data;
-
-      if (!payload) return;
-
-      if (collection === "hero" || type?.includes("hero") || payload.headline) {
-        setHeroState((prev) => ({
-          ...prev,
-          ...payload,
-        }));
-      }
-
-      if (
-        collection === "services" ||
-        type?.includes("services") ||
-        payload.servicesList
-      ) {
-        if (Array.isArray(payload.servicesList)) {
-          setServicesState(payload.servicesList);
-        }
-      }
-
-      if (
-        collection === "portfolio" ||
-        type?.includes("portfolio") ||
-        payload.portfolioList
-      ) {
-        if (Array.isArray(payload.portfolioList)) {
-          setPortfolioState(payload.portfolioList);
-        }
-      }
-
-      if (collection === "events" || type?.includes("events") || payload.title) {
-        setEventsState((prev) => ({
-          ...prev,
-          ...payload,
-        }));
-      }
-
-      if (collection === "site" || type?.includes("site")) {
-        if (payload.email) setEmailState(payload.email);
-        if (payload.phone) setPhoneState(payload.phone);
-        if (payload.calUsername) setCalUsernameState(payload.calUsername);
-        if (payload.calDefaultSlug)
-          setCalDefaultSlugState(payload.calDefaultSlug);
-        if (payload.instagramHandle) {
-          const clean = payload.instagramHandle.replace(/^@/, "");
-          setInstagramState(`@${clean}`);
-          setInstagramUrlState(`https://www.instagram.com/${clean}/`);
-        }
-      }
-    };
-
-    window.addEventListener("message", handleTinaMessage);
     return () => {
-      window.removeEventListener("message", handleTinaMessage);
       window.removeEventListener("hashchange", handleHashScroll);
     };
   }, []);
 
-  const handleOpenBooking = (service?: ServiceItem) => {
+  const handleOpenBooking = (service?: ServiceItem | null, slug?: string) => {
     setSelectedService(service ?? null);
+    setCustomCalSlug(slug || service?.calSlug || null);
     setIsBookingOpen(true);
   };
 
@@ -257,108 +464,45 @@ export default function App() {
       {/* Dynamic Schema.org JSON-LD Controller */}
       <SchemaOrg />
 
-      {/* Navigation */}
-      <Navbar onBookAppointment={() => handleOpenBooking()} />
-
-      {/* 1. Primary Hero Section (LCP Optimized) */}
-      <Hero
-        onBookAppointment={() => handleOpenBooking()}
-        heroContent={heroState}
-        heroImage={heroImageState}
+      {/* TinaCMS Site Settings Bridge */}
+      <SiteSettingsBridge
+        payload={sitePayload}
+        onSiteUpdate={handleSiteUpdate}
       />
 
-      {/* 2. Signature Disciplines: Pin-Up & Curly Cuts Showcase Grid */}
-      <StyleShowcase images={portfolioState} />
+      {/* Navigation */}
+      <Navbar
+        onBookAppointment={() => handleOpenBooking()}
+        studioName={siteState.studioName}
+        instagramUrl={siteState.instagramUrl}
+      />
 
-      {/* 3. Services Menu (Two Core Disciplines) */}
-      <section
-        id="services"
-        className="py-20 md:py-28 bg-white scroll-mt-20 border-b border-stone-200"
-      >
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="max-w-2xl mx-auto text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 tracking-tight">
-              Services & Pricing
-            </h2>
-          </div>
+      {/* 1. Primary Hero Section (LCP Optimized + TinaCMS Live Hook) */}
+      <HeroSectionContainer
+        payload={heroPayload}
+        heroImage={SITE_CONFIG.heroPreloadImage}
+        onBookAppointment={(slug) => handleOpenBooking(null, slug)}
+      />
 
-          {/* Consolidated Scheduling Callout Banner */}
-          <div className={`mb-10 max-w-2xl mx-auto ${TOKENS.card.callout}`}>
-            <Calendar className={`w-4 h-4 ${TOKENS.accent.icon} shrink-0`} />
-            <span>
-              <strong>Scheduling Logistics:</strong>{" "}
-              {heroState.availabilityNotice}
-            </span>
-          </div>
+      {/* 2. Signature Disciplines: Pin-Up & Curly Cuts Showcase Grid (TinaCMS Live Hook) */}
+      <PortfolioSectionContainer payload={portfolioPayload} />
 
-          {/* 2 Clean Core Services Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 items-stretch">
-            {servicesState.map((service) => (
-              <div
-                id={`service-card-${service.id}`}
-                key={service.id}
-                className={TOKENS.card.service}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-end">
-                    <div className="flex items-center gap-1 text-[11px] text-stone-500 shrink-0">
-                      <Clock className="w-3 h-3 text-stone-400" />
-                      <span>{service.duration}</span>
-                    </div>
-                  </div>
+      {/* 3. Services Menu (TinaCMS Live Hook) */}
+      <ServicesSectionContainer
+        payload={servicesPayload}
+        availabilityNotice={
+          heroPayload.data.hero.availabilityNotice ||
+          siteState.availabilityBanner ||
+          SITE_CONFIG.logisticsNotice
+        }
+        onSelectService={(service) => handleOpenBooking(service, service.calSlug)}
+      />
 
-                  <div>
-                    <h3 className="font-serif font-bold text-2xl text-stone-900 leading-snug">
-                      {service.name}
-                    </h3>
-                    <div className="font-serif font-bold text-3xl text-stone-900 mt-1">
-                      {service.price}
-                    </div>
-                  </div>
-
-                  <p className="text-stone-600 text-xs font-sans leading-relaxed">
-                    {service.description}
-                  </p>
-
-                  <div className="pt-4 border-t border-stone-200/70">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 block mb-2.5 font-sans">
-                      Included Deliverables:
-                    </span>
-                    <ul className="space-y-2.5">
-                      {service.deliverables.map((item, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-2 text-xs text-stone-600 font-sans"
-                        >
-                          <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-stone-200/70">
-                  <button
-                    id={`book-service-btn-${service.id}`}
-                    onClick={() => handleOpenBooking(service)}
-                    className={TOKENS.button.primaryFull}
-                  >
-                    <span>Book Appointment</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Flexible Events & Productions */}
-      <EventsCollaboration content={eventsState} />
-
-      {/* 5. Custom Booking & Event Inquiry Form */}
-      {eventsState.showForm !== false && <InquiryModule />}
+      {/* 4. Flexible Events & Custom Inquiry Form (TinaCMS Live Hook) */}
+      <EventsSectionContainer
+        payload={eventsPayload}
+        recipientEmail={siteState.email}
+      />
 
       {/* Footer Branding & Navigation */}
       <Footer
@@ -366,10 +510,11 @@ export default function App() {
         onToggleAdmin={() => {
           setIsAdminOpen(true);
         }}
-        email={emailState}
-        phone={phoneState}
-        instagram={instagramState}
-        instagramUrl={instagramUrlState}
+        studioName={siteState.studioName}
+        email={siteState.email}
+        phone={siteState.phone}
+        instagram={siteState.instagram}
+        instagramUrl={siteState.instagramUrl}
       />
 
       {/* Code-split Cal.com Embed Modal */}
@@ -378,8 +523,14 @@ export default function App() {
           <BookingModal
             isOpen={isBookingOpen}
             onClose={() => setIsBookingOpen(false)}
-            eventSlug={selectedService?.calSlug || heroState.calSlug || calDefaultSlugState}
-            calUsername={calUsernameState}
+            eventSlug={
+              customCalSlug ||
+              selectedService?.calSlug ||
+              heroPayload.data.hero.calSlug ||
+              siteState.calDefaultSlug ||
+              "april-demo"
+            }
+            calUsername={siteState.calUsername || "ariel-anders"}
           />
         </Suspense>
       )}
@@ -396,25 +547,59 @@ export default function App() {
         }
       >
         <AdminMockup
-          heroContent={heroState}
-          setHeroContent={setHeroState}
-          eventsContent={eventsState}
-          setEventsContent={setEventsState}
-          servicesContent={servicesState}
-          setServicesContent={setServicesState}
-          portfolioContent={portfolioState}
-          setPortfolioContent={setPortfolioState}
+          heroContent={heroPayload.data.hero}
+          setHeroContent={(newHero) => {
+            const h = typeof newHero === "function" ? newHero(heroPayload.data.hero) : newHero;
+            setHeroPayload((prev) => ({
+              ...prev,
+              data: { hero: h },
+            }));
+          }}
+          eventsContent={eventsPayload.data.events}
+          setEventsContent={(newEvents) => {
+            const ev = typeof newEvents === "function" ? newEvents(eventsPayload.data.events) : newEvents;
+            setEventsPayload((prev) => ({
+              ...prev,
+              data: { events: ev },
+            }));
+          }}
+          servicesContent={servicesPayload.data.services.servicesList}
+          setServicesContent={(newServices) => {
+            const list = typeof newServices === "function" ? newServices(servicesPayload.data.services.servicesList) : newServices;
+            setServicesPayload((prev) => ({
+              ...prev,
+              data: {
+                services: {
+                  ...prev.data.services,
+                  servicesList: list,
+                },
+              },
+            }));
+          }}
+          portfolioContent={portfolioPayload.data.portfolio.portfolioList}
+          setPortfolioContent={(newPortfolio) => {
+            const list = typeof newPortfolio === "function" ? newPortfolio(portfolioPayload.data.portfolio.portfolioList) : newPortfolio;
+            setPortfolioPayload((prev) => ({
+              ...prev,
+              data: {
+                portfolio: {
+                  ...prev.data.portfolio,
+                  portfolioList: list,
+                },
+              },
+            }));
+          }}
           onClose={() => setIsAdminOpen(false)}
-          email={emailState}
-          setEmail={setEmailState}
-          phone={phoneState}
-          setPhone={setPhoneState}
-          instagram={instagramState}
-          setInstagram={setInstagramState}
-          instagramUrl={instagramUrlState}
-          setInstagramUrl={setInstagramUrlState}
-          heroImage={heroImageState}
-          setHeroImage={setHeroImageState}
+          email={siteState.email}
+          setEmail={(email: string) => setSiteState((p) => ({ ...p, email }))}
+          phone={siteState.phone}
+          setPhone={(phone: string) => setSiteState((p) => ({ ...p, phone }))}
+          instagram={siteState.instagram}
+          setInstagram={(instagram: string) => setSiteState((p) => ({ ...p, instagram }))}
+          instagramUrl={siteState.instagramUrl}
+          setInstagramUrl={(instagramUrl: string) => setSiteState((p) => ({ ...p, instagramUrl }))}
+          heroImage={SITE_CONFIG.heroPreloadImage}
+          setHeroImage={() => {}}
         >
           {mainSiteContent}
         </AdminMockup>

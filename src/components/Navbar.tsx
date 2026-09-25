@@ -5,9 +5,15 @@ import { SITE_CONFIG } from "../config/site";
 
 interface NavbarProps {
   onBookAppointment: () => void;
+  studioName?: string;
+  instagramUrl?: string;
 }
 
-export const Navbar: React.FC<NavbarProps> = ({ onBookAppointment }) => {
+export const Navbar: React.FC<NavbarProps> = ({
+  onBookAppointment,
+  studioName = SITE_CONFIG.studioName,
+  instagramUrl = SITE_CONFIG.instagramUrl,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
@@ -29,7 +35,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookAppointment }) => {
               <Scissors className="w-3.5 h-3.5" />
             </span>
             <span className="font-serif text-lg font-bold tracking-tight text-stone-900">
-              {SITE_CONFIG.studioName}
+              {studioName}
             </span>
           </a>
         </div>
@@ -50,7 +56,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookAppointment }) => {
         {/* Right Pillar: Action Button & IG */}
         <div className="hidden md:flex items-center justify-end flex-1 gap-4">
           <a
-            href={SITE_CONFIG.instagramUrl}
+            href={instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className={TOKENS.button.icon}

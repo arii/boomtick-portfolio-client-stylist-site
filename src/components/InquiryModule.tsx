@@ -11,7 +11,17 @@ import { TOKENS } from "../styles/tokens";
 import { SITE_CONFIG, EVENTS_CONTENT } from "../config/site";
 import type { FormFieldItem } from "../types/content";
 
-export const InquiryModule: React.FC = () => {
+interface InquiryModuleProps {
+  formFields?: FormFieldItem[];
+  submitButtonText?: string;
+  recipientEmail?: string;
+}
+
+export const InquiryModule: React.FC<InquiryModuleProps> = ({
+  formFields: propsFormFields,
+  submitButtonText: propsSubmitButtonText,
+  recipientEmail = SITE_CONFIG.email,
+}) => {
   const defaultFields: FormFieldItem[] = [
     { _template: "inputField", label: "Your Name", fieldType: "text", placeholder: "Jane Doe", required: true },
     { _template: "inputField", label: "Email Address", fieldType: "email", placeholder: "jane@example.com", required: true },
@@ -43,8 +53,16 @@ export const InquiryModule: React.FC = () => {
     { _template: "textareaField", label: "Styling Notes / Desired Aesthetics", placeholder: "Mention desired styles (e.g. vintage victory rolls, natural curl styling, 1940s waves), call-times, or group details...", required: false }
   ];
 
-  const formFields: FormFieldItem[] = EVENTS_CONTENT.formFields?.length ? EVENTS_CONTENT.formFields : defaultFields;
-  const submitButtonText = EVENTS_CONTENT.formOptions?.submitButtonText || "Submit Booking Inquiry";
+  const formFields: FormFieldItem[] =
+    propsFormFields && propsFormFields.length > 0
+      ? propsFormFields
+      : EVENTS_CONTENT.formFields?.length
+      ? EVENTS_CONTENT.formFields
+      : defaultFields;
+  const submitButtonText =
+    propsSubmitButtonText ||
+    EVENTS_CONTENT.formOptions?.submitButtonText ||
+    "Submit Booking Inquiry";
 
   const [fieldValues, setFieldValues] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -63,7 +81,7 @@ export const InquiryModule: React.FC = () => {
     const sheetUrl = SITE_CONFIG.googleSheetUrl;
 
     const payload = {
-      recipient: SITE_CONFIG.email,
+      recipient: recipientEmail || SITE_CONFIG.email,
       submittedAt: new Date().toISOString(),
       fields: formFields.map((field) => ({
         label: field.label,

@@ -1,6 +1,7 @@
 import React from "react";
 import { ArrowRight, Calendar, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
+import { tinaField } from "tinacms/dist/react";
 import { TOKENS } from "../styles/tokens";
 import { HERO_CONTENT, SITE_CONFIG } from "../config/site";
 import type { HeroContent } from "../types/content";
@@ -31,7 +32,10 @@ export const Hero: React.FC<HeroProps> = ({
             className="lg:col-span-7 space-y-6 text-left"
           >
             {/* Credentials Badge */}
-            <div className={TOKENS.badge.credentials}>
+            <div
+              data-tina-field={tinaField(heroContent, "badge")}
+              className={TOKENS.badge.credentials}
+            >
               <ShieldCheck
                 className={`w-4 h-4 ${TOKENS.accent.icon} shrink-0`}
               />
@@ -39,12 +43,18 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
 
             {/* Primary Heading */}
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-stone-900 tracking-tight leading-[1.12]">
+            <h1
+              data-tina-field={tinaField(heroContent, "headline")}
+              className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-stone-900 tracking-tight leading-[1.12]"
+            >
               {heroContent.headline}
             </h1>
 
             {/* Subtext */}
-            <p className="text-base md:text-lg text-stone-600 font-sans leading-relaxed max-w-xl">
+            <p
+              data-tina-field={tinaField(heroContent, "subheading")}
+              className="text-base md:text-lg text-stone-600 font-sans leading-relaxed max-w-xl"
+            >
               {heroContent.subheading}
             </p>
 
@@ -61,7 +71,10 @@ export const Hero: React.FC<HeroProps> = ({
             </div>
 
             {/* Scheduling Availability Note */}
-            <div className="pt-1 flex items-center gap-1.5 text-xs text-stone-500 font-sans">
+            <div
+              data-tina-field={tinaField(heroContent, "availabilityNotice")}
+              className="pt-1 flex items-center gap-1.5 text-xs text-stone-500 font-sans"
+            >
               <Calendar className={`w-3.5 h-3.5 ${TOKENS.accent.icon}`} />
               <span>{heroContent.availabilityNotice}</span>
             </div>

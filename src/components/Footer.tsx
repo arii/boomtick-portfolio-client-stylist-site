@@ -6,6 +6,7 @@ import { SITE_CONFIG } from "../config/site";
 interface FooterProps {
   onBookAppointment: () => void;
   onToggleAdmin?: () => void;
+  studioName?: string;
   email?: string;
   phone?: string;
   instagram?: string;
@@ -15,6 +16,7 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({
   onBookAppointment,
   onToggleAdmin,
+  studioName = SITE_CONFIG.studioName,
   email = SITE_CONFIG.email,
   phone = SITE_CONFIG.phone,
   instagram = SITE_CONFIG.instagram,
@@ -32,7 +34,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <Scissors className={`w-4 h-4 ${TOKENS.accent.icon}`} />
               </span>
               <span className="font-serif text-lg font-bold tracking-tight">
-                {SITE_CONFIG.studioName}
+                {studioName}
               </span>
             </div>
 

@@ -131,7 +131,7 @@ export default defineConfig({
         match: { include: "hero" },
         format: "json",
         ui: {
-          router: () => "/#hero",
+          router: () => "/",
           allowedActions: { create: false, delete: false },
         },
         fields: [
@@ -151,7 +151,7 @@ export default defineConfig({
         match: { include: "portfolio" },
         format: "json",
         ui: {
-          router: () => "/#portfolio",
+          router: () => "/",
           allowedActions: { create: false, delete: false },
         },
         fields: [
@@ -186,7 +186,7 @@ export default defineConfig({
         match: { include: "services" },
         format: "json",
         ui: {
-          router: () => "/#services",
+          router: () => "/",
           allowedActions: { create: false, delete: false },
         },
         fields: [
@@ -226,7 +226,7 @@ export default defineConfig({
         match: { include: "events" },
         format: "json",
         ui: {
-          router: () => "/#forms",
+          router: () => "/",
           allowedActions: { create: false, delete: false },
         },
         fields: [

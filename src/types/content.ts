@@ -5,6 +5,7 @@ export interface HeroContent {
   availabilityNotice: string;
   calSlug?: string;
   instagramUrl?: string;
+  [key: string]: unknown;
 }
 
 export interface ServiceItem {
@@ -15,6 +16,7 @@ export interface ServiceItem {
   description: string;
   deliverables: string[];
   calSlug?: string;
+  [key: string]: unknown;
 }
 
 export interface PortfolioItem {
@@ -22,15 +24,17 @@ export interface PortfolioItem {
   image: string;
   alt: string;
   tag: string;
+  [key: string]: unknown;
 }
 
 export interface FormFieldItem {
-  _template: "inputField" | "selectField" | "textareaField";
+  _template?: "inputField" | "selectField" | "textareaField";
   label: string;
   fieldType?: string;
   placeholder?: string;
   required?: boolean;
   options?: string[];
+  [key: string]: unknown;
 }
 
 export interface EventsContent {
@@ -41,6 +45,7 @@ export interface EventsContent {
   formOptions?: {
     submitButtonText?: string;
   };
+  [key: string]: unknown;
 }
 
 export interface SiteContent {
@@ -87,4 +92,5 @@ export interface SiteContent {
   ogImageHeight: number;
   heroPreloadImage: string;
   portfolioImagesRelative: string[];
+  [key: string]: unknown;
 }
