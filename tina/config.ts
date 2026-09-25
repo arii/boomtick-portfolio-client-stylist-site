@@ -4,12 +4,14 @@ import { defineConfig } from "tinacms";
 const branch =
   (typeof process !== "undefined" ? process.env?.VITE_TINA_BRANCH : undefined) ||
   import.meta.env?.VITE_TINA_BRANCH ||
+  (typeof process !== "undefined" ? process.env?.CF_PAGES_BRANCH : undefined) ||
+  (typeof process !== "undefined" ? process.env?.HEAD : undefined) ||
   "main";
 
 const clientId =
   (typeof process !== "undefined" ? process.env?.VITE_TINA_CLIENT_ID : undefined) ||
   import.meta.env?.VITE_TINA_CLIENT_ID ||
-  null; // Obtain from o.tina.io
+  "87e12abe-90fc-43a9-9f88-48270c37724d"; // Default to configured project client ID
 
 const token =
   (typeof process !== "undefined" ? process.env?.TINA_TOKEN : undefined) ||

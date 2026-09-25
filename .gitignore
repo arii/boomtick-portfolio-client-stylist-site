@@ -11,9 +11,8 @@ coverage/
 .wrangler/
 .cloudflare/
 
-# TinaCMS generated build files
-public/admin
-tina/__generated__
+# TinaCMS
+# Keep tina/__generated__ and tina/tina-lock.json tracked in git for TinaCloud schema sync
 .tina/
 
 bun.lock
