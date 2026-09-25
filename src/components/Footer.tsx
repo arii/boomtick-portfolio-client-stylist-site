@@ -84,11 +84,11 @@ export const Footer: React.FC<FooterProps> = ({
               Services & Pricing
             </a>
             <a
-              id="footer-events-link"
-              href="#events"
+              id="footer-forms-link"
+              href="#forms"
               className="hover:text-white transition"
             >
-              Events & Collaborations
+              Inquiry Form
             </a>
           </nav>
         </div>

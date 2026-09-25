@@ -12,9 +12,10 @@ export const StyleShowcase: React.FC<StyleShowcaseProps> = ({
 }) => {
   return (
     <section
-      id="showcase"
-      className="py-14 md:py-18 bg-stone-100/70 border-b border-stone-200"
+      id="portfolio"
+      className="relative py-14 md:py-18 bg-stone-100/70 border-b border-stone-200 scroll-mt-16"
     >
+      <span id="showcase" className="absolute -top-16" />
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {images.map((item) => (

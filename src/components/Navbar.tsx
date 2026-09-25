@@ -14,7 +14,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onBookAppointment }) => {
 
   const navItems = [
     { label: "Services & Pricing", href: "#services" },
-    { label: "Events & Collaborations", href: "#events" },
+    { label: "Inquiry Form", href: "#forms" },
   ];
 
   return (

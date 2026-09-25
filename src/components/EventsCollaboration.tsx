@@ -11,9 +11,11 @@ export const EventsCollaboration: React.FC<EventsCollaborationProps> = ({
 }) => {
   return (
     <section
-      id="events"
-      className="pt-20 pb-4 bg-stone-50 border-t border-stone-200 scroll-mt-16"
+      id="forms"
+      className="relative pt-20 pb-4 bg-stone-50 border-t border-stone-200 scroll-mt-16"
     >
+      <span id="events" className="absolute -top-16" />
+      <span id="form" className="absolute -top-16" />
       <div className="max-w-4xl mx-auto px-6 text-center">
         <h2 className="text-3xl md:text-4xl font-serif font-bold text-stone-900 tracking-tight">
           {content.title}

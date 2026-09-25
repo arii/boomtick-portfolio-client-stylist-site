@@ -16,6 +16,12 @@ const token =
   import.meta.env?.TINA_TOKEN || // Check for VITE_TINA_TOKEN as well
   null; // Obtain from o.tina.io
 
+const searchToken =
+  (typeof process !== "undefined" ? process.env?.TINA_SEARCH_TOKEN : undefined) ||
+  import.meta.env?.TINA_SEARCH_TOKEN ||
+  import.meta.env?.VITE_TINA_SEARCH_TOKEN ||
+  null;
+
 if (!clientId) {
   console.warn(
     "⚠️ [TinaCMS Warning] VITE_TINA_CLIENT_ID is not set or is null! Admin login will redirect with clientId=null. Please configure VITE_TINA_CLIENT_ID in your environment variables."
@@ -30,6 +36,14 @@ if (!token) {
   );
 } else {
   console.log("✅ [TinaCMS Info] TINA_TOKEN loaded successfully.");
+}
+
+if (!searchToken) {
+  console.warn(
+    "⚠️ [TinaCMS Warning] TINA_SEARCH_TOKEN is not set or is null! Search indexing will be disabled. Set TINA_SEARCH_TOKEN to enable TinaCloud search."
+  );
+} else {
+  console.log("✅ [TinaCMS Info] TINA_SEARCH_TOKEN loaded successfully. Search indexing enabled.");
 }
 
 export default defineConfig({
@@ -210,7 +224,7 @@ export default defineConfig({
         match: { include: "events" },
         format: "json",
         ui: {
-          router: () => "/#events",
+          router: () => "/#forms",
           allowedActions: { create: false, delete: false },
         },
         fields: [
@@ -276,4 +290,22 @@ export default defineConfig({
       },
     ],
   },
+
+  search: searchToken
+    ? {
+        tina: {
+          indexerToken: searchToken,
+          stopwordLanguages: ["eng"],
+          fuzzyEnabled: true,
+          fuzzyOptions: {
+            maxDistance: 2,
+            minSimilarity: 0.6,
+            maxTermExpansions: 10,
+            useTranspositions: true,
+          },
+        },
+        indexBatchSize: 100,
+        maxSearchIndexFieldLength: 100,
+      }
+    : undefined,
 });

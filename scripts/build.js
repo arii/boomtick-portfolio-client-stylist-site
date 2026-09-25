@@ -1,5 +1,6 @@
 import { spawnSync } from "child_process";
 import net from "net";
+import fs from "fs";
 
 function isPortBusy(port) {
   return new Promise((resolve) => {
@@ -47,9 +48,13 @@ async function run() {
 
   console.log("\n2️⃣ Checking TinaCMS datalayer on port 9000...");
   const busy = await isPortBusy(9000);
-  if (busy) {
+  const hasGeneratedAssets =
+    fs.existsSync("public/admin/index.html") &&
+    fs.existsSync("tina/__generated__/types.ts");
+
+  if (busy && hasGeneratedAssets) {
     console.log(
-      "Local datalayer active on port 9000. Reusing compiled assets to prevent port conflict."
+      "Local datalayer active on port 9000 and compiled assets exist. Reusing compiled assets to prevent port conflict."
     );
     runTinaBuild = false;
   } else {
