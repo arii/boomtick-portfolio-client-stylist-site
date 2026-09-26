@@ -1,0 +1,92 @@
+fragment PageParts on Page {
+  __typename
+  site {
+    __typename
+    studioName
+    stylistName
+    browserTitle
+    metaDescription
+    email
+    phone
+    instagramHandle
+    locationDisplay
+    availabilityBanner
+    calUsername
+    calDefaultSlug
+    priceRange
+    address {
+      __typename
+      locality
+      region
+      country
+    }
+    geo {
+      __typename
+      latitude
+      longitude
+    }
+    areaServed
+    keywords
+  }
+  hero {
+    __typename
+    badge
+    headline
+    subheading
+    availabilityNotice
+    calSlug
+  }
+  portfolio {
+    __typename
+    portfolioList {
+      __typename
+      id
+      image
+      alt
+      tag
+    }
+  }
+  services {
+    __typename
+    sectionTitle
+    servicesList {
+      __typename
+      id
+      name
+      price
+      duration
+      description
+      deliverables
+      calSlug
+    }
+  }
+  events {
+    __typename
+    title
+    description
+    showForm
+    formFields {
+      __typename
+      ... on PageEventsFormFieldsInputField {
+        label
+        fieldType
+        placeholder
+        required
+      }
+      ... on PageEventsFormFieldsSelectField {
+        label
+        options
+        required
+      }
+      ... on PageEventsFormFieldsTextareaField {
+        label
+        placeholder
+        required
+      }
+    }
+    formOptions {
+      __typename
+      submitButtonText
+    }
+  }
+}

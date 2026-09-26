@@ -46,7 +46,7 @@ async function run() {
   const hasEnv = process.env.VITE_TINA_CLIENT_ID && process.env.TINA_TOKEN;
   let runTinaBuild = true;
 
-  console.log("\n2️⃣ Checking TinaCMS datalayer on port 9000...");
+  console.log("\n2️⃣ Checking TinaCMS datalayer and schema status...");
   const busy = await isPortBusy(9000);
   const hasGeneratedAssets =
     fs.existsSync("public/admin/index.html") &&
