@@ -3,7 +3,9 @@ import { createClient } from "tinacms/dist/client";
 import { queries } from "../../tina/__generated__/types.js";
 
 const clientId =
-  (typeof process !== "undefined" ? process.env?.VITE_TINA_CLIENT_ID : undefined) ||
+  (typeof process !== "undefined"
+    ? process.env?.VITE_TINA_CLIENT_ID
+    : undefined) ||
   import.meta.env?.VITE_TINA_CLIENT_ID ||
   null;
 
@@ -14,7 +16,9 @@ const token =
   null;
 
 const branch =
-  (typeof process !== "undefined" ? process.env?.VITE_TINA_BRANCH : undefined) ||
+  (typeof process !== "undefined"
+    ? process.env?.VITE_TINA_BRANCH
+    : undefined) ||
   import.meta.env?.VITE_TINA_BRANCH ||
   "main";
 
@@ -31,5 +35,3 @@ export const tinaClient =
         queries,
       })
     : defaultClient;
-
-export default tinaClient;

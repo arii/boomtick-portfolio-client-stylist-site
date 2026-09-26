@@ -212,7 +212,10 @@ if (fs.existsSync(bunLockbPath)) {
   } catch {}
 }
 
-check("No Bun lockfile in workspace root (prevents deployment failures)", !fs.existsSync(bunLockPath) && !fs.existsSync(bunLockbPath));
+check(
+  "No Bun lockfile in workspace root (prevents deployment failures)",
+  !fs.existsSync(bunLockPath) && !fs.existsSync(bunLockbPath)
+);
 check("No Yarn lockfile in workspace root", !fs.existsSync(yarnLockPath));
 
 console.log(`\n========================================`);

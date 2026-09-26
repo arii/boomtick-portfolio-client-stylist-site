@@ -23,42 +23,72 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
   recipientEmail = SITE_CONFIG.email,
 }) => {
   const defaultFields: FormFieldItem[] = [
-    { _template: "inputField", label: "Your Name", fieldType: "text", placeholder: "Jane Doe", required: true },
-    { _template: "inputField", label: "Email Address", fieldType: "email", placeholder: "jane@example.com", required: true },
-    { _template: "inputField", label: "Phone Number", fieldType: "tel", placeholder: SITE_CONFIG.phoneDisplay, required: true },
-    { 
-      _template: "selectField", 
-      label: "Event / Inquiry Type", 
-      options: [
-        "Wedding / Bridal Party", 
-        "Editorial / Commercial Photoshoot", 
-        "Swing Dance Camp / Festival", 
-        "Retro Pageant / Special Event", 
-        "Private Group Styling Session"
-      ], 
-      required: true 
+    {
+      _template: "inputField",
+      label: "Your Name",
+      fieldType: "text",
+      placeholder: "Jane Doe",
+      required: true,
     },
-    { 
-      _template: "selectField", 
-      label: "Estimated Party Size", 
-      options: [
-        "1 Person", 
-        "2-4 People", 
-        "5-8 People", 
-        "9+ People (Large Bridal / Production Group)"
-      ], 
-      required: true 
+    {
+      _template: "inputField",
+      label: "Email Address",
+      fieldType: "email",
+      placeholder: "jane@example.com",
+      required: true,
     },
-    { _template: "inputField", label: "Target Date & Location (City or Venue)", fieldType: "text", placeholder: "e.g., October 14, 2026 • San Francisco or Bay Area venue", required: true },
-    { _template: "textareaField", label: "Styling Notes / Desired Aesthetics", placeholder: "Mention desired styles (e.g. vintage victory rolls, natural curl styling, 1940s waves), call-times, or group details...", required: false }
+    {
+      _template: "inputField",
+      label: "Phone Number",
+      fieldType: "tel",
+      placeholder: SITE_CONFIG.phoneDisplay,
+      required: true,
+    },
+    {
+      _template: "selectField",
+      label: "Event / Inquiry Type",
+      options: [
+        "Wedding / Bridal Party",
+        "Editorial / Commercial Photoshoot",
+        "Swing Dance Camp / Festival",
+        "Retro Pageant / Special Event",
+        "Private Group Styling Session",
+      ],
+      required: true,
+    },
+    {
+      _template: "selectField",
+      label: "Estimated Party Size",
+      options: [
+        "1 Person",
+        "2-4 People",
+        "5-8 People",
+        "9+ People (Large Bridal / Production Group)",
+      ],
+      required: true,
+    },
+    {
+      _template: "inputField",
+      label: "Target Date & Location (City or Venue)",
+      fieldType: "text",
+      placeholder: "e.g., October 14, 2026 • San Francisco or Bay Area venue",
+      required: true,
+    },
+    {
+      _template: "textareaField",
+      label: "Styling Notes / Desired Aesthetics",
+      placeholder:
+        "Mention desired styles (e.g. vintage victory rolls, natural curl styling, 1940s waves), call-times, or group details...",
+      required: false,
+    },
   ];
 
   const formFields: FormFieldItem[] =
     propsFormFields && propsFormFields.length > 0
       ? propsFormFields
       : EVENTS_CONTENT.formFields?.length
-      ? EVENTS_CONTENT.formFields
-      : defaultFields;
+        ? EVENTS_CONTENT.formFields
+        : defaultFields;
   const submitButtonText =
     propsSubmitButtonText ||
     EVENTS_CONTENT.formOptions?.submitButtonText ||
@@ -119,7 +149,7 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
   };
 
   // Find client name if possible for confirmation message
-  const clientNameField = Object.entries(fieldValues).find(([label]) => 
+  const clientNameField = Object.entries(fieldValues).find(([label]) =>
     label.toLowerCase().includes("name")
   );
   const clientName = clientNameField ? clientNameField[1] : "";
@@ -138,9 +168,9 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                 Inquiry Received
               </h3>
               <p className="text-xs text-stone-600 font-sans max-w-md mx-auto leading-relaxed">
-                Thank you, {clientName || "friend"}.{" "}
-                {SITE_CONFIG.stylistName} will review your request and reach out
-                with availability, schedule details, and custom rate options.
+                Thank you, {clientName || "friend"}. {SITE_CONFIG.stylistName}{" "}
+                will review your request and reach out with availability,
+                schedule details, and custom rate options.
               </p>
               <button
                 onClick={() => {
@@ -192,7 +222,10 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                 if (field._template === "selectField") {
                   return (
                     <div key={fieldKey}>
-                      <label htmlFor={`field-input-${idx}`} className={TOKENS.input.label}>
+                      <label
+                        htmlFor={`field-input-${idx}`}
+                        className={TOKENS.input.label}
+                      >
                         {field.label} {isRequired && "*"}
                       </label>
                       <div className="relative">
@@ -201,10 +234,14 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                           id={`field-input-${idx}`}
                           required={isRequired}
                           value={fieldValues[field.label] || ""}
-                          onChange={(e) => handleFieldChange(field.label, e.target.value)}
+                          onChange={(e) =>
+                            handleFieldChange(field.label, e.target.value)
+                          }
                           className={TOKENS.input.selectWithIcon}
                         >
-                          <option value="" disabled>Select an option...</option>
+                          <option value="" disabled>
+                            Select an option...
+                          </option>
                           {field.options?.map((opt, oIdx) => (
                             <option key={oIdx} value={opt}>
                               {opt}
@@ -219,7 +256,10 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                 if (field._template === "textareaField") {
                   return (
                     <div key={fieldKey}>
-                      <label htmlFor={`field-input-${idx}`} className={TOKENS.input.label}>
+                      <label
+                        htmlFor={`field-input-${idx}`}
+                        className={TOKENS.input.label}
+                      >
                         {field.label} {isRequired && "*"}
                       </label>
                       <textarea
@@ -227,7 +267,9 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                         rows={3}
                         required={isRequired}
                         value={fieldValues[field.label] || ""}
-                        onChange={(e) => handleFieldChange(field.label, e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(field.label, e.target.value)
+                        }
                         placeholder={field.placeholder || ""}
                         className={TOKENS.input.base}
                       />
@@ -238,11 +280,15 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                 // Default inputField
                 return (
                   <div key={fieldKey}>
-                    <label htmlFor={`field-input-${idx}`} className={TOKENS.input.label}>
+                    <label
+                      htmlFor={`field-input-${idx}`}
+                      className={TOKENS.input.label}
+                    >
                       {field.label} {isRequired && "*"}
                     </label>
                     <div className="relative">
-                      {field.label.toLowerCase().includes("location") || field.label.toLowerCase().includes("venue") ? (
+                      {field.label.toLowerCase().includes("location") ||
+                      field.label.toLowerCase().includes("venue") ? (
                         <MapPin className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                       ) : null}
                       <input
@@ -250,10 +296,13 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                         type={field.fieldType || "text"}
                         required={isRequired}
                         value={fieldValues[field.label] || ""}
-                        onChange={(e) => handleFieldChange(field.label, e.target.value)}
+                        onChange={(e) =>
+                          handleFieldChange(field.label, e.target.value)
+                        }
                         placeholder={field.placeholder || ""}
                         className={
-                          field.label.toLowerCase().includes("location") || field.label.toLowerCase().includes("venue")
+                          field.label.toLowerCase().includes("location") ||
+                          field.label.toLowerCase().includes("venue")
                             ? TOKENS.input.iconWrapper
                             : TOKENS.input.base
                         }

@@ -6,6 +6,6 @@
   "vars": {
     "VITE_TINA_CLIENT_ID": "87e12abe-90fc-43a9-9f88-48270c37724d",
     "VITE_TINA_BRANCH": "main",
-    "VITE_SITE_URL": "https://hairbyapril.pages.dev"
-  }
+    "VITE_SITE_URL": "https://hairbyapril.pages.dev",
+  },
 }

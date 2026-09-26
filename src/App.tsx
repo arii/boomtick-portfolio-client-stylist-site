@@ -44,13 +44,24 @@ const AdminMockup = lazy(() =>
   }))
 );
 
+// Stable form selectors to prevent re-render focus stealing in TinaCMS sidebar
+const selectHeroForm = () => "src/content/hero.json";
+const selectServicesForm = () => "src/content/services.json";
+const selectPortfolioForm = () => "src/content/portfolio.json";
+const selectEventsForm = () => "src/content/events.json";
+const selectSiteForm = () => "src/content/site.json";
+
 // 1. Hero Section Container with TinaCMS data registration
 function HeroSectionContainer({
   payload,
   heroImage,
   onBookAppointment,
 }: {
-  payload: { query: string; variables: { relativePath: string }; data: { hero: HeroContent } };
+  payload: {
+    query: string;
+    variables: { relativePath: string };
+    data: { hero: HeroContent };
+  };
   heroImage: string;
   onBookAppointment: (slug?: string) => void;
 }) {
@@ -58,7 +69,7 @@ function HeroSectionContainer({
     query: payload.query,
     variables: payload.variables,
     data: payload.data,
-    experimental___selectFormByFormId: () => "src/content/hero.json",
+    experimental___selectFormByFormId: selectHeroForm,
   });
 
   const heroContent = data?.hero || payload.data.hero;
@@ -90,7 +101,7 @@ function ServicesSectionContainer({
     query: payload.query,
     variables: payload.variables,
     data: payload.data,
-    experimental___selectFormByFormId: () => "src/content/services.json",
+    experimental___selectFormByFormId: selectServicesForm,
   });
 
   const services = data?.services || payload.data.services;
@@ -211,7 +222,7 @@ function PortfolioSectionContainer({
     query: payload.query,
     variables: payload.variables,
     data: payload.data,
-    experimental___selectFormByFormId: () => "src/content/portfolio.json",
+    experimental___selectFormByFormId: selectPortfolioForm,
   });
 
   const portfolio = data?.portfolio || payload.data.portfolio;
@@ -234,7 +245,7 @@ function EventsSectionContainer({
     query: payload.query,
     variables: payload.variables,
     data: payload.data,
-    experimental___selectFormByFormId: () => "src/content/events.json",
+    experimental___selectFormByFormId: selectEventsForm,
   });
 
   const events = data?.events || payload.data.events;
@@ -253,7 +264,7 @@ function EventsSectionContainer({
   );
 }
 
-// 5. Site Settings Bridge with TinaCMS data registration
+// 5. Site Settings Bridge with TinaCMS data registration and isolated updates
 function SiteSettingsBridge({
   payload,
   onSiteUpdate,
@@ -269,16 +280,18 @@ function SiteSettingsBridge({
     query: payload.query,
     variables: payload.variables,
     data: payload.data,
-    experimental___selectFormByFormId: () => "src/content/site.json",
+    experimental___selectFormByFormId: selectSiteForm,
   });
 
   const site = data?.site || payload.data.site;
 
+  const siteSerialized = JSON.stringify(site);
   useEffect(() => {
     if (site) {
       onSiteUpdate(site);
     }
-  }, [site, onSiteUpdate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [siteSerialized, onSiteUpdate]);
 
   return null;
 }
@@ -299,37 +312,53 @@ export default function App() {
     return false;
   });
 
-  // Dynamic Site Layout Settings (Driven by TinaCMS site.json)
-  const [siteState, setSiteState] = useState({
-    studioName: SITE_CONFIG.studioName,
-    stylistName: SITE_CONFIG.stylistName,
-    email: SITE_CONFIG.email,
-    phone: SITE_CONFIG.phone,
-    instagram: SITE_CONFIG.instagram,
-    instagramUrl: SITE_CONFIG.instagramUrl,
-    calUsername: SITE_CONFIG.calUsername,
-    calDefaultSlug: SITE_CONFIG.calDefaultSlug,
-    availabilityBanner: SITE_CONFIG.logisticsNotice,
-  });
+  // Dynamic Site Layout Settings (Driven by TinaCMS site.json + SSOT SITE_CONFIG)
+  const [siteState, setSiteState] = useState<SiteContent>(
+    () =>
+      ({
+        ...(siteContentJson as unknown as SiteContent),
+        studioName: SITE_CONFIG.studioName,
+        stylistName: SITE_CONFIG.stylistName,
+        email: SITE_CONFIG.email,
+        phone: SITE_CONFIG.phone,
+        instagramHandle: (SITE_CONFIG.instagram || "").replace(/^@/, ""),
+        instagram: SITE_CONFIG.instagram,
+        instagramUrl: SITE_CONFIG.instagramUrl,
+        calUsername: SITE_CONFIG.calUsername,
+        calDefaultSlug: SITE_CONFIG.calDefaultSlug,
+        availabilityBanner: SITE_CONFIG.logisticsNotice,
+        locationDisplay: SITE_CONFIG.locationDisplay,
+        logisticsNotice: SITE_CONFIG.logisticsNotice,
+        address: SITE_CONFIG.address,
+        geo: SITE_CONFIG.geo,
+        areaServed: SITE_CONFIG.areaServed,
+        openingDays: SITE_CONFIG.openingDays,
+        openingHours: SITE_CONFIG.openingHours,
+        priceRange: SITE_CONFIG.priceRange,
+        title: SITE_CONFIG.title,
+        description: SITE_CONFIG.description,
+        browserTitle: SITE_CONFIG.title,
+        metaDescription: SITE_CONFIG.description,
+      }) as unknown as SiteContent
+  );
 
   const handleSiteUpdate = useCallback((site: Partial<SiteContent>) => {
     if (!site) return;
     setSiteState((prev) => {
-      const updated = { ...prev };
-      if (site.studioName) updated.studioName = site.studioName;
-      if (site.stylistName) updated.stylistName = site.stylistName;
-      if (site.email) updated.email = site.email;
-      if (site.phone) updated.phone = site.phone;
-      if (site.calUsername) updated.calUsername = site.calUsername;
-      if (site.calDefaultSlug) updated.calDefaultSlug = site.calDefaultSlug;
-      if (site.availabilityBanner)
-        updated.availabilityBanner = site.availabilityBanner;
+      let changed = false;
+      const updated: SiteContent = { ...prev, ...site };
       if (site.instagramHandle) {
         const clean = site.instagramHandle.replace(/^@/, "");
         updated.instagram = `@${clean}`;
         updated.instagramUrl = `https://www.instagram.com/${clean}/`;
       }
-      return updated;
+      for (const key of Object.keys(updated) as (keyof SiteContent)[]) {
+        if (JSON.stringify(prev[key]) !== JSON.stringify(updated[key])) {
+          changed = true;
+          break;
+        }
+      }
+      return changed ? updated : prev;
     });
   }, []);
 
@@ -343,13 +372,22 @@ export default function App() {
   const [servicesPayload, setServicesPayload] = useState({
     query: ServicesDocument,
     variables: { relativePath: "services.json" },
-    data: { services: servicesContentJson as unknown as { sectionTitle?: string; servicesList: ServiceItem[] } },
+    data: {
+      services: servicesContentJson as unknown as {
+        sectionTitle?: string;
+        servicesList: ServiceItem[];
+      },
+    },
   });
 
   const [portfolioPayload, setPortfolioPayload] = useState({
     query: PortfolioDocument,
     variables: { relativePath: "portfolio.json" },
-    data: { portfolio: portfolioContentJson as unknown as { portfolioList: PortfolioItem[] } },
+    data: {
+      portfolio: portfolioContentJson as unknown as {
+        portfolioList: PortfolioItem[];
+      },
+    },
   });
 
   const [eventsPayload, setEventsPayload] = useState({
@@ -382,7 +420,8 @@ export default function App() {
 
         if (!isMounted) return;
 
-        const [heroRes, siteRes, servicesRes, portfolioRes, eventsRes] = results;
+        const [heroRes, siteRes, servicesRes, portfolioRes, eventsRes] =
+          results;
 
         if (heroRes.status === "fulfilled" && heroRes.value?.data?.hero) {
           setHeroPayload({
@@ -400,26 +439,42 @@ export default function App() {
           });
         }
 
-        if (servicesRes.status === "fulfilled" && servicesRes.value?.data?.services) {
+        if (
+          servicesRes.status === "fulfilled" &&
+          servicesRes.value?.data?.services
+        ) {
           setServicesPayload({
             query: servicesRes.value.query || ServicesDocument,
-            variables: servicesRes.value.variables || { relativePath: "services.json" },
-            data: servicesRes.value.data as unknown as { services: { sectionTitle?: string; servicesList: ServiceItem[] } },
+            variables: servicesRes.value.variables || {
+              relativePath: "services.json",
+            },
+            data: servicesRes.value.data as unknown as {
+              services: { sectionTitle?: string; servicesList: ServiceItem[] };
+            },
           });
         }
 
-        if (portfolioRes.status === "fulfilled" && portfolioRes.value?.data?.portfolio) {
+        if (
+          portfolioRes.status === "fulfilled" &&
+          portfolioRes.value?.data?.portfolio
+        ) {
           setPortfolioPayload({
             query: portfolioRes.value.query || PortfolioDocument,
-            variables: portfolioRes.value.variables || { relativePath: "portfolio.json" },
-            data: portfolioRes.value.data as unknown as { portfolio: { portfolioList: PortfolioItem[] } },
+            variables: portfolioRes.value.variables || {
+              relativePath: "portfolio.json",
+            },
+            data: portfolioRes.value.data as unknown as {
+              portfolio: { portfolioList: PortfolioItem[] };
+            },
           });
         }
 
         if (eventsRes.status === "fulfilled" && eventsRes.value?.data?.events) {
           setEventsPayload({
             query: eventsRes.value.query || EventsDocument,
-            variables: eventsRes.value.variables || { relativePath: "events.json" },
+            variables: eventsRes.value.variables || {
+              relativePath: "events.json",
+            },
             data: eventsRes.value.data as unknown as { events: EventsContent },
           });
         }
@@ -461,8 +516,11 @@ export default function App() {
 
   const mainSiteContent = (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-rose-100 selection:text-rose-900">
-      {/* Dynamic Schema.org JSON-LD Controller */}
-      <SchemaOrg />
+      {/* Dynamic Reactive Schema.org JSON-LD & SEO Controller */}
+      <SchemaOrg
+        siteConfig={siteState}
+        services={servicesPayload.data.services.servicesList}
+      />
 
       {/* TinaCMS Site Settings Bridge */}
       <SiteSettingsBridge
@@ -473,8 +531,10 @@ export default function App() {
       {/* Navigation */}
       <Navbar
         onBookAppointment={() => handleOpenBooking()}
-        studioName={siteState.studioName}
-        instagramUrl={siteState.instagramUrl}
+        studioName={String(siteState.studioName || SITE_CONFIG.studioName)}
+        instagramUrl={String(
+          siteState.instagramUrl || SITE_CONFIG.instagramUrl
+        )}
       />
 
       {/* 1. Primary Hero Section (LCP Optimized + TinaCMS Live Hook) */}
@@ -492,16 +552,19 @@ export default function App() {
         payload={servicesPayload}
         availabilityNotice={
           heroPayload.data.hero.availabilityNotice ||
-          siteState.availabilityBanner ||
+          String(siteState.availabilityBanner || "") ||
+          String(siteState.logisticsNotice || "") ||
           SITE_CONFIG.logisticsNotice
         }
-        onSelectService={(service) => handleOpenBooking(service, service.calSlug)}
+        onSelectService={(service) =>
+          handleOpenBooking(service, service.calSlug)
+        }
       />
 
       {/* 4. Flexible Events & Custom Inquiry Form (TinaCMS Live Hook) */}
       <EventsSectionContainer
         payload={eventsPayload}
-        recipientEmail={siteState.email}
+        recipientEmail={String(siteState.email || SITE_CONFIG.email)}
       />
 
       {/* Footer Branding & Navigation */}
@@ -510,11 +573,13 @@ export default function App() {
         onToggleAdmin={() => {
           setIsAdminOpen(true);
         }}
-        studioName={siteState.studioName}
-        email={siteState.email}
-        phone={siteState.phone}
-        instagram={siteState.instagram}
-        instagramUrl={siteState.instagramUrl}
+        studioName={String(siteState.studioName || SITE_CONFIG.studioName)}
+        email={String(siteState.email || SITE_CONFIG.email)}
+        phone={String(siteState.phone || SITE_CONFIG.phone)}
+        instagram={String(siteState.instagram || SITE_CONFIG.instagram)}
+        instagramUrl={String(
+          siteState.instagramUrl || SITE_CONFIG.instagramUrl
+        )}
       />
 
       {/* Code-split Cal.com Embed Modal */}
@@ -527,10 +592,23 @@ export default function App() {
               customCalSlug ||
               selectedService?.calSlug ||
               heroPayload.data.hero.calSlug ||
-              siteState.calDefaultSlug ||
-              "april-demo"
+              String(siteState.calDefaultSlug || "") ||
+              SITE_CONFIG.calDefaultSlug
             }
-            calUsername={siteState.calUsername || "ariel-anders"}
+            calUsername={String(
+              siteState.calUsername || SITE_CONFIG.calUsername
+            )}
+            logisticsNotice={
+              String(siteState.availabilityBanner || "") ||
+              String(siteState.logisticsNotice || "") ||
+              SITE_CONFIG.logisticsNotice
+            }
+            locationDisplay={String(
+              siteState.locationDisplay || SITE_CONFIG.locationDisplay
+            )}
+            stylistName={String(
+              siteState.stylistName || SITE_CONFIG.stylistName
+            )}
           />
         </Suspense>
       )}
@@ -549,7 +627,10 @@ export default function App() {
         <AdminMockup
           heroContent={heroPayload.data.hero}
           setHeroContent={(newHero) => {
-            const h = typeof newHero === "function" ? newHero(heroPayload.data.hero) : newHero;
+            const h =
+              typeof newHero === "function"
+                ? newHero(heroPayload.data.hero)
+                : newHero;
             setHeroPayload((prev) => ({
               ...prev,
               data: { hero: h },
@@ -557,7 +638,10 @@ export default function App() {
           }}
           eventsContent={eventsPayload.data.events}
           setEventsContent={(newEvents) => {
-            const ev = typeof newEvents === "function" ? newEvents(eventsPayload.data.events) : newEvents;
+            const ev =
+              typeof newEvents === "function"
+                ? newEvents(eventsPayload.data.events)
+                : newEvents;
             setEventsPayload((prev) => ({
               ...prev,
               data: { events: ev },
@@ -565,7 +649,10 @@ export default function App() {
           }}
           servicesContent={servicesPayload.data.services.servicesList}
           setServicesContent={(newServices) => {
-            const list = typeof newServices === "function" ? newServices(servicesPayload.data.services.servicesList) : newServices;
+            const list =
+              typeof newServices === "function"
+                ? newServices(servicesPayload.data.services.servicesList)
+                : newServices;
             setServicesPayload((prev) => ({
               ...prev,
               data: {
@@ -578,7 +665,10 @@ export default function App() {
           }}
           portfolioContent={portfolioPayload.data.portfolio.portfolioList}
           setPortfolioContent={(newPortfolio) => {
-            const list = typeof newPortfolio === "function" ? newPortfolio(portfolioPayload.data.portfolio.portfolioList) : newPortfolio;
+            const list =
+              typeof newPortfolio === "function"
+                ? newPortfolio(portfolioPayload.data.portfolio.portfolioList)
+                : newPortfolio;
             setPortfolioPayload((prev) => ({
               ...prev,
               data: {
@@ -590,14 +680,25 @@ export default function App() {
             }));
           }}
           onClose={() => setIsAdminOpen(false)}
-          email={siteState.email}
+          email={String(siteState.email || SITE_CONFIG.email)}
           setEmail={(email: string) => setSiteState((p) => ({ ...p, email }))}
-          phone={siteState.phone}
+          phone={String(siteState.phone || SITE_CONFIG.phone)}
           setPhone={(phone: string) => setSiteState((p) => ({ ...p, phone }))}
-          instagram={siteState.instagram}
-          setInstagram={(instagram: string) => setSiteState((p) => ({ ...p, instagram }))}
-          instagramUrl={siteState.instagramUrl}
-          setInstagramUrl={(instagramUrl: string) => setSiteState((p) => ({ ...p, instagramUrl }))}
+          instagram={String(
+            siteState.instagram ||
+              (siteState.instagramHandle
+                ? `@${String(siteState.instagramHandle).replace(/^@/, "")}`
+                : "")
+          )}
+          setInstagram={(instagram: string) =>
+            setSiteState((p) => ({ ...p, instagram }))
+          }
+          instagramUrl={String(
+            siteState.instagramUrl || SITE_CONFIG.instagramUrl
+          )}
+          setInstagramUrl={(instagramUrl: string) =>
+            setSiteState((p) => ({ ...p, instagramUrl }))
+          }
           heroImage={SITE_CONFIG.heroPreloadImage}
           setHeroImage={() => {}}
         >

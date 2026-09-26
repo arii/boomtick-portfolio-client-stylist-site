@@ -453,7 +453,8 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
             </button>
 
             <p className="text-[11px] text-stone-400 leading-relaxed text-center px-1">
-              Safely test the live interactive preview editor and schema controls in sandbox mode without altering production data.
+              Safely test the live interactive preview editor and schema
+              controls in sandbox mode without altering production data.
             </p>
           </div>
 
@@ -858,9 +859,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                 <input
                   type="text"
                   value={instagram}
-                  onChange={(e) =>
-                    handleInstagramHandleChange(e.target.value)
-                  }
+                  onChange={(e) => handleInstagramHandleChange(e.target.value)}
                   className={`w-full bg-stone-900 border rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none transition ${
                     getFieldError("hero", "instagram")
                       ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
@@ -871,9 +870,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                 {getFieldError("hero", "instagram") && (
                   <p className="text-[11px] text-red-400 flex items-center gap-1 font-mono">
                     <AlertCircle className="w-3 h-3 shrink-0" />
-                    <span>
-                      {getFieldError("hero", "instagram")?.message}
-                    </span>
+                    <span>{getFieldError("hero", "instagram")?.message}</span>
                   </p>
                 )}
               </div>
@@ -1311,7 +1308,9 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                   Inquiry & Mailing List Form
                 </h2>
                 <p className="text-[10px] text-stone-500 mt-1">
-                  Configure section title, header description, and dynamic input fields for client inquiries or mailing list signups (stored in src/content/events.json)
+                  Configure section title, header description, and dynamic input
+                  fields for client inquiries or mailing list signups (stored in
+                  src/content/events.json)
                 </p>
               </div>
 
@@ -1381,7 +1380,8 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                       Display Inquiry Form on Site
                     </span>
                     <span className="text-[10px] text-stone-500 block">
-                      Toggle off to completely remove the booking inquiry form from the public website
+                      Toggle off to completely remove the booking inquiry form
+                      from the public website
                     </span>
                   </div>
                 </label>
@@ -1391,7 +1391,8 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-xs font-bold text-stone-300 uppercase tracking-wider">
-                      Inquiry Form Fields ({eventsContent.formFields?.length || 0})
+                      Inquiry Form Fields (
+                      {eventsContent.formFields?.length || 0})
                     </h3>
                     <p className="text-[10px] text-stone-500">
                       Manage form inputs rendered on the public booking module
@@ -1410,7 +1411,10 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                           required: false,
                         },
                       ];
-                      setEventsContent({ ...eventsContent, formFields: newFields });
+                      setEventsContent({
+                        ...eventsContent,
+                        formFields: newFields,
+                      });
                     }}
                     className="px-2.5 py-1 bg-orange-500/20 hover:bg-orange-500/30 text-orange-400 text-xs font-semibold rounded-md flex items-center gap-1 transition cursor-pointer"
                   >
@@ -1421,7 +1425,10 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
 
                 <div className="space-y-2">
                   {(eventsContent.formFields || []).map((field, fIdx) => (
-                    <div key={fIdx} className="p-3 bg-stone-900/90 border border-stone-800 rounded-lg space-y-2">
+                    <div
+                      key={fIdx}
+                      className="p-3 bg-stone-900/90 border border-stone-800 rounded-lg space-y-2"
+                    >
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-mono text-orange-400 uppercase tracking-wider">
                           Field #{fIdx + 1} ({field._template})
@@ -1429,9 +1436,14 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                         <button
                           type="button"
                           onClick={() => {
-                            const newFields = [...(eventsContent.formFields || [])];
+                            const newFields = [
+                              ...(eventsContent.formFields || []),
+                            ];
                             newFields.splice(fIdx, 1);
-                            setEventsContent({ ...eventsContent, formFields: newFields });
+                            setEventsContent({
+                              ...eventsContent,
+                              formFields: newFields,
+                            });
                           }}
                           className="text-stone-500 hover:text-red-400 transition p-1"
                           title="Remove Field"
@@ -1442,31 +1454,54 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div>
-                          <label className="text-[10px] text-stone-400 block mb-1">Label</label>
+                          <label className="text-[10px] text-stone-400 block mb-1">
+                            Label
+                          </label>
                           <input
                             type="text"
                             value={field.label}
                             onChange={(e) => {
-                              const newFields = [...(eventsContent.formFields || [])];
-                              newFields[fIdx] = { ...newFields[fIdx], label: e.target.value };
-                              setEventsContent({ ...eventsContent, formFields: newFields });
+                              const newFields = [
+                                ...(eventsContent.formFields || []),
+                              ];
+                              newFields[fIdx] = {
+                                ...newFields[fIdx],
+                                label: e.target.value,
+                              };
+                              setEventsContent({
+                                ...eventsContent,
+                                formFields: newFields,
+                              });
                             }}
                             className="w-full bg-stone-950 border border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-orange-500"
                           />
                         </div>
 
                         <div>
-                          <label className="text-[10px] text-stone-400 block mb-1">Type / Template</label>
+                          <label className="text-[10px] text-stone-400 block mb-1">
+                            Type / Template
+                          </label>
                           <select
                             value={field._template}
                             onChange={(e) => {
-                              const newFields = [...(eventsContent.formFields || [])];
-                              newFields[fIdx] = { 
-                                ...newFields[fIdx], 
-                                _template: e.target.value as "inputField" | "selectField" | "textareaField",
-                                fieldType: e.target.value === "inputField" ? "text" : undefined,
+                              const newFields = [
+                                ...(eventsContent.formFields || []),
+                              ];
+                              newFields[fIdx] = {
+                                ...newFields[fIdx],
+                                _template: e.target.value as
+                                  | "inputField"
+                                  | "selectField"
+                                  | "textareaField",
+                                fieldType:
+                                  e.target.value === "inputField"
+                                    ? "text"
+                                    : undefined,
                               };
-                              setEventsContent({ ...eventsContent, formFields: newFields });
+                              setEventsContent({
+                                ...eventsContent,
+                                formFields: newFields,
+                              });
                             }}
                             className="w-full bg-stone-950 border border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-orange-500"
                           >
@@ -1480,13 +1515,23 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                       {field._template === "inputField" && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                           <div>
-                            <label className="text-[10px] text-stone-400 block mb-1">Input Type</label>
+                            <label className="text-[10px] text-stone-400 block mb-1">
+                              Input Type
+                            </label>
                             <select
                               value={field.fieldType || "text"}
                               onChange={(e) => {
-                                const newFields = [...(eventsContent.formFields || [])];
-                                newFields[fIdx] = { ...newFields[fIdx], fieldType: e.target.value };
-                                setEventsContent({ ...eventsContent, formFields: newFields });
+                                const newFields = [
+                                  ...(eventsContent.formFields || []),
+                                ];
+                                newFields[fIdx] = {
+                                  ...newFields[fIdx],
+                                  fieldType: e.target.value,
+                                };
+                                setEventsContent({
+                                  ...eventsContent,
+                                  formFields: newFields,
+                                });
                               }}
                               className="w-full bg-stone-950 border border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-orange-500"
                             >
@@ -1497,14 +1542,24 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                             </select>
                           </div>
                           <div>
-                            <label className="text-[10px] text-stone-400 block mb-1">Placeholder</label>
+                            <label className="text-[10px] text-stone-400 block mb-1">
+                              Placeholder
+                            </label>
                             <input
                               type="text"
                               value={field.placeholder || ""}
                               onChange={(e) => {
-                                const newFields = [...(eventsContent.formFields || [])];
-                                newFields[fIdx] = { ...newFields[fIdx], placeholder: e.target.value };
-                                setEventsContent({ ...eventsContent, formFields: newFields });
+                                const newFields = [
+                                  ...(eventsContent.formFields || []),
+                                ];
+                                newFields[fIdx] = {
+                                  ...newFields[fIdx],
+                                  placeholder: e.target.value,
+                                };
+                                setEventsContent({
+                                  ...eventsContent,
+                                  formFields: newFields,
+                                });
                               }}
                               className="w-full bg-stone-950 border border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-orange-500"
                             />
@@ -1518,9 +1573,17 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                             type="checkbox"
                             checked={field.required !== false}
                             onChange={(e) => {
-                              const newFields = [...(eventsContent.formFields || [])];
-                              newFields[fIdx] = { ...newFields[fIdx], required: e.target.checked };
-                              setEventsContent({ ...eventsContent, formFields: newFields });
+                              const newFields = [
+                                ...(eventsContent.formFields || []),
+                              ];
+                              newFields[fIdx] = {
+                                ...newFields[fIdx],
+                                required: e.target.checked,
+                              };
+                              setEventsContent({
+                                ...eventsContent,
+                                formFields: newFields,
+                              });
                             }}
                             className="w-3.5 h-3.5 rounded bg-stone-950 border-stone-800 text-orange-500 focus:ring-orange-500"
                           />
@@ -1845,8 +1908,12 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-orange-400 shrink-0" />
               <div>
-                <span className="font-semibold text-stone-200 block">Live Sandbox Demo Active</span>
-                <span className="text-[10px] text-stone-400 block">Edits re-hydrate live React state instantly</span>
+                <span className="font-semibold text-stone-200 block">
+                  Live Sandbox Demo Active
+                </span>
+                <span className="text-[10px] text-stone-400 block">
+                  Edits re-hydrate live React state instantly
+                </span>
               </div>
             </div>
             <button

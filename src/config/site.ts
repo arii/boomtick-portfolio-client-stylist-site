@@ -25,8 +25,8 @@ export const SERVICES_CONTENT: ServiceItem[] =
   (servicesData as unknown as { servicesList: ServiceItem[] }).servicesList ||
   (servicesData as unknown as ServiceItem[]);
 export const PORTFOLIO_CONTENT: PortfolioItem[] =
-  (portfolioData as unknown as { portfolioList: PortfolioItem[] }).portfolioList ||
-  (portfolioData as unknown as PortfolioItem[]);
+  (portfolioData as unknown as { portfolioList: PortfolioItem[] })
+    .portfolioList || (portfolioData as unknown as PortfolioItem[]);
 
 /**
  * Resolve deployment canonical URL for Cloudflare Pages and local dev.
@@ -85,7 +85,9 @@ export const SITE_CONFIG = {
     (typeof process !== "undefined" && process.env?.VITE_GOOGLE_SHEET_URL) ||
     "",
   locationDisplay: SITE_CONTENT.locationDisplay,
-  logisticsNotice: SITE_CONTENT.availabilityBanner || "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
+  logisticsNotice:
+    SITE_CONTENT.availabilityBanner ||
+    "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
 
   // Address & Hours
   address: SITE_CONTENT.address,
@@ -121,18 +123,57 @@ export type SiteConfig = typeof SITE_CONFIG;
  * Dynamically builds a Schema.org HairSalon / LocalBusiness JSON-LD structure.
  */
 export function generateSiteSchema(
-  config: SiteConfig = SITE_CONFIG,
+  config: Partial<SiteContent> & Partial<SiteConfig> = SITE_CONFIG,
   services: ServiceItem[] = SERVICES_CONTENT
 ) {
-  const baseUrl = config.canonicalUrl.replace(/\/+$/, "");
+  const merged = {
+    ...SITE_CONFIG,
+    ...config,
+    address: {
+      ...SITE_CONFIG.address,
+      ...(config.address || {}),
+    },
+    geo: {
+      ...SITE_CONFIG.geo,
+      ...(config.geo || {}),
+    },
+    openingHours: {
+      ...SITE_CONFIG.openingHours,
+      ...(config.openingHours || {}),
+    },
+    openingDays: config.openingDays || SITE_CONFIG.openingDays,
+    areaServed: config.areaServed || SITE_CONFIG.areaServed,
+  };
+
+  const baseUrl = (merged.canonicalUrl || SITE_CONFIG.canonicalUrl).replace(
+    /\/+$/,
+    ""
+  );
+
+  const rawPhone = merged.phone || SITE_CONFIG.phone;
+  const cleanPhoneDigits = rawPhone.replace(/[^0-9]/g, "");
+  const telephoneSchema =
+    cleanPhoneDigits.length >= 10
+      ? `+1-${cleanPhoneDigits.slice(0, 3)}-${cleanPhoneDigits.slice(3, 6)}-${cleanPhoneDigits.slice(6)}`
+      : SITE_CONFIG.telephoneSchema;
+
+  const rawHandle = (merged.instagramHandle || merged.instagram || "").replace(
+    /^@/,
+    ""
+  );
+  const instagramUrl =
+    merged.instagramUrl ||
+    (rawHandle
+      ? `https://www.instagram.com/${rawHandle}/`
+      : SITE_CONFIG.instagramUrl);
 
   const serviceImages: Record<string, string> = {
     "curly-cut-finish": `${baseUrl}/assets/portfolio-2.webp`,
     "vintage-set-updo": `${baseUrl}/assets/portfolio-1.webp`,
   };
 
-  const itemListElement = services.map((service) => {
-    const rawPrice = service.price.replace(/[^0-9]/g, "");
+  const itemListElement = (services || SERVICES_CONTENT).map((service) => {
+    const rawPrice = service.price ? service.price.replace(/[^0-9]/g, "") : "";
     return {
       "@type": "Offer",
       itemOffered: {
@@ -168,7 +209,7 @@ export function generateSiteSchema(
   return {
     "@context": "https://schema.org",
     "@type": "HairSalon",
-    name: config.studioName,
+    name: merged.studioName || SITE_CONFIG.studioName,
     image: [
       `${baseUrl}/assets/portfolio-4.webp`,
       `${baseUrl}/assets/portfolio-1.webp`,
@@ -176,38 +217,41 @@ export function generateSiteSchema(
       `${baseUrl}/assets/portfolio-3.webp`,
       `${baseUrl}/assets/portfolio-5.webp`,
     ],
-    description: config.description,
-    telephone: config.telephoneSchema,
-    email: config.email,
-    url: config.canonicalUrl,
-    priceRange: config.priceRange,
+    description:
+      merged.metaDescription || merged.description || SITE_CONFIG.description,
+    telephone: telephoneSchema,
+    email: merged.email || SITE_CONFIG.email,
+    url: merged.canonicalUrl || SITE_CONFIG.canonicalUrl,
+    priceRange: merged.priceRange || SITE_CONFIG.priceRange,
     address: {
       "@type": "PostalAddress",
-      addressLocality: config.address.locality,
-      addressRegion: config.address.region,
-      addressCountry: config.address.country,
+      addressLocality: merged.address.locality,
+      addressRegion: merged.address.region,
+      addressCountry: merged.address.country,
     },
     geo: {
       "@type": "GeoCoordinates",
-      latitude: config.geo.latitude,
-      longitude: config.geo.longitude,
+      latitude: merged.geo.latitude,
+      longitude: merged.geo.longitude,
     },
     openingHoursSpecification: [
       {
         "@type": "OpeningHoursSpecification",
         dayOfWeek:
-          config.openingDays.length === 1
-            ? config.openingDays[0]
-            : config.openingDays,
-        opens: config.openingHours.opens,
-        closes: config.openingHours.closes,
+          merged.openingDays.length === 1
+            ? merged.openingDays[0]
+            : merged.openingDays,
+        opens: merged.openingHours.opens,
+        closes: merged.openingHours.closes,
       },
     ],
     areaServed: {
       "@type": "AdministrativeArea",
-      name: "San Francisco, CA",
+      name: Array.isArray(merged.areaServed)
+        ? merged.areaServed.join(", ")
+        : merged.locationDisplay || "San Francisco, CA",
     },
-    sameAs: [config.instagramUrl],
+    sameAs: [instagramUrl],
     hasOfferCatalog: {
       "@type": "OfferCatalog",
       name: "Styling Services",

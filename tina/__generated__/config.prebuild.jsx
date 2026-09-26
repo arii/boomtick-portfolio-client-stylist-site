@@ -1,78 +1,47 @@
+// tina/config.ts
 import { defineConfig } from "tinacms";
-
-// Your hosting provider will set these environment variables automatically in production
-const branch =
-  (typeof process !== "undefined"
-    ? process.env?.VITE_TINA_BRANCH
-    : undefined) ||
-  import.meta.env?.VITE_TINA_BRANCH ||
-  (typeof process !== "undefined" ? process.env?.CF_PAGES_BRANCH : undefined) ||
-  (typeof process !== "undefined" ? process.env?.HEAD : undefined) ||
-  "main";
-
-const clientId =
-  (typeof process !== "undefined"
-    ? process.env?.VITE_TINA_CLIENT_ID
-    : undefined) ||
-  import.meta.env?.VITE_TINA_CLIENT_ID ||
-  "87e12abe-90fc-43a9-9f88-48270c37724d"; // Default to configured project client ID
-
-const token =
-  (typeof process !== "undefined" ? process.env?.TINA_TOKEN : undefined) ||
-  import.meta.env?.TINA_TOKEN || // Check for VITE_TINA_TOKEN as well
-  null; // Obtain from o.tina.io
-
-const searchToken =
-  (typeof process !== "undefined"
-    ? process.env?.TINA_SEARCH_TOKEN
-    : undefined) ||
-  import.meta.env?.TINA_SEARCH_TOKEN ||
-  import.meta.env?.VITE_TINA_SEARCH_TOKEN ||
-  null;
-
+var branch = (typeof process !== "undefined" ? process.env?.VITE_TINA_BRANCH : void 0) || import.meta.env?.VITE_TINA_BRANCH || (typeof process !== "undefined" ? process.env?.CF_PAGES_BRANCH : void 0) || (typeof process !== "undefined" ? process.env?.HEAD : void 0) || "main";
+var clientId = (typeof process !== "undefined" ? process.env?.VITE_TINA_CLIENT_ID : void 0) || import.meta.env?.VITE_TINA_CLIENT_ID || "87e12abe-90fc-43a9-9f88-48270c37724d";
+var token = (typeof process !== "undefined" ? process.env?.TINA_TOKEN : void 0) || import.meta.env?.TINA_TOKEN || // Check for VITE_TINA_TOKEN as well
+null;
+var searchToken = (typeof process !== "undefined" ? process.env?.TINA_SEARCH_TOKEN : void 0) || import.meta.env?.TINA_SEARCH_TOKEN || import.meta.env?.VITE_TINA_SEARCH_TOKEN || null;
 if (!clientId) {
   console.warn(
-    "⚠️ [TinaCMS Warning] VITE_TINA_CLIENT_ID is not set or is null! Admin login will redirect with clientId=null. Please configure VITE_TINA_CLIENT_ID in your environment variables."
+    "\u26A0\uFE0F [TinaCMS Warning] VITE_TINA_CLIENT_ID is not set or is null! Admin login will redirect with clientId=null. Please configure VITE_TINA_CLIENT_ID in your environment variables."
   );
 } else {
-  console.log("✅ [TinaCMS Info] VITE_TINA_CLIENT_ID loaded successfully.");
+  console.log("\u2705 [TinaCMS Info] VITE_TINA_CLIENT_ID loaded successfully.");
 }
-
 if (!token) {
   console.warn(
-    "⚠️ [TinaCMS Warning] TINA_TOKEN is not set or is null! Content queries may fail in production. Please configure TINA_TOKEN in your environment variables."
+    "\u26A0\uFE0F [TinaCMS Warning] TINA_TOKEN is not set or is null! Content queries may fail in production. Please configure TINA_TOKEN in your environment variables."
   );
 } else {
-  console.log("✅ [TinaCMS Info] TINA_TOKEN loaded successfully.");
+  console.log("\u2705 [TinaCMS Info] TINA_TOKEN loaded successfully.");
 }
-
 if (!searchToken) {
   console.warn(
-    "⚠️ [TinaCMS Warning] TINA_SEARCH_TOKEN is not set or is null! Search indexing will be disabled. Set TINA_SEARCH_TOKEN to enable TinaCloud search."
+    "\u26A0\uFE0F [TinaCMS Warning] TINA_SEARCH_TOKEN is not set or is null! Search indexing will be disabled. Set TINA_SEARCH_TOKEN to enable TinaCloud search."
   );
 } else {
   console.log(
-    "✅ [TinaCMS Info] TINA_SEARCH_TOKEN loaded successfully. Search indexing enabled."
+    "\u2705 [TinaCMS Info] TINA_SEARCH_TOKEN loaded successfully. Search indexing enabled."
   );
 }
-
-export default defineConfig({
+var config_default = defineConfig({
   branch,
   clientId,
   token,
-
   build: {
     outputFolder: "admin",
-    publicFolder: "public",
+    publicFolder: "public"
   },
-
   media: {
     tina: {
       mediaRoot: "assets",
-      publicFolder: "public",
-    },
+      publicFolder: "public"
+    }
   },
-
   schema: {
     collections: [
       // 1. GLOBAL SETTINGS (Single Source of Truth)
@@ -84,57 +53,57 @@ export default defineConfig({
         format: "json",
         ui: {
           router: () => "/",
-          allowedActions: { create: false, delete: false },
+          allowedActions: { create: false, delete: false }
         },
         fields: [
           {
             type: "string",
             name: "studioName",
             label: "Studio Name",
-            required: true,
+            required: true
           },
           {
             type: "string",
             name: "stylistName",
             label: "Stylist Name",
-            required: true,
+            required: true
           },
           { type: "string", name: "credentials", label: "Credentials Badge" },
           { type: "string", name: "title", label: "Default Site Title" },
           {
             type: "string",
             name: "browserTitle",
-            label: "Browser Title (SEO)",
+            label: "Browser Title (SEO)"
           },
           {
             type: "string",
             name: "description",
             label: "Default Description",
-            ui: { component: "textarea" },
+            ui: { component: "textarea" }
           },
           {
             type: "string",
             name: "metaDescription",
             label: "Meta Description",
-            ui: { component: "textarea" },
+            ui: { component: "textarea" }
           },
           {
             type: "string",
             name: "keywords",
             label: "SEO Keywords",
-            list: true,
+            list: true
           },
           {
             type: "string",
             name: "email",
             label: "Direct Email Address",
-            description: "Used for public display and contact routing",
+            description: "Used for public display and contact routing"
           },
           {
             type: "string",
             name: "phone",
             label: "Direct Phone Number",
-            description: "Formats automatically on site links",
+            description: "Formats automatically on site links"
           },
           { type: "string", name: "emailFallback", label: "Email Fallback" },
           { type: "string", name: "phoneFallback", label: "Phone Fallback" },
@@ -142,36 +111,36 @@ export default defineConfig({
             type: "string",
             name: "instagramHandle",
             label: "Instagram Handle (@...)",
-            description: "Enter handle only (e.g. hair.by.april_209)",
+            description: "Enter handle only (e.g. hair.by.april_209)"
           },
           {
             type: "string",
             name: "locationDisplay",
-            label: "Location Display Text",
+            label: "Location Display Text"
           },
           {
             type: "string",
             name: "availabilityBanner",
             label: "Global Availability Notice",
-            description: "Displays above the services and appointment buttons",
+            description: "Displays above the services and appointment buttons"
           },
           {
             type: "string",
             name: "logisticsNotice",
             label: "Logistics Notice",
-            ui: { component: "textarea" },
+            ui: { component: "textarea" }
           },
           {
             type: "string",
             name: "calUsername",
             label: "Cal.com Username",
-            description: "Your Cal.com scheduling username (e.g. ariel-anders)",
+            description: "Your Cal.com scheduling username (e.g. ariel-anders)"
           },
           {
             type: "string",
             name: "calDefaultSlug",
             label: "Cal.com Default Event Slug",
-            description: "Default event booking slug (e.g. april-demo)",
+            description: "Default event booking slug (e.g. april-demo)"
           },
           {
             type: "object",
@@ -180,8 +149,8 @@ export default defineConfig({
             fields: [
               { type: "string", name: "locality", label: "City / Locality" },
               { type: "string", name: "region", label: "State / Region" },
-              { type: "string", name: "country", label: "Country Code" },
-            ],
+              { type: "string", name: "country", label: "Country Code" }
+            ]
           },
           {
             type: "object",
@@ -189,20 +158,20 @@ export default defineConfig({
             label: "Geographic Coordinates",
             fields: [
               { type: "number", name: "latitude", label: "Latitude" },
-              { type: "number", name: "longitude", label: "Longitude" },
-            ],
+              { type: "number", name: "longitude", label: "Longitude" }
+            ]
           },
           {
             type: "string",
             name: "areaServed",
             label: "Areas Served",
-            list: true,
+            list: true
           },
           {
             type: "string",
             name: "openingDays",
             label: "Opening Days",
-            list: true,
+            list: true
           },
           {
             type: "object",
@@ -210,30 +179,30 @@ export default defineConfig({
             label: "Opening Hours",
             fields: [
               { type: "string", name: "opens", label: "Opening Time (HH:MM)" },
-              { type: "string", name: "closes", label: "Closing Time (HH:MM)" },
-            ],
+              { type: "string", name: "closes", label: "Closing Time (HH:MM)" }
+            ]
           },
           { type: "string", name: "priceRange", label: "Price Range" },
           {
             type: "string",
             name: "heroHeading",
-            label: "Hero Heading (Fallback)",
+            label: "Hero Heading (Fallback)"
           },
           {
             type: "string",
             name: "heroSubtext",
             label: "Hero Subtext (Fallback)",
-            ui: { component: "textarea" },
+            ui: { component: "textarea" }
           },
           {
             type: "image",
             name: "ogImageRelative",
-            label: "OG Image Relative Path",
+            label: "OG Image Relative Path"
           },
           {
             type: "image",
             name: "ogImageFallbackRelative",
-            label: "OG Image Fallback Path",
+            label: "OG Image Fallback Path"
           },
           { type: "string", name: "ogImageAlt", label: "OG Image Alt Text" },
           { type: "number", name: "ogImageWidth", label: "OG Image Width" },
@@ -241,17 +210,16 @@ export default defineConfig({
           {
             type: "image",
             name: "heroPreloadImage",
-            label: "Hero Preload Image",
+            label: "Hero Preload Image"
           },
           {
             type: "image",
             name: "portfolioImagesRelative",
             label: "Portfolio Images Relative Paths",
-            list: true,
-          },
-        ],
+            list: true
+          }
+        ]
       },
-
       // 2. HERO SECTION
       {
         name: "hero",
@@ -261,7 +229,7 @@ export default defineConfig({
         format: "json",
         ui: {
           router: () => "/",
-          allowedActions: { create: false, delete: false },
+          allowedActions: { create: false, delete: false }
         },
         fields: [
           { type: "string", name: "badge", label: "Credentials Badge" },
@@ -269,31 +237,29 @@ export default defineConfig({
             type: "string",
             name: "headline",
             label: "Main Headline",
-            required: true,
+            required: true
           },
           {
             type: "string",
             name: "subheading",
             label: "Subheading Copy",
-            ui: { component: "textarea" },
+            ui: { component: "textarea" }
           },
           {
             type: "string",
             name: "availabilityNotice",
             label: "Availability Notice Banner",
             required: true,
-            ui: { component: "textarea" },
+            ui: { component: "textarea" }
           },
           {
             type: "string",
             name: "calSlug",
             label: "Cal.com Booking Event Slug",
-            description:
-              "Specific Cal.com event slug for the Hero button (e.g. april-demo)",
-          },
-        ],
+            description: "Specific Cal.com event slug for the Hero button (e.g. april-demo)"
+          }
+        ]
       },
-
       // 3. PORTFOLIO SHOWCASE
       {
         name: "portfolio",
@@ -303,7 +269,7 @@ export default defineConfig({
         format: "json",
         ui: {
           router: () => "/",
-          allowedActions: { create: false, delete: false },
+          allowedActions: { create: false, delete: false }
         },
         fields: [
           {
@@ -312,23 +278,23 @@ export default defineConfig({
             label: "Showcase Images List",
             list: true,
             ui: {
-              itemProps: (item: any) => ({
-                label: item?.id || "Portfolio Item",
-              }),
+              itemProps: (item) => ({
+                label: item?.id || "Portfolio Item"
+              })
             },
             fields: [
               {
                 type: "string",
                 name: "id",
                 label: "Image ID (slug)",
-                required: true,
+                required: true
               },
               { type: "image", name: "image", label: "Photo", required: true },
               {
                 type: "string",
                 name: "alt",
                 label: "Alt Text Description",
-                required: true,
+                required: true
               },
               {
                 type: "string",
@@ -338,14 +304,13 @@ export default defineConfig({
                   "Curly Cut",
                   "Vintage Styling",
                   "Updos",
-                  "Events & Production",
-                ],
-              },
-            ],
-          },
-        ],
+                  "Events & Production"
+                ]
+              }
+            ]
+          }
+        ]
       },
-
       // 4. SERVICES & PRICING
       {
         name: "services",
@@ -355,7 +320,7 @@ export default defineConfig({
         format: "json",
         ui: {
           router: () => "/",
-          allowedActions: { create: false, delete: false },
+          allowedActions: { create: false, delete: false }
         },
         fields: [
           { type: "string", name: "sectionTitle", label: "Section Title" },
@@ -365,59 +330,57 @@ export default defineConfig({
             label: "Service Offerings",
             list: true,
             ui: {
-              itemProps: (item: any) => ({
-                label: `${item?.name || "New Service"} (${item?.price || 0})`,
-              }),
+              itemProps: (item) => ({
+                label: `${item?.name || "New Service"} (${item?.price || 0})`
+              })
             },
             fields: [
               {
                 type: "string",
                 name: "id",
                 label: "Service Slug ID",
-                required: true,
+                required: true
               },
               {
                 type: "string",
                 name: "name",
                 label: "Service Name",
-                required: true,
+                required: true
               },
               {
                 type: "string",
                 name: "price",
                 label: "Price Display (e.g. $175)",
-                required: true,
+                required: true
               },
               {
                 type: "string",
                 name: "duration",
                 label: "Estimated Duration",
-                description: "e.g., 2 hrs, 90 mins",
+                description: "e.g., 2 hrs, 90 mins"
               },
               {
                 type: "string",
                 name: "description",
                 label: "Short Description",
-                ui: { component: "textarea" },
+                ui: { component: "textarea" }
               },
               {
                 type: "string",
                 name: "deliverables",
                 label: "Included Features",
                 list: true,
-                description:
-                  "Bullet points detailing what is included in this service",
+                description: "Bullet points detailing what is included in this service"
               },
               {
                 type: "string",
                 name: "calSlug",
-                label: "Cal.com Scheduling Slug",
-              },
-            ],
-          },
-        ],
+                label: "Cal.com Scheduling Slug"
+              }
+            ]
+          }
+        ]
       },
-
       // 5. INQUIRY & MAILING LIST FORM SETUP
       {
         name: "events",
@@ -427,29 +390,27 @@ export default defineConfig({
         format: "json",
         ui: {
           router: () => "/",
-          allowedActions: { create: false, delete: false },
+          allowedActions: { create: false, delete: false }
         },
         fields: [
           {
             type: "string",
             name: "title",
             label: "Form Section Title",
-            description: "Main section heading for inquiry & mailing list form",
+            description: "Main section heading for inquiry & mailing list form"
           },
           {
             type: "string",
             name: "description",
             label: "Form Section Description",
-            description:
-              "Header copy explaining inquiry or mailing list details",
-            ui: { component: "textarea" },
+            description: "Header copy explaining inquiry or mailing list details",
+            ui: { component: "textarea" }
           },
           {
             type: "boolean",
             name: "showForm",
             label: "Display Inquiry Form on Site?",
-            description:
-              "Toggle off to completely remove the form from the public website",
+            description: "Toggle off to completely remove the form from the public website"
           },
           {
             type: "object",
@@ -465,25 +426,25 @@ export default defineConfig({
                     type: "string",
                     name: "label",
                     label: "Field Label",
-                    required: true,
+                    required: true
                   },
                   {
                     type: "string",
                     name: "fieldType",
                     label: "Input Type",
-                    options: ["text", "email", "tel", "date", "number"],
+                    options: ["text", "email", "tel", "date", "number"]
                   },
                   {
                     type: "string",
                     name: "placeholder",
-                    label: "Placeholder Hint",
+                    label: "Placeholder Hint"
                   },
                   {
                     type: "boolean",
                     name: "required",
-                    label: "Required Field?",
-                  },
-                ],
+                    label: "Required Field?"
+                  }
+                ]
               },
               {
                 name: "selectField",
@@ -493,21 +454,21 @@ export default defineConfig({
                     type: "string",
                     name: "label",
                     label: "Field Label",
-                    required: true,
+                    required: true
                   },
                   {
                     type: "string",
                     name: "options",
                     label: "Dropdown Options",
                     list: true,
-                    description: "Options the client can pick from",
+                    description: "Options the client can pick from"
                   },
                   {
                     type: "boolean",
                     name: "required",
-                    label: "Required Field?",
-                  },
-                ],
+                    label: "Required Field?"
+                  }
+                ]
               },
               {
                 name: "textareaField",
@@ -517,21 +478,21 @@ export default defineConfig({
                     type: "string",
                     name: "label",
                     label: "Field Label",
-                    required: true,
+                    required: true
                   },
                   {
                     type: "string",
                     name: "placeholder",
-                    label: "Placeholder Hint",
+                    label: "Placeholder Hint"
                   },
                   {
                     type: "boolean",
                     name: "required",
-                    label: "Required Field?",
-                  },
-                ],
-              },
-            ],
+                    label: "Required Field?"
+                  }
+                ]
+              }
+            ]
           },
           {
             type: "object",
@@ -541,30 +502,30 @@ export default defineConfig({
               {
                 type: "string",
                 name: "submitButtonText",
-                label: "Submit Button Text",
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-
-  search: searchToken
-    ? {
-        tina: {
-          indexerToken: searchToken,
-          stopwordLanguages: ["eng"],
-          fuzzyEnabled: true,
-          fuzzyOptions: {
-            maxDistance: 2,
-            minSimilarity: 0.6,
-            maxTermExpansions: 10,
-            useTranspositions: true,
-          },
-        },
-        indexBatchSize: 100,
-        maxSearchIndexFieldLength: 100,
+                label: "Submit Button Text"
+              }
+            ]
+          }
+        ]
       }
-    : undefined,
+    ]
+  },
+  search: searchToken ? {
+    tina: {
+      indexerToken: searchToken,
+      stopwordLanguages: ["eng"],
+      fuzzyEnabled: true,
+      fuzzyOptions: {
+        maxDistance: 2,
+        minSimilarity: 0.6,
+        maxTermExpansions: 10,
+        useTranspositions: true
+      }
+    },
+    indexBatchSize: 100,
+    maxSearchIndexFieldLength: 100
+  } : void 0
 });
+export {
+  config_default as default
+};

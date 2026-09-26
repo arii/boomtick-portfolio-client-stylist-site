@@ -52,16 +52,20 @@ async function run() {
     fs.existsSync("public/admin/index.html") &&
     fs.existsSync("tina/__generated__/types.ts");
 
-  if (busy && hasGeneratedAssets) {
+  if (busy) {
     console.log(
-      "Local datalayer active on port 9000 and compiled assets exist. Reusing compiled assets to prevent port conflict."
+      "Local datalayer active on port 9000. Reusing compiled assets to prevent port conflict."
     );
     runTinaBuild = false;
   } else {
     if (hasEnv) {
-      console.log("✅ [Build Info] Tina Cloud credentials found (VITE_TINA_CLIENT_ID & TINA_TOKEN present), compiling cloud build...");
+      console.log(
+        "✅ [Build Info] Tina Cloud credentials found (VITE_TINA_CLIENT_ID & TINA_TOKEN present), compiling cloud build..."
+      );
     } else {
-      console.warn("⚠️ [Build Warning] Tina Cloud credentials NOT fully found! Missing VITE_TINA_CLIENT_ID or TINA_TOKEN. Falling back to local TinaCMS build where clientId will be null.");
+      console.warn(
+        "⚠️ [Build Warning] Tina Cloud credentials NOT fully found! Missing VITE_TINA_CLIENT_ID or TINA_TOKEN. Falling back to local TinaCMS build where clientId will be null."
+      );
     }
   }
 

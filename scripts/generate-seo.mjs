@@ -22,7 +22,9 @@ if (
 const site = JSON.parse(fs.readFileSync(sitePath, "utf8"));
 const hero = JSON.parse(fs.readFileSync(heroPath, "utf8"));
 const servicesRaw = JSON.parse(fs.readFileSync(servicesPath, "utf8"));
-const services = Array.isArray(servicesRaw) ? servicesRaw : (servicesRaw.servicesList || []);
+const services = Array.isArray(servicesRaw)
+  ? servicesRaw
+  : servicesRaw.servicesList || [];
 
 const siteUrl = (
   process.env.VITE_SITE_URL ||
@@ -81,7 +83,10 @@ fs.writeFileSync(
   "utf8"
 );
 
-const instaHandle = (site.instagramHandle || "hair.by.april_209").replace(/^@/, "");
+const instaHandle = (site.instagramHandle || "hair.by.april_209").replace(
+  /^@/,
+  ""
+);
 const instagramUrl = `https://www.instagram.com/${instaHandle}/`;
 
 // 3. Generate llms.txt
@@ -190,7 +195,9 @@ const schemaOrgData = {
     "@type": "AdministrativeArea",
     name: "San Francisco, CA",
   },
-  sameAs: [`https://www.instagram.com/${(site.instagramHandle || site.instagram || "hair.by.april_209").replace("@", "")}/`],
+  sameAs: [
+    `https://www.instagram.com/${(site.instagramHandle || site.instagram || "hair.by.april_209").replace("@", "")}/`,
+  ],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Styling Services",

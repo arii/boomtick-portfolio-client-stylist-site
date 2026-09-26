@@ -8,6 +8,9 @@ interface BookingModalProps {
   onClose: () => void;
   eventSlug?: string;
   calUsername?: string;
+  logisticsNotice?: string;
+  locationDisplay?: string;
+  stylistName?: string;
 }
 
 export const BookingModal: React.FC<BookingModalProps> = ({
@@ -15,6 +18,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   onClose,
   eventSlug = SITE_CONFIG.calDefaultSlug,
   calUsername = SITE_CONFIG.calUsername,
+  logisticsNotice = SITE_CONFIG.logisticsNotice,
+  locationDisplay = SITE_CONFIG.locationDisplay,
+  stylistName = SITE_CONFIG.stylistName,
 }) => {
   if (!isOpen) return null;
 
@@ -36,7 +42,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               Book Your Appointment
             </h3>
             <p className="text-stone-500 text-xs sm:text-sm mt-1 font-sans">
-              {SITE_CONFIG.logisticsNotice} Select your preferred slot below.
+              {logisticsNotice} Select your preferred slot below.
             </p>
           </div>
           <button
@@ -52,7 +58,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         <div className="flex-1 border border-stone-200 rounded-xl overflow-hidden bg-stone-50 relative min-h-[480px]">
           <iframe
             src={calUrl}
-            title={`Book an appointment with ${SITE_CONFIG.stylistName}`}
+            title={`Book an appointment with ${stylistName}`}
             className="w-full h-full min-h-[480px] border-0"
             loading="lazy"
           />
@@ -61,9 +67,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         <div className="mt-4 flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-stone-100 text-xs text-stone-500">
           <div className="flex items-center gap-1.5">
             <Calendar className={`w-3.5 h-3.5 ${TOKENS.accent.icon}`} />
-            <span>
-              On-location appointments in {SITE_CONFIG.locationDisplay}
-            </span>
+            <span>On-location appointments in {locationDisplay}</span>
           </div>
           <a
             href={directUrl}

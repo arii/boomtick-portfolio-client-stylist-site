@@ -22,6 +22,11 @@ export const Footer: React.FC<FooterProps> = ({
   instagram = SITE_CONFIG.instagram,
   instagramUrl = SITE_CONFIG.instagramUrl,
 }) => {
+  const cleanPhoneDigits = phone.replace(/[^0-9]/g, "");
+  const phoneTel = cleanPhoneDigits
+    ? `tel:${cleanPhoneDigits}`
+    : SITE_CONFIG.phoneTel;
+
   return (
     <footer className="bg-stone-900 text-stone-300 py-16 md:py-20 border-t border-stone-800">
       <div className="max-w-6xl mx-auto px-6">
@@ -49,7 +54,7 @@ export const Footer: React.FC<FooterProps> = ({
               </a>
               <a
                 id="footer-phone-link"
-                href={SITE_CONFIG.phoneTel}
+                href={phoneTel}
                 className="hover:text-white transition w-fit"
               >
                 {phone}
@@ -102,8 +107,8 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-500 font-sans">
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
             <span>
-              &copy; {new Date().getFullYear()} {SITE_CONFIG.studioName}. All
-              rights reserved.
+              &copy; {new Date().getFullYear()} {studioName}. All rights
+              reserved.
             </span>
             {onToggleAdmin && (
               <>
