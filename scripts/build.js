@@ -46,22 +46,29 @@ async function run() {
   const hasEnv = process.env.VITE_TINA_CLIENT_ID && process.env.TINA_TOKEN;
   let runTinaBuild = true;
 
-  console.log("\n2️⃣ Checking TinaCMS datalayer and schema status...");
+  console.log("\n2️⃣ Checking TinaCMS datalayer on port 9000...");
   const busy = await isPortBusy(9000);
   const hasGeneratedAssets =
     fs.existsSync("public/admin/index.html") &&
     fs.existsSync("tina/__generated__/types.ts");
 
-  if (busy) {
-    console.log("Stopping active tinacms datalayer process on port 9000 for clean build...");
-    spawnSync("pkill", ["-f", "tinacms"], { stdio: "inherit", shell: true });
+  if (busy && hasGeneratedAssets) {
+    console.log(
+      "Local datalayer active on port 9000 and compiled assets exist. Reusing compiled assets to prevent port conflict."
+    );
+    runTinaBuild = false;
+  } else {
+    if (hasEnv) {
+      console.log("✅ [Build Info] Tina Cloud credentials found (VITE_TINA_CLIENT_ID & TINA_TOKEN present), compiling cloud build...");
+    } else {
+      console.warn("⚠️ [Build Warning] Tina Cloud credentials NOT fully found! Missing VITE_TINA_CLIENT_ID or TINA_TOKEN. Falling back to local TinaCMS build where clientId will be null.");
+    }
   }
 
-  console.log("✅ Compiling TinaCMS build...");
-  runTinaBuild = true;
-
   if (runTinaBuild) {
-    const tinaArgs = ["build", "--skip-cloud-checks"];
+    const tinaArgs = hasEnv
+      ? ["build", "--skip-cloud-checks"]
+      : ["build", "--local", "--skip-cloud-checks"];
 
     console.log(`Executing: npx tinacms ${tinaArgs.join(" ")}`);
     const tinaResult = spawnSync("npx", ["tinacms", ...tinaArgs], {

@@ -31,3 +31,5 @@ export const tinaClient =
         queries,
       })
     : defaultClient;
+
+export default tinaClient;

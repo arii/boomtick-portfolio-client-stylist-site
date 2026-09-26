@@ -38,6 +38,12 @@ const BookingModal = lazy(() =>
   }))
 );
 
+const AdminMockup = lazy(() =>
+  import("./components/AdminMockup").then((mod) => ({
+    default: mod.AdminMockup,
+  }))
+);
+
 // 1. Hero Section Container with TinaCMS data registration
 function HeroSectionContainer({
   payload,
@@ -283,6 +289,15 @@ export default function App() {
   );
   const [customCalSlug, setCustomCalSlug] = useState<string | null>(null);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [isAdminOpen, setIsAdminOpen] = useState(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      return (
+        params.get("admin") === "true" || window.location.hash === "#admin"
+      );
+    }
+    return false;
+  });
 
   // Dynamic Site Layout Settings (Driven by TinaCMS site.json)
   const [siteState, setSiteState] = useState({
@@ -493,7 +508,7 @@ export default function App() {
       <Footer
         onBookAppointment={() => handleOpenBooking()}
         onToggleAdmin={() => {
-          window.location.href = "/admin";
+          setIsAdminOpen(true);
         }}
         studioName={siteState.studioName}
         email={siteState.email}
@@ -521,6 +536,76 @@ export default function App() {
       )}
     </div>
   );
+
+  if (isAdminOpen) {
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-screen bg-stone-950 text-stone-200 flex items-center justify-center font-mono text-sm">
+            Loading CMS Portal...
+          </div>
+        }
+      >
+        <AdminMockup
+          heroContent={heroPayload.data.hero}
+          setHeroContent={(newHero) => {
+            const h = typeof newHero === "function" ? newHero(heroPayload.data.hero) : newHero;
+            setHeroPayload((prev) => ({
+              ...prev,
+              data: { hero: h },
+            }));
+          }}
+          eventsContent={eventsPayload.data.events}
+          setEventsContent={(newEvents) => {
+            const ev = typeof newEvents === "function" ? newEvents(eventsPayload.data.events) : newEvents;
+            setEventsPayload((prev) => ({
+              ...prev,
+              data: { events: ev },
+            }));
+          }}
+          servicesContent={servicesPayload.data.services.servicesList}
+          setServicesContent={(newServices) => {
+            const list = typeof newServices === "function" ? newServices(servicesPayload.data.services.servicesList) : newServices;
+            setServicesPayload((prev) => ({
+              ...prev,
+              data: {
+                services: {
+                  ...prev.data.services,
+                  servicesList: list,
+                },
+              },
+            }));
+          }}
+          portfolioContent={portfolioPayload.data.portfolio.portfolioList}
+          setPortfolioContent={(newPortfolio) => {
+            const list = typeof newPortfolio === "function" ? newPortfolio(portfolioPayload.data.portfolio.portfolioList) : newPortfolio;
+            setPortfolioPayload((prev) => ({
+              ...prev,
+              data: {
+                portfolio: {
+                  ...prev.data.portfolio,
+                  portfolioList: list,
+                },
+              },
+            }));
+          }}
+          onClose={() => setIsAdminOpen(false)}
+          email={siteState.email}
+          setEmail={(email: string) => setSiteState((p) => ({ ...p, email }))}
+          phone={siteState.phone}
+          setPhone={(phone: string) => setSiteState((p) => ({ ...p, phone }))}
+          instagram={siteState.instagram}
+          setInstagram={(instagram: string) => setSiteState((p) => ({ ...p, instagram }))}
+          instagramUrl={siteState.instagramUrl}
+          setInstagramUrl={(instagramUrl: string) => setSiteState((p) => ({ ...p, instagramUrl }))}
+          heroImage={SITE_CONFIG.heroPreloadImage}
+          setHeroImage={() => {}}
+        >
+          {mainSiteContent}
+        </AdminMockup>
+      </Suspense>
+    );
+  }
 
   return mainSiteContent;
 }
