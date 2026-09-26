@@ -61,9 +61,7 @@ async function run() {
   runTinaBuild = true;
 
   if (runTinaBuild) {
-    const tinaArgs = hasEnv
-      ? ["build", "--skip-cloud-checks"]
-      : ["build", "--local", "--skip-cloud-checks"];
+    const tinaArgs = ["build", "--skip-cloud-checks"];
 
     console.log(`Executing: npx tinacms ${tinaArgs.join(" ")}`);
     const tinaResult = spawnSync("npx", ["tinacms", ...tinaArgs], {

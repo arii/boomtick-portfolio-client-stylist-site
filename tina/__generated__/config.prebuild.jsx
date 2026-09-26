@@ -1,8 +1,9 @@
 // tina/config.ts
 import { defineConfig } from "tinacms";
 var branch = (typeof process !== "undefined" ? process.env?.VITE_TINA_BRANCH : void 0) || (typeof process !== "undefined" ? process.env?.CF_PAGES_BRANCH : void 0) || "main";
-var clientId = (typeof process !== "undefined" ? process.env?.VITE_TINA_CLIENT_ID : void 0) || null;
-var token = (typeof process !== "undefined" ? process.env?.TINA_TOKEN : void 0) || null;
+var hasCloudCreds = typeof process !== "undefined" && Boolean(process.env?.VITE_TINA_CLIENT_ID) && Boolean(process.env?.TINA_TOKEN);
+var clientId = hasCloudCreds ? process.env?.VITE_TINA_CLIENT_ID : void 0;
+var token = hasCloudCreds ? process.env?.TINA_TOKEN : void 0;
 var config_default = defineConfig({
   branch,
   clientId,

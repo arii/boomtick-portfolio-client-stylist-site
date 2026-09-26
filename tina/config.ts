@@ -6,13 +6,16 @@ const branch =
   (typeof process !== "undefined" ? process.env?.CF_PAGES_BRANCH : undefined) ||
   "main";
 
-// TinaCloud Credentials
+// TinaCloud Credentials (with local fallback)
 const clientId =
-  (typeof process !== "undefined" ? process.env?.VITE_TINA_CLIENT_ID : undefined) ||
-  null;
+  (typeof process !== "undefined" && process.env?.VITE_TINA_CLIENT_ID && process.env?.TINA_TOKEN)
+    ? process.env.VITE_TINA_CLIENT_ID
+    : "local-mode-client";
+
 const token =
-  (typeof process !== "undefined" ? process.env?.TINA_TOKEN : undefined) ||
-  null;
+  (typeof process !== "undefined" && process.env?.VITE_TINA_CLIENT_ID && process.env?.TINA_TOKEN)
+    ? process.env.TINA_TOKEN
+    : "";
 
 export default defineConfig({
   branch,
