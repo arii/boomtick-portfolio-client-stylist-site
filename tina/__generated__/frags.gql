@@ -1,92 +1,93 @@
-fragment PageParts on Page {
+fragment SiteParts on Site {
   __typename
-  site {
+  studioName
+  stylistName
+  browserTitle
+  metaDescription
+  email
+  phone
+  instagramHandle
+  locationDisplay
+  availabilityBanner
+  calUsername
+  calDefaultSlug
+  priceRange
+  address {
     __typename
-    studioName
-    stylistName
-    browserTitle
-    metaDescription
-    email
-    phone
-    instagramHandle
-    locationDisplay
-    availabilityBanner
-    calUsername
-    calDefaultSlug
-    priceRange
-    address {
-      __typename
-      locality
-      region
-      country
-    }
-    geo {
-      __typename
-      latitude
-      longitude
-    }
-    areaServed
-    keywords
+    locality
+    region
+    country
   }
-  hero {
+  geo {
     __typename
-    badge
-    headline
-    subheading
-    availabilityNotice
+    latitude
+    longitude
+  }
+  areaServed
+  keywords
+}
+
+fragment HeroParts on Hero {
+  __typename
+  badge
+  headline
+  subheading
+  availabilityNotice
+  calSlug
+}
+
+fragment PortfolioParts on Portfolio {
+  __typename
+  portfolioList {
+    __typename
+    id
+    image
+    alt
+    tag
+  }
+}
+
+fragment ServicesParts on Services {
+  __typename
+  sectionTitle
+  servicesList {
+    __typename
+    id
+    name
+    price
+    duration
+    description
+    deliverables
     calSlug
   }
-  portfolio {
+}
+
+fragment EventsParts on Events {
+  __typename
+  title
+  description
+  showForm
+  formFields {
     __typename
-    portfolioList {
-      __typename
-      id
-      image
-      alt
-      tag
+    ... on EventsFormFieldsInputField {
+      label
+      fieldType
+      placeholder
+      required
+    }
+    ... on EventsFormFieldsSelectField {
+      label
+      options
+      required
+    }
+    ... on EventsFormFieldsTextareaField {
+      label
+      placeholder
+      required
     }
   }
-  services {
+  formOptions {
     __typename
-    sectionTitle
-    servicesList {
-      __typename
-      id
-      name
-      price
-      duration
-      description
-      deliverables
-      calSlug
-    }
-  }
-  events {
-    __typename
-    title
-    description
-    showForm
-    formFields {
-      __typename
-      ... on PageEventsFormFieldsInputField {
-        label
-        fieldType
-        placeholder
-        required
-      }
-      ... on PageEventsFormFieldsSelectField {
-        label
-        options
-        required
-      }
-      ... on PageEventsFormFieldsTextareaField {
-        label
-        placeholder
-        required
-      }
-    }
-    formOptions {
-      __typename
-      submitButtonText
-    }
+    submitButtonText
   }
 }

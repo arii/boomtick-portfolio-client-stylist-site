@@ -57,12 +57,24 @@ type Query {
   collections: [Collection!]!
   node(id: String): Node!
   document(collection: String, relativePath: String): DocumentNode!
-  page(relativePath: String): Page!
-  pageConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PageFilter): PageConnection!
+  site(relativePath: String): Site!
+  siteConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: SiteFilter): SiteConnection!
+  hero(relativePath: String): Hero!
+  heroConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: HeroFilter): HeroConnection!
+  portfolio(relativePath: String): Portfolio!
+  portfolioConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: PortfolioFilter): PortfolioConnection!
+  services(relativePath: String): Services!
+  servicesConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: ServicesFilter): ServicesConnection!
+  events(relativePath: String): Events!
+  eventsConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: EventsFilter): EventsConnection!
 }
 
 input DocumentFilter {
-  page: PageFilter
+  site: SiteFilter
+  hero: HeroFilter
+  portfolio: PortfolioFilter
+  services: ServicesFilter
+  events: EventsFilter
 }
 
 type DocumentConnectionEdges {
@@ -88,20 +100,20 @@ type Collection {
   documents(before: String, after: String, first: Float, last: Float, sort: String, filter: DocumentFilter, folder: String): DocumentConnection!
 }
 
-union DocumentNode = Page | Folder
+union DocumentNode = Site | Hero | Portfolio | Services | Events | Folder
 
-type PageSiteAddress {
+type SiteAddress {
   locality: String
   region: String
   country: String
 }
 
-type PageSiteGeo {
+type SiteGeo {
   latitude: Float
   longitude: Float
 }
 
-type PageSite {
+type Site implements Node & Document {
   studioName: String!
   stylistName: String!
   browserTitle: String
@@ -114,85 +126,10 @@ type PageSite {
   calUsername: String
   calDefaultSlug: String
   priceRange: String
-  address: PageSiteAddress
-  geo: PageSiteGeo
+  address: SiteAddress
+  geo: SiteGeo
   areaServed: [String]
   keywords: [String]
-}
-
-type PageHero {
-  badge: String
-  headline: String!
-  subheading: String
-  availabilityNotice: String!
-  calSlug: String
-}
-
-type PagePortfolioPortfolioList {
-  id: String!
-  image: String!
-  alt: String!
-  tag: String
-}
-
-type PagePortfolio {
-  portfolioList: [PagePortfolioPortfolioList]
-}
-
-type PageServicesServicesList {
-  id: String!
-  name: String!
-  price: String!
-  duration: String!
-  description: String
-  deliverables: [String]
-  calSlug: String
-}
-
-type PageServices {
-  sectionTitle: String
-  servicesList: [PageServicesServicesList]
-}
-
-type PageEventsFormFieldsInputField {
-  label: String!
-  fieldType: String
-  placeholder: String
-  required: Boolean
-}
-
-type PageEventsFormFieldsSelectField {
-  label: String!
-  options: [String]
-  required: Boolean
-}
-
-type PageEventsFormFieldsTextareaField {
-  label: String!
-  placeholder: String
-  required: Boolean
-}
-
-union PageEventsFormFields = PageEventsFormFieldsInputField | PageEventsFormFieldsSelectField | PageEventsFormFieldsTextareaField
-
-type PageEventsFormOptions {
-  submitButtonText: String
-}
-
-type PageEvents {
-  title: String
-  description: String
-  showForm: Boolean
-  formFields: [PageEventsFormFields]
-  formOptions: PageEventsFormOptions
-}
-
-type Page implements Node & Document {
-  site: PageSite
-  hero: PageHero
-  portfolio: PagePortfolio
-  services: PageServices
-  events: PageEvents
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
@@ -205,7 +142,7 @@ input StringFilter {
   in: [String]
 }
 
-input PageSiteAddressFilter {
+input SiteAddressFilter {
   locality: StringFilter
   region: StringFilter
   country: StringFilter
@@ -221,12 +158,12 @@ input NumberFilter {
   in: [Float]
 }
 
-input PageSiteGeoFilter {
+input SiteGeoFilter {
   latitude: NumberFilter
   longitude: NumberFilter
 }
 
-input PageSiteFilter {
+input SiteFilter {
   studioName: StringFilter
   stylistName: StringFilter
   browserTitle: StringFilter
@@ -239,18 +176,65 @@ input PageSiteFilter {
   calUsername: StringFilter
   calDefaultSlug: StringFilter
   priceRange: StringFilter
-  address: PageSiteAddressFilter
-  geo: PageSiteGeoFilter
+  address: SiteAddressFilter
+  geo: SiteGeoFilter
   areaServed: StringFilter
   keywords: StringFilter
 }
 
-input PageHeroFilter {
+type SiteConnectionEdges {
+  cursor: String!
+  node: Site
+}
+
+type SiteConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [SiteConnectionEdges]
+}
+
+type Hero implements Node & Document {
+  badge: String
+  headline: String!
+  subheading: String
+  availabilityNotice: String!
+  calSlug: String
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input HeroFilter {
   badge: StringFilter
   headline: StringFilter
   subheading: StringFilter
   availabilityNotice: StringFilter
   calSlug: StringFilter
+}
+
+type HeroConnectionEdges {
+  cursor: String!
+  node: Hero
+}
+
+type HeroConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [HeroConnectionEdges]
+}
+
+type PortfolioPortfolioList {
+  id: String!
+  image: String!
+  alt: String!
+  tag: String
+}
+
+type Portfolio implements Node & Document {
+  portfolioList: [PortfolioPortfolioList]
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
 }
 
 input ImageFilter {
@@ -260,18 +244,47 @@ input ImageFilter {
   in: [String]
 }
 
-input PagePortfolioPortfolioListFilter {
+input PortfolioPortfolioListFilter {
   id: StringFilter
   image: ImageFilter
   alt: StringFilter
   tag: StringFilter
 }
 
-input PagePortfolioFilter {
-  portfolioList: PagePortfolioPortfolioListFilter
+input PortfolioFilter {
+  portfolioList: PortfolioPortfolioListFilter
 }
 
-input PageServicesServicesListFilter {
+type PortfolioConnectionEdges {
+  cursor: String!
+  node: Portfolio
+}
+
+type PortfolioConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [PortfolioConnectionEdges]
+}
+
+type ServicesServicesList {
+  id: String!
+  name: String!
+  price: String!
+  duration: String!
+  description: String
+  deliverables: [String]
+  calSlug: String
+}
+
+type Services implements Node & Document {
+  sectionTitle: String
+  servicesList: [ServicesServicesList]
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input ServicesServicesListFilter {
   id: StringFilter
   name: StringFilter
   price: StringFilter
@@ -281,9 +294,56 @@ input PageServicesServicesListFilter {
   calSlug: StringFilter
 }
 
-input PageServicesFilter {
+input ServicesFilter {
   sectionTitle: StringFilter
-  servicesList: PageServicesServicesListFilter
+  servicesList: ServicesServicesListFilter
+}
+
+type ServicesConnectionEdges {
+  cursor: String!
+  node: Services
+}
+
+type ServicesConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [ServicesConnectionEdges]
+}
+
+type EventsFormFieldsInputField {
+  label: String!
+  fieldType: String
+  placeholder: String
+  required: Boolean
+}
+
+type EventsFormFieldsSelectField {
+  label: String!
+  options: [String]
+  required: Boolean
+}
+
+type EventsFormFieldsTextareaField {
+  label: String!
+  placeholder: String
+  required: Boolean
+}
+
+union EventsFormFields = EventsFormFieldsInputField | EventsFormFieldsSelectField | EventsFormFieldsTextareaField
+
+type EventsFormOptions {
+  submitButtonText: String
+}
+
+type Events implements Node & Document {
+  title: String
+  description: String
+  showForm: Boolean
+  formFields: [EventsFormFields]
+  formOptions: EventsFormOptions
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
 }
 
 input BooleanFilter {
@@ -291,60 +351,52 @@ input BooleanFilter {
   exists: Boolean
 }
 
-input PageEventsFormFieldsInputFieldFilter {
+input EventsFormFieldsInputFieldFilter {
   label: StringFilter
   fieldType: StringFilter
   placeholder: StringFilter
   required: BooleanFilter
 }
 
-input PageEventsFormFieldsSelectFieldFilter {
+input EventsFormFieldsSelectFieldFilter {
   label: StringFilter
   options: StringFilter
   required: BooleanFilter
 }
 
-input PageEventsFormFieldsTextareaFieldFilter {
+input EventsFormFieldsTextareaFieldFilter {
   label: StringFilter
   placeholder: StringFilter
   required: BooleanFilter
 }
 
-input PageEventsFormFieldsFilter {
-  inputField: PageEventsFormFieldsInputFieldFilter
-  selectField: PageEventsFormFieldsSelectFieldFilter
-  textareaField: PageEventsFormFieldsTextareaFieldFilter
+input EventsFormFieldsFilter {
+  inputField: EventsFormFieldsInputFieldFilter
+  selectField: EventsFormFieldsSelectFieldFilter
+  textareaField: EventsFormFieldsTextareaFieldFilter
 }
 
-input PageEventsFormOptionsFilter {
+input EventsFormOptionsFilter {
   submitButtonText: StringFilter
 }
 
-input PageEventsFilter {
+input EventsFilter {
   title: StringFilter
   description: StringFilter
   showForm: BooleanFilter
-  formFields: PageEventsFormFieldsFilter
-  formOptions: PageEventsFormOptionsFilter
+  formFields: EventsFormFieldsFilter
+  formOptions: EventsFormOptionsFilter
 }
 
-input PageFilter {
-  site: PageSiteFilter
-  hero: PageHeroFilter
-  portfolio: PagePortfolioFilter
-  services: PageServicesFilter
-  events: PageEventsFilter
-}
-
-type PageConnectionEdges {
+type EventsConnectionEdges {
   cursor: String!
-  node: Page
+  node: Events
 }
 
-type PageConnection implements Connection {
+type EventsConnection implements Connection {
   pageInfo: PageInfo!
   totalCount: Float!
-  edges: [PageConnectionEdges]
+  edges: [EventsConnectionEdges]
 }
 
 type Mutation {
@@ -353,31 +405,47 @@ type Mutation {
   deleteDocument(collection: String, relativePath: String!): DocumentNode!
   createDocument(collection: String, relativePath: String!, params: DocumentMutation!): DocumentNode!
   createFolder(collection: String, relativePath: String!): DocumentNode!
-  updatePage(relativePath: String!, params: PageMutation!): Page!
-  createPage(relativePath: String!, params: PageMutation!): Page!
+  updateSite(relativePath: String!, params: SiteMutation!): Site!
+  createSite(relativePath: String!, params: SiteMutation!): Site!
+  updateHero(relativePath: String!, params: HeroMutation!): Hero!
+  createHero(relativePath: String!, params: HeroMutation!): Hero!
+  updatePortfolio(relativePath: String!, params: PortfolioMutation!): Portfolio!
+  createPortfolio(relativePath: String!, params: PortfolioMutation!): Portfolio!
+  updateServices(relativePath: String!, params: ServicesMutation!): Services!
+  createServices(relativePath: String!, params: ServicesMutation!): Services!
+  updateEvents(relativePath: String!, params: EventsMutation!): Events!
+  createEvents(relativePath: String!, params: EventsMutation!): Events!
 }
 
 input DocumentUpdateMutation {
-  page: PageMutation
+  site: SiteMutation
+  hero: HeroMutation
+  portfolio: PortfolioMutation
+  services: ServicesMutation
+  events: EventsMutation
   relativePath: String
 }
 
 input DocumentMutation {
-  page: PageMutation
+  site: SiteMutation
+  hero: HeroMutation
+  portfolio: PortfolioMutation
+  services: ServicesMutation
+  events: EventsMutation
 }
 
-input PageSiteAddressMutation {
+input SiteAddressMutation {
   locality: String
   region: String
   country: String
 }
 
-input PageSiteGeoMutation {
+input SiteGeoMutation {
   latitude: Float
   longitude: Float
 }
 
-input PageSiteMutation {
+input SiteMutation {
   studioName: String
   stylistName: String
   browserTitle: String
@@ -390,13 +458,13 @@ input PageSiteMutation {
   calUsername: String
   calDefaultSlug: String
   priceRange: String
-  address: PageSiteAddressMutation
-  geo: PageSiteGeoMutation
+  address: SiteAddressMutation
+  geo: SiteGeoMutation
   areaServed: [String]
   keywords: [String]
 }
 
-input PageHeroMutation {
+input HeroMutation {
   badge: String
   headline: String
   subheading: String
@@ -404,18 +472,18 @@ input PageHeroMutation {
   calSlug: String
 }
 
-input PagePortfolioPortfolioListMutation {
+input PortfolioPortfolioListMutation {
   id: String
   image: String
   alt: String
   tag: String
 }
 
-input PagePortfolioMutation {
-  portfolioList: [PagePortfolioPortfolioListMutation]
+input PortfolioMutation {
+  portfolioList: [PortfolioPortfolioListMutation]
 }
 
-input PageServicesServicesListMutation {
+input ServicesServicesListMutation {
   id: String
   name: String
   price: String
@@ -425,54 +493,46 @@ input PageServicesServicesListMutation {
   calSlug: String
 }
 
-input PageServicesMutation {
+input ServicesMutation {
   sectionTitle: String
-  servicesList: [PageServicesServicesListMutation]
+  servicesList: [ServicesServicesListMutation]
 }
 
-input PageEventsFormFieldsInputFieldMutation {
+input EventsFormFieldsInputFieldMutation {
   label: String
   fieldType: String
   placeholder: String
   required: Boolean
 }
 
-input PageEventsFormFieldsSelectFieldMutation {
+input EventsFormFieldsSelectFieldMutation {
   label: String
   options: [String]
   required: Boolean
 }
 
-input PageEventsFormFieldsTextareaFieldMutation {
+input EventsFormFieldsTextareaFieldMutation {
   label: String
   placeholder: String
   required: Boolean
 }
 
-input PageEventsFormFieldsMutation {
-  inputField: PageEventsFormFieldsInputFieldMutation
-  selectField: PageEventsFormFieldsSelectFieldMutation
-  textareaField: PageEventsFormFieldsTextareaFieldMutation
+input EventsFormFieldsMutation {
+  inputField: EventsFormFieldsInputFieldMutation
+  selectField: EventsFormFieldsSelectFieldMutation
+  textareaField: EventsFormFieldsTextareaFieldMutation
 }
 
-input PageEventsFormOptionsMutation {
+input EventsFormOptionsMutation {
   submitButtonText: String
 }
 
-input PageEventsMutation {
+input EventsMutation {
   title: String
   description: String
   showForm: Boolean
-  formFields: [PageEventsFormFieldsMutation]
-  formOptions: PageEventsFormOptionsMutation
-}
-
-input PageMutation {
-  site: PageSiteMutation
-  hero: PageHeroMutation
-  portfolio: PagePortfolioMutation
-  services: PageServicesMutation
-  events: PageEventsMutation
+  formFields: [EventsFormFieldsMutation]
+  formOptions: EventsFormOptionsMutation
 }
 
 schema {
