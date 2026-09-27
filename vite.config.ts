@@ -9,68 +9,6 @@ import {
   generateSiteSchema,
 } from "./src/config/site";
 
-function adminRedirectPlugin(): Plugin {
-  return {
-    name: "admin-redirect-middleware",
-    configureServer(server) {
-      server.middlewares.use((req, res, next) => {
-        if (
-          req.url &&
-          (req.url === "/admin" ||
-            req.url === "/admin/" ||
-            req.url.startsWith("/admin/index.html"))
-        ) {
-          const indexPath = path.resolve(__dirname, "public/admin/index.html");
-          if (fs.existsSync(indexPath)) {
-            let html = fs.readFileSync(indexPath, "utf8");
-
-            const monkeyPatch = `
-  <script>
-    (function() {
-      const originalFetch = window.fetch;
-      window.fetch = function(input, init) {
-        if (typeof input === 'string') {
-          if (input.includes('localhost:4001/graphql')) {
-            input = input.replace('http://localhost:4001/graphql', '/tina-graphql');
-          } else if (input.includes('localhost:4001')) {
-            input = input.replace('http://localhost:4001', '/tina-admin-backend');
-          }
-        }
-        return originalFetch.call(this, input, init);
-      };
-
-      const OriginalWebSocket = window.WebSocket;
-      window.WebSocket = function(url, protocols) {
-        if (typeof url === 'string' && url.includes('localhost:4001')) {
-          const secure = window.location.protocol === 'https:';
-          const newHost = window.location.host;
-          url = url.replace('ws://localhost:4001', (secure ? 'wss://' : 'ws://') + newHost + '/tina-admin-backend');
-          url = url.replace('http://localhost:4001', (secure ? 'https://' : 'http://') + newHost + '/tina-admin-backend');
-        }
-        return new OriginalWebSocket(url, protocols);
-      };
-      window.WebSocket.prototype = OriginalWebSocket.prototype;
-    })();
-  </script>
-            `;
-
-            html = html.replace(
-              /http:\/\/localhost:4001/g,
-              "/tina-admin-backend"
-            );
-            html = html.replace("<head>", "<head>" + monkeyPatch);
-
-            res.writeHead(200, { "Content-Type": "text/html" });
-            res.end(html);
-            return;
-          }
-        }
-        next();
-      });
-    },
-  };
-}
-
 function dynamicSeoAndCdnPlugin(): Plugin {
   return {
     name: "dynamic-seo-and-cdn",
@@ -203,16 +141,33 @@ export default defineConfig(({ command }) => {
         process.env.VITE_TINA_BRANCH || "main"
       ),
     },
-    plugins: [
-      react(),
-      tailwindcss(),
-      dynamicSeoAndCdnPlugin(),
-      adminRedirectPlugin(),
-    ],
+    plugins: [react(), tailwindcss(), dynamicSeoAndCdnPlugin()],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "."),
       },
+      dedupe: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+      ],
+    },
+    optimizeDeps: {
+      cacheDir: "node_modules/.vite-app",
+      include: [
+        "react",
+        "react-dom",
+        "react-dom/client",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "@tinacms/bridge/metadata",
+        "@tinacms/bridge/quick-edit-css",
+        "@tinacms/bridge/tina-field",
+        "tinacms/dist/client",
+        "lucide-react",
+        "motion/react",
+      ],
     },
     build: {
       outDir: "dist",
@@ -233,13 +188,23 @@ export default defineConfig(({ command }) => {
     server: {
       port: 3000,
       host: "0.0.0.0",
-      hmr: process.env.DISABLE_HMR !== "true",
+      hmr:
+        process.env.DISABLE_HMR === "true"
+          ? false
+          : {
+              port: 3000,
+            },
       watch: process.env.DISABLE_HMR === "true" ? null : {},
       proxy: {
+        "^/admin/(src|node_modules|@vite|@react-refresh|@id|@fs|assets)": {
+          target: "http://localhost:4001",
+          changeOrigin: true,
+          ws: true,
+        },
         "/tina-admin-backend": {
           target: "http://localhost:4001",
           changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/tina-admin-backend/, ""),
+          rewrite: (path) => path.replace(/^\/tina-admin-backend/, "/admin"),
           ws: true,
         },
         "/tina-graphql": {

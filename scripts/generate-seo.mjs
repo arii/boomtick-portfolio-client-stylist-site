@@ -27,8 +27,10 @@ const services = Array.isArray(servicesRaw)
   : servicesRaw.servicesList || [];
 
 const siteUrl = (
-  process.env.VITE_SITE_URL ||
   process.env.CF_PAGES_URL ||
+  (process.env.VITE_SITE_URL && !process.env.VITE_SITE_URL.includes("localhost")
+    ? process.env.VITE_SITE_URL
+    : null) ||
   "https://hairbyapril.pages.dev"
 ).replace(/\/+$/, "");
 const canonicalUrl = `${siteUrl}/`;

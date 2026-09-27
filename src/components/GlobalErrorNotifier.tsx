@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState, type FC } from "react";
 import { AlertCircle, X, RefreshCw } from "lucide-react";
 
 interface ElevatedError {
@@ -7,7 +7,7 @@ interface ElevatedError {
   source?: string;
 }
 
-export const GlobalErrorNotifier: React.FC = () => {
+export const GlobalErrorNotifier: FC = () => {
   const [errors, setErrors] = useState<ElevatedError[]>([]);
 
   useEffect(() => {

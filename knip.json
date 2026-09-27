@@ -1,6 +1,5 @@
 {
   "$schema": "https://unpkg.com/knip@5/overview/configuration-schema.json",
-  "entry": ["tina/config.ts", "scripts/**/*.{js,mjs}"],
-  "project": ["src/**/*.{ts,tsx,css}", "scripts/**/*.{js,mjs}"],
-  "ignoreBinaries": ["pkill"]
+  "entry": ["tina/config.ts", "src/lib/useTina.ts", "scripts/**/*.{js,mjs}"],
+  "project": ["src/**/*.{ts,tsx,css}", "scripts/**/*.{js,mjs}"]
 }

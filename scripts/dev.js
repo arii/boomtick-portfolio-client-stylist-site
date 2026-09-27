@@ -5,7 +5,7 @@ console.log(
   "Starting TinaCMS dev server via custom wrapper to prevent CLI argument collision..."
 );
 
-const child = spawn("npx", ["tinacms", "dev", "-c", "vite"], {
+const child = spawn('npx tinacms dev -c "vite"', {
   stdio: "inherit",
   shell: true,
 });

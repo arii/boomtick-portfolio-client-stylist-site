@@ -252,24 +252,47 @@ export type SiteGeo = {
   longitude?: Maybe<Scalars['Float']['output']>;
 };
 
+export type SiteOpeningHours = {
+  __typename?: 'SiteOpeningHours';
+  opens?: Maybe<Scalars['String']['output']>;
+  closes?: Maybe<Scalars['String']['output']>;
+};
+
 export type Site = Node & Document & {
   __typename?: 'Site';
   studioName: Scalars['String']['output'];
   stylistName: Scalars['String']['output'];
+  credentials?: Maybe<Scalars['String']['output']>;
+  title?: Maybe<Scalars['String']['output']>;
   browserTitle?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
   metaDescription?: Maybe<Scalars['String']['output']>;
+  keywords?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   email?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
+  emailFallback?: Maybe<Scalars['String']['output']>;
+  phoneFallback?: Maybe<Scalars['String']['output']>;
   instagramHandle?: Maybe<Scalars['String']['output']>;
   locationDisplay?: Maybe<Scalars['String']['output']>;
   availabilityBanner?: Maybe<Scalars['String']['output']>;
+  logisticsNotice?: Maybe<Scalars['String']['output']>;
   calUsername?: Maybe<Scalars['String']['output']>;
   calDefaultSlug?: Maybe<Scalars['String']['output']>;
-  priceRange?: Maybe<Scalars['String']['output']>;
   address?: Maybe<SiteAddress>;
   geo?: Maybe<SiteGeo>;
   areaServed?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  keywords?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  openingDays?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  openingHours?: Maybe<SiteOpeningHours>;
+  priceRange?: Maybe<Scalars['String']['output']>;
+  heroHeading?: Maybe<Scalars['String']['output']>;
+  heroSubtext?: Maybe<Scalars['String']['output']>;
+  ogImageRelative?: Maybe<Scalars['String']['output']>;
+  ogImageFallbackRelative?: Maybe<Scalars['String']['output']>;
+  ogImageAlt?: Maybe<Scalars['String']['output']>;
+  ogImageWidth?: Maybe<Scalars['Float']['output']>;
+  ogImageHeight?: Maybe<Scalars['Float']['output']>;
+  heroPreloadImage?: Maybe<Scalars['String']['output']>;
+  portfolioImagesRelative?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
@@ -303,23 +326,52 @@ export type SiteGeoFilter = {
   longitude?: InputMaybe<NumberFilter>;
 };
 
+export type SiteOpeningHoursFilter = {
+  opens?: InputMaybe<StringFilter>;
+  closes?: InputMaybe<StringFilter>;
+};
+
+export type ImageFilter = {
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+  eq?: InputMaybe<Scalars['String']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 export type SiteFilter = {
   studioName?: InputMaybe<StringFilter>;
   stylistName?: InputMaybe<StringFilter>;
+  credentials?: InputMaybe<StringFilter>;
+  title?: InputMaybe<StringFilter>;
   browserTitle?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
   metaDescription?: InputMaybe<StringFilter>;
+  keywords?: InputMaybe<StringFilter>;
   email?: InputMaybe<StringFilter>;
   phone?: InputMaybe<StringFilter>;
+  emailFallback?: InputMaybe<StringFilter>;
+  phoneFallback?: InputMaybe<StringFilter>;
   instagramHandle?: InputMaybe<StringFilter>;
   locationDisplay?: InputMaybe<StringFilter>;
   availabilityBanner?: InputMaybe<StringFilter>;
+  logisticsNotice?: InputMaybe<StringFilter>;
   calUsername?: InputMaybe<StringFilter>;
   calDefaultSlug?: InputMaybe<StringFilter>;
-  priceRange?: InputMaybe<StringFilter>;
   address?: InputMaybe<SiteAddressFilter>;
   geo?: InputMaybe<SiteGeoFilter>;
   areaServed?: InputMaybe<StringFilter>;
-  keywords?: InputMaybe<StringFilter>;
+  openingDays?: InputMaybe<StringFilter>;
+  openingHours?: InputMaybe<SiteOpeningHoursFilter>;
+  priceRange?: InputMaybe<StringFilter>;
+  heroHeading?: InputMaybe<StringFilter>;
+  heroSubtext?: InputMaybe<StringFilter>;
+  ogImageRelative?: InputMaybe<ImageFilter>;
+  ogImageFallbackRelative?: InputMaybe<ImageFilter>;
+  ogImageAlt?: InputMaybe<StringFilter>;
+  ogImageWidth?: InputMaybe<NumberFilter>;
+  ogImageHeight?: InputMaybe<NumberFilter>;
+  heroPreloadImage?: InputMaybe<ImageFilter>;
+  portfolioImagesRelative?: InputMaybe<ImageFilter>;
 };
 
 export type SiteConnectionEdges = {
@@ -384,13 +436,6 @@ export type Portfolio = Node & Document & {
   _values: Scalars['JSON']['output'];
 };
 
-export type ImageFilter = {
-  startsWith?: InputMaybe<Scalars['String']['input']>;
-  eq?: InputMaybe<Scalars['String']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
 export type PortfolioPortfolioListFilter = {
   id?: InputMaybe<StringFilter>;
   image?: InputMaybe<ImageFilter>;
@@ -420,7 +465,7 @@ export type ServicesServicesList = {
   id: Scalars['String']['output'];
   name: Scalars['String']['output'];
   price: Scalars['String']['output'];
-  duration: Scalars['String']['output'];
+  duration?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   deliverables?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   calSlug?: Maybe<Scalars['String']['output']>;
@@ -699,23 +744,45 @@ export type SiteGeoMutation = {
   longitude?: InputMaybe<Scalars['Float']['input']>;
 };
 
+export type SiteOpeningHoursMutation = {
+  opens?: InputMaybe<Scalars['String']['input']>;
+  closes?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type SiteMutation = {
   studioName?: InputMaybe<Scalars['String']['input']>;
   stylistName?: InputMaybe<Scalars['String']['input']>;
+  credentials?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
   browserTitle?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
   metaDescription?: InputMaybe<Scalars['String']['input']>;
+  keywords?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   email?: InputMaybe<Scalars['String']['input']>;
   phone?: InputMaybe<Scalars['String']['input']>;
+  emailFallback?: InputMaybe<Scalars['String']['input']>;
+  phoneFallback?: InputMaybe<Scalars['String']['input']>;
   instagramHandle?: InputMaybe<Scalars['String']['input']>;
   locationDisplay?: InputMaybe<Scalars['String']['input']>;
   availabilityBanner?: InputMaybe<Scalars['String']['input']>;
+  logisticsNotice?: InputMaybe<Scalars['String']['input']>;
   calUsername?: InputMaybe<Scalars['String']['input']>;
   calDefaultSlug?: InputMaybe<Scalars['String']['input']>;
-  priceRange?: InputMaybe<Scalars['String']['input']>;
   address?: InputMaybe<SiteAddressMutation>;
   geo?: InputMaybe<SiteGeoMutation>;
   areaServed?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  keywords?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  openingDays?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  openingHours?: InputMaybe<SiteOpeningHoursMutation>;
+  priceRange?: InputMaybe<Scalars['String']['input']>;
+  heroHeading?: InputMaybe<Scalars['String']['input']>;
+  heroSubtext?: InputMaybe<Scalars['String']['input']>;
+  ogImageRelative?: InputMaybe<Scalars['String']['input']>;
+  ogImageFallbackRelative?: InputMaybe<Scalars['String']['input']>;
+  ogImageAlt?: InputMaybe<Scalars['String']['input']>;
+  ogImageWidth?: InputMaybe<Scalars['Float']['input']>;
+  ogImageHeight?: InputMaybe<Scalars['Float']['input']>;
+  heroPreloadImage?: InputMaybe<Scalars['String']['input']>;
+  portfolioImagesRelative?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 export type HeroMutation = {
@@ -817,23 +884,52 @@ export type SiteGeoFilter = {
   longitude?: NumberFilter | null | undefined;
 };
 
+export type SiteOpeningHoursFilter = {
+  opens?: StringFilter | null | undefined;
+  closes?: StringFilter | null | undefined;
+};
+
+export type ImageFilter = {
+  startsWith?: string | null | undefined;
+  eq?: string | null | undefined;
+  exists?: boolean | null | undefined;
+  in?: Array<string | null | undefined> | null | undefined;
+};
+
 export type SiteFilter = {
   studioName?: StringFilter | null | undefined;
   stylistName?: StringFilter | null | undefined;
+  credentials?: StringFilter | null | undefined;
+  title?: StringFilter | null | undefined;
   browserTitle?: StringFilter | null | undefined;
+  description?: StringFilter | null | undefined;
   metaDescription?: StringFilter | null | undefined;
+  keywords?: StringFilter | null | undefined;
   email?: StringFilter | null | undefined;
   phone?: StringFilter | null | undefined;
+  emailFallback?: StringFilter | null | undefined;
+  phoneFallback?: StringFilter | null | undefined;
   instagramHandle?: StringFilter | null | undefined;
   locationDisplay?: StringFilter | null | undefined;
   availabilityBanner?: StringFilter | null | undefined;
+  logisticsNotice?: StringFilter | null | undefined;
   calUsername?: StringFilter | null | undefined;
   calDefaultSlug?: StringFilter | null | undefined;
-  priceRange?: StringFilter | null | undefined;
   address?: SiteAddressFilter | null | undefined;
   geo?: SiteGeoFilter | null | undefined;
   areaServed?: StringFilter | null | undefined;
-  keywords?: StringFilter | null | undefined;
+  openingDays?: StringFilter | null | undefined;
+  openingHours?: SiteOpeningHoursFilter | null | undefined;
+  priceRange?: StringFilter | null | undefined;
+  heroHeading?: StringFilter | null | undefined;
+  heroSubtext?: StringFilter | null | undefined;
+  ogImageRelative?: ImageFilter | null | undefined;
+  ogImageFallbackRelative?: ImageFilter | null | undefined;
+  ogImageAlt?: StringFilter | null | undefined;
+  ogImageWidth?: NumberFilter | null | undefined;
+  ogImageHeight?: NumberFilter | null | undefined;
+  heroPreloadImage?: ImageFilter | null | undefined;
+  portfolioImagesRelative?: ImageFilter | null | undefined;
 };
 
 export type HeroFilter = {
@@ -842,13 +938,6 @@ export type HeroFilter = {
   subheading?: StringFilter | null | undefined;
   availabilityNotice?: StringFilter | null | undefined;
   calSlug?: StringFilter | null | undefined;
-};
-
-export type ImageFilter = {
-  startsWith?: string | null | undefined;
-  eq?: string | null | undefined;
-  exists?: boolean | null | undefined;
-  in?: Array<string | null | undefined> | null | undefined;
 };
 
 export type PortfolioPortfolioListFilter = {
@@ -919,13 +1008,13 @@ export type EventsFilter = {
   formOptions?: EventsFormOptionsFilter | null | undefined;
 };
 
-export type SitePartsFragment = { __typename: 'Site', studioName: string, stylistName: string, browserTitle: string | null, metaDescription: string | null, email: string | null, phone: string | null, instagramHandle: string | null, locationDisplay: string | null, availabilityBanner: string | null, calUsername: string | null, calDefaultSlug: string | null, priceRange: string | null, areaServed: Array<string | null> | null, keywords: Array<string | null> | null, address: { __typename: 'SiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'SiteGeo', latitude: number | null, longitude: number | null } | null };
+export type SitePartsFragment = { __typename: 'Site', studioName: string, stylistName: string, credentials: string | null, title: string | null, browserTitle: string | null, description: string | null, metaDescription: string | null, keywords: Array<string | null> | null, email: string | null, phone: string | null, emailFallback: string | null, phoneFallback: string | null, instagramHandle: string | null, locationDisplay: string | null, availabilityBanner: string | null, logisticsNotice: string | null, calUsername: string | null, calDefaultSlug: string | null, areaServed: Array<string | null> | null, openingDays: Array<string | null> | null, priceRange: string | null, heroHeading: string | null, heroSubtext: string | null, ogImageRelative: string | null, ogImageFallbackRelative: string | null, ogImageAlt: string | null, ogImageWidth: number | null, ogImageHeight: number | null, heroPreloadImage: string | null, portfolioImagesRelative: Array<string | null> | null, address: { __typename: 'SiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'SiteGeo', latitude: number | null, longitude: number | null } | null, openingHours: { __typename: 'SiteOpeningHours', opens: string | null, closes: string | null } | null };
 
 export type HeroPartsFragment = { __typename: 'Hero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string, calSlug: string | null };
 
 export type PortfolioPartsFragment = { __typename: 'Portfolio', portfolioList: Array<{ __typename: 'PortfolioPortfolioList', id: string, image: string, alt: string, tag: string | null } | null> | null };
 
-export type ServicesPartsFragment = { __typename: 'Services', sectionTitle: string | null, servicesList: Array<{ __typename: 'ServicesServicesList', id: string, name: string, price: string, duration: string, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null };
+export type ServicesPartsFragment = { __typename: 'Services', sectionTitle: string | null, servicesList: Array<{ __typename: 'ServicesServicesList', id: string, name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null };
 
 export type EventsPartsFragment = { __typename: 'Events', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
     | { __typename: 'EventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
@@ -938,7 +1027,7 @@ export type SiteQueryVariables = Exact<{
 }>;
 
 
-export type SiteQuery = { site: { __typename: 'Site', id: string, studioName: string, stylistName: string, browserTitle: string | null, metaDescription: string | null, email: string | null, phone: string | null, instagramHandle: string | null, locationDisplay: string | null, availabilityBanner: string | null, calUsername: string | null, calDefaultSlug: string | null, priceRange: string | null, areaServed: Array<string | null> | null, keywords: Array<string | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, address: { __typename: 'SiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'SiteGeo', latitude: number | null, longitude: number | null } | null } };
+export type SiteQuery = { site: { __typename: 'Site', id: string, studioName: string, stylistName: string, credentials: string | null, title: string | null, browserTitle: string | null, description: string | null, metaDescription: string | null, keywords: Array<string | null> | null, email: string | null, phone: string | null, emailFallback: string | null, phoneFallback: string | null, instagramHandle: string | null, locationDisplay: string | null, availabilityBanner: string | null, logisticsNotice: string | null, calUsername: string | null, calDefaultSlug: string | null, areaServed: Array<string | null> | null, openingDays: Array<string | null> | null, priceRange: string | null, heroHeading: string | null, heroSubtext: string | null, ogImageRelative: string | null, ogImageFallbackRelative: string | null, ogImageAlt: string | null, ogImageWidth: number | null, ogImageHeight: number | null, heroPreloadImage: string | null, portfolioImagesRelative: Array<string | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, address: { __typename: 'SiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'SiteGeo', latitude: number | null, longitude: number | null } | null, openingHours: { __typename: 'SiteOpeningHours', opens: string | null, closes: string | null } | null } };
 
 export type SiteConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -950,7 +1039,7 @@ export type SiteConnectionQueryVariables = Exact<{
 }>;
 
 
-export type SiteConnectionQuery = { siteConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Site', id: string, studioName: string, stylistName: string, browserTitle: string | null, metaDescription: string | null, email: string | null, phone: string | null, instagramHandle: string | null, locationDisplay: string | null, availabilityBanner: string | null, calUsername: string | null, calDefaultSlug: string | null, priceRange: string | null, areaServed: Array<string | null> | null, keywords: Array<string | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, address: { __typename: 'SiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'SiteGeo', latitude: number | null, longitude: number | null } | null } | null } | null> | null } };
+export type SiteConnectionQuery = { siteConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Site', id: string, studioName: string, stylistName: string, credentials: string | null, title: string | null, browserTitle: string | null, description: string | null, metaDescription: string | null, keywords: Array<string | null> | null, email: string | null, phone: string | null, emailFallback: string | null, phoneFallback: string | null, instagramHandle: string | null, locationDisplay: string | null, availabilityBanner: string | null, logisticsNotice: string | null, calUsername: string | null, calDefaultSlug: string | null, areaServed: Array<string | null> | null, openingDays: Array<string | null> | null, priceRange: string | null, heroHeading: string | null, heroSubtext: string | null, ogImageRelative: string | null, ogImageFallbackRelative: string | null, ogImageAlt: string | null, ogImageWidth: number | null, ogImageHeight: number | null, heroPreloadImage: string | null, portfolioImagesRelative: Array<string | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, address: { __typename: 'SiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'SiteGeo', latitude: number | null, longitude: number | null } | null, openingHours: { __typename: 'SiteOpeningHours', opens: string | null, closes: string | null } | null } | null } | null> | null } };
 
 export type HeroQueryVariables = Exact<{
   relativePath: string;
@@ -995,7 +1084,7 @@ export type ServicesQueryVariables = Exact<{
 }>;
 
 
-export type ServicesQuery = { services: { __typename: 'Services', id: string, sectionTitle: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, servicesList: Array<{ __typename: 'ServicesServicesList', id: string, name: string, price: string, duration: string, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null } };
+export type ServicesQuery = { services: { __typename: 'Services', id: string, sectionTitle: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, servicesList: Array<{ __typename: 'ServicesServicesList', id: string, name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null } };
 
 export type ServicesConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
@@ -1007,7 +1096,7 @@ export type ServicesConnectionQueryVariables = Exact<{
 }>;
 
 
-export type ServicesConnectionQuery = { servicesConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Services', id: string, sectionTitle: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, servicesList: Array<{ __typename: 'ServicesServicesList', id: string, name: string, price: string, duration: string, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null } | null } | null> | null } };
+export type ServicesConnectionQuery = { servicesConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Services', id: string, sectionTitle: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, servicesList: Array<{ __typename: 'ServicesServicesList', id: string, name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null } | null } | null> | null } };
 
 export type EventsQueryVariables = Exact<{
   relativePath: string;
@@ -1041,16 +1130,22 @@ export const SitePartsFragmentDoc = gql`
   __typename
   studioName
   stylistName
+  credentials
+  title
   browserTitle
+  description
   metaDescription
+  keywords
   email
   phone
+  emailFallback
+  phoneFallback
   instagramHandle
   locationDisplay
   availabilityBanner
+  logisticsNotice
   calUsername
   calDefaultSlug
-  priceRange
   address {
     __typename
     locality
@@ -1063,7 +1158,22 @@ export const SitePartsFragmentDoc = gql`
     longitude
   }
   areaServed
-  keywords
+  openingDays
+  openingHours {
+    __typename
+    opens
+    closes
+  }
+  priceRange
+  heroHeading
+  heroSubtext
+  ogImageRelative
+  ogImageFallbackRelative
+  ogImageAlt
+  ogImageWidth
+  ogImageHeight
+  heroPreloadImage
+  portfolioImagesRelative
 }
     `;
 export const HeroPartsFragmentDoc = gql`
@@ -1500,7 +1610,7 @@ export const ExperimentalGetTinaClient = () =>
   getSdk(
     generateRequester(
       createClient({
-        url: "https://content.tinajs.io/3.0/content/87e12abe-90fc-43a9-9f88-48270c37724d/github/main",
+        url: "http://localhost:4001/graphql",
         queries,
       })
     )

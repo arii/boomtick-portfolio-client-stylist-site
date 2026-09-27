@@ -113,23 +113,45 @@ type SiteGeo {
   longitude: Float
 }
 
+type SiteOpeningHours {
+  opens: String
+  closes: String
+}
+
 type Site implements Node & Document {
   studioName: String!
   stylistName: String!
+  credentials: String
+  title: String
   browserTitle: String
+  description: String
   metaDescription: String
+  keywords: [String]
   email: String
   phone: String
+  emailFallback: String
+  phoneFallback: String
   instagramHandle: String
   locationDisplay: String
   availabilityBanner: String
+  logisticsNotice: String
   calUsername: String
   calDefaultSlug: String
-  priceRange: String
   address: SiteAddress
   geo: SiteGeo
   areaServed: [String]
-  keywords: [String]
+  openingDays: [String]
+  openingHours: SiteOpeningHours
+  priceRange: String
+  heroHeading: String
+  heroSubtext: String
+  ogImageRelative: String
+  ogImageFallbackRelative: String
+  ogImageAlt: String
+  ogImageWidth: Float
+  ogImageHeight: Float
+  heroPreloadImage: String
+  portfolioImagesRelative: [String]
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
@@ -163,23 +185,52 @@ input SiteGeoFilter {
   longitude: NumberFilter
 }
 
+input SiteOpeningHoursFilter {
+  opens: StringFilter
+  closes: StringFilter
+}
+
+input ImageFilter {
+  startsWith: String
+  eq: String
+  exists: Boolean
+  in: [String]
+}
+
 input SiteFilter {
   studioName: StringFilter
   stylistName: StringFilter
+  credentials: StringFilter
+  title: StringFilter
   browserTitle: StringFilter
+  description: StringFilter
   metaDescription: StringFilter
+  keywords: StringFilter
   email: StringFilter
   phone: StringFilter
+  emailFallback: StringFilter
+  phoneFallback: StringFilter
   instagramHandle: StringFilter
   locationDisplay: StringFilter
   availabilityBanner: StringFilter
+  logisticsNotice: StringFilter
   calUsername: StringFilter
   calDefaultSlug: StringFilter
-  priceRange: StringFilter
   address: SiteAddressFilter
   geo: SiteGeoFilter
   areaServed: StringFilter
-  keywords: StringFilter
+  openingDays: StringFilter
+  openingHours: SiteOpeningHoursFilter
+  priceRange: StringFilter
+  heroHeading: StringFilter
+  heroSubtext: StringFilter
+  ogImageRelative: ImageFilter
+  ogImageFallbackRelative: ImageFilter
+  ogImageAlt: StringFilter
+  ogImageWidth: NumberFilter
+  ogImageHeight: NumberFilter
+  heroPreloadImage: ImageFilter
+  portfolioImagesRelative: ImageFilter
 }
 
 type SiteConnectionEdges {
@@ -237,13 +288,6 @@ type Portfolio implements Node & Document {
   _values: JSON!
 }
 
-input ImageFilter {
-  startsWith: String
-  eq: String
-  exists: Boolean
-  in: [String]
-}
-
 input PortfolioPortfolioListFilter {
   id: StringFilter
   image: ImageFilter
@@ -270,7 +314,7 @@ type ServicesServicesList {
   id: String!
   name: String!
   price: String!
-  duration: String!
+  duration: String
   description: String
   deliverables: [String]
   calSlug: String
@@ -445,23 +489,45 @@ input SiteGeoMutation {
   longitude: Float
 }
 
+input SiteOpeningHoursMutation {
+  opens: String
+  closes: String
+}
+
 input SiteMutation {
   studioName: String
   stylistName: String
+  credentials: String
+  title: String
   browserTitle: String
+  description: String
   metaDescription: String
+  keywords: [String]
   email: String
   phone: String
+  emailFallback: String
+  phoneFallback: String
   instagramHandle: String
   locationDisplay: String
   availabilityBanner: String
+  logisticsNotice: String
   calUsername: String
   calDefaultSlug: String
-  priceRange: String
   address: SiteAddressMutation
   geo: SiteGeoMutation
   areaServed: [String]
-  keywords: [String]
+  openingDays: [String]
+  openingHours: SiteOpeningHoursMutation
+  priceRange: String
+  heroHeading: String
+  heroSubtext: String
+  ogImageRelative: String
+  ogImageFallbackRelative: String
+  ogImageAlt: String
+  ogImageWidth: Float
+  ogImageHeight: Float
+  heroPreloadImage: String
+  portfolioImagesRelative: [String]
 }
 
 input HeroMutation {

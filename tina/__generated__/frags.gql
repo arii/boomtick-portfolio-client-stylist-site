@@ -2,16 +2,22 @@ fragment SiteParts on Site {
   __typename
   studioName
   stylistName
+  credentials
+  title
   browserTitle
+  description
   metaDescription
+  keywords
   email
   phone
+  emailFallback
+  phoneFallback
   instagramHandle
   locationDisplay
   availabilityBanner
+  logisticsNotice
   calUsername
   calDefaultSlug
-  priceRange
   address {
     __typename
     locality
@@ -24,7 +30,22 @@ fragment SiteParts on Site {
     longitude
   }
   areaServed
-  keywords
+  openingDays
+  openingHours {
+    __typename
+    opens
+    closes
+  }
+  priceRange
+  heroHeading
+  heroSubtext
+  ogImageRelative
+  ogImageFallbackRelative
+  ogImageAlt
+  ogImageWidth
+  ogImageHeight
+  heroPreloadImage
+  portfolioImagesRelative
 }
 
 fragment HeroParts on Hero {

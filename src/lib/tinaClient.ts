@@ -22,13 +22,15 @@ const branch =
   import.meta.env?.VITE_TINA_BRANCH ||
   "main";
 
+const isDev = Boolean(import.meta.env?.DEV);
+
 /**
  * Unified TinaCMS Content API Client
- * - When running in production with TinaCloud credentials: uses TinaCloud endpoint
- * - When running locally: uses local GraphQL endpoint (http://localhost:4001/graphql)
+ * - In local development: uses defaultClient (http://localhost:4001/graphql)
+ * - In production: uses TinaCloud endpoint if clientId and token are configured, otherwise falls back to defaultClient
  */
 export const tinaClient =
-  clientId && token
+  !isDev && clientId && token
     ? createClient({
         url: `https://content.tinajs.io/content/${clientId}/github/${branch}`,
         token,

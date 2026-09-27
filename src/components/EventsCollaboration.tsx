@@ -1,5 +1,4 @@
-import React from "react";
-import { tinaField } from "tinacms/dist/react";
+import { tinaField } from "../lib/useTina";
 import { EVENTS_CONTENT } from "../config/site";
 import type { EventsContent } from "../types/content";
 

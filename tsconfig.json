@@ -18,5 +18,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "noEmit": true
-  }
+  },
+  "include": ["src", "tina", "scripts", "vite.config.ts", "eslint.config.js"],
+  "exclude": ["node_modules", "dist"]
 }

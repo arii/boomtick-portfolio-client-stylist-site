@@ -1,5 +1,5 @@
-import { useState, useEffect, lazy, Suspense } from "react";
-import { useTina, tinaField } from "tinacms/dist/react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
+import { useTina, tinaField } from "./lib/useTina";
 import { Navbar } from "./components/Navbar";
 import { Hero } from "./components/Hero";
 import { StyleShowcase } from "./components/StyleShowcase";
@@ -391,14 +391,19 @@ export default function App() {
       try {
         if (!tinaClient) return;
 
-        // @ts-expect-error - Tina client request function types can mismatch depending on local config build context
-        const result = await tinaClient.request(ALL_CONTENT_QUERY, {
-          heroPath: "hero.json",
-          sitePath: "site.json",
-          servicesPath: "services.json",
-          portfolioPath: "portfolio.json",
-          eventsPath: "events.json",
-        });
+        const result = await tinaClient.request(
+          {
+            query: ALL_CONTENT_QUERY,
+            variables: {
+              heroPath: "hero.json",
+              sitePath: "site.json",
+              servicesPath: "services.json",
+              portfolioPath: "portfolio.json",
+              eventsPath: "events.json",
+            },
+          },
+          {}
+        );
 
         if (!isMounted) return;
 
@@ -416,7 +421,7 @@ export default function App() {
             events: (result.data.events || cmsState.events) as EventsContent,
           });
         }
-      } catch (err) {
+      } catch (err: unknown) {
         console.warn(
           "⚠️ [TinaCMS Info] Fallback to local static assets. Dev server may be launching...",
           err

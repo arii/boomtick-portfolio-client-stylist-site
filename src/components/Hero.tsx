@@ -1,7 +1,6 @@
-import React from "react";
 import { ArrowRight, Calendar, ShieldCheck } from "lucide-react";
 import { motion } from "motion/react";
-import { tinaField } from "tinacms/dist/react";
+import { tinaField } from "../lib/useTina";
 import { TOKENS } from "../styles/tokens";
 import { HERO_CONTENT, SITE_CONFIG } from "../config/site";
 import type { HeroContent } from "../types/content";

@@ -10,16 +10,22 @@ export const SitePartsFragmentDoc = gql`
   __typename
   studioName
   stylistName
+  credentials
+  title
   browserTitle
+  description
   metaDescription
+  keywords
   email
   phone
+  emailFallback
+  phoneFallback
   instagramHandle
   locationDisplay
   availabilityBanner
+  logisticsNotice
   calUsername
   calDefaultSlug
-  priceRange
   address {
     __typename
     locality
@@ -32,7 +38,22 @@ export const SitePartsFragmentDoc = gql`
     longitude
   }
   areaServed
-  keywords
+  openingDays
+  openingHours {
+    __typename
+    opens
+    closes
+  }
+  priceRange
+  heroHeading
+  heroSubtext
+  ogImageRelative
+  ogImageFallbackRelative
+  ogImageAlt
+  ogImageWidth
+  ogImageHeight
+  heroPreloadImage
+  portfolioImagesRelative
 }
     `;
 export const HeroPartsFragmentDoc = gql`
@@ -443,7 +464,7 @@ const generateRequester = (client) => {
 export const ExperimentalGetTinaClient = () => getSdk(
   generateRequester(
     createClient({
-      url: "https://content.tinajs.io/3.0/content/87e12abe-90fc-43a9-9f88-48270c37724d/github/main",
+      url: "http://localhost:4001/graphql",
       queries
     })
   )

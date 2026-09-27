@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from "react";
+import { Component, type ErrorInfo, type ReactNode } from "react";
 import {
   AlertTriangle,
   RefreshCw,
@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
-      isDetailsOpen: false,
+      isDetailsOpen: true,
       copied: false,
     };
   }
@@ -88,6 +88,9 @@ export class ErrorBoundary extends Component<Props, State> {
             <div className="bg-red-950/40 border border-red-900/60 rounded-xl p-4 text-xs font-mono text-red-200 break-words leading-relaxed">
               <strong>Error: </strong>
               {error?.message || "An unexpected runtime error occurred."}
+              <pre className="mt-2 text-[10px] text-stone-300 whitespace-pre-wrap break-all">
+                {error?.stack}
+              </pre>
             </div>
 
             {/* Actions */}
@@ -136,32 +139,26 @@ export class ErrorBoundary extends Component<Props, State> {
               </button>
             </div>
 
-            {/* Collapsible Stack Trace */}
-            {isDetailsOpen && (
-              <div className="pt-2 border-t border-stone-850 space-y-3 animate-fade-in">
-                {error?.stack && (
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider block mb-1">
-                      Error Stack
-                    </span>
-                    <pre className="bg-stone-900 p-3 rounded-lg text-[11px] font-mono text-stone-300 overflow-x-auto max-h-48 border border-stone-800">
-                      {error.stack}
-                    </pre>
-                  </div>
-                )}
-
-                {errorInfo?.componentStack && (
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider block mb-1">
-                      Component Hierarchy Stack
-                    </span>
-                    <pre className="bg-stone-900 p-3 rounded-lg text-[11px] font-mono text-stone-400 overflow-x-auto max-h-48 border border-stone-800">
-                      {errorInfo.componentStack}
-                    </pre>
-                  </div>
-                )}
+            <div className="pt-2 border-t border-stone-800 space-y-3">
+              <div>
+                <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider block mb-1">
+                  Error Stack
+                </span>
+                <pre className="bg-stone-900 p-3 rounded-lg text-[11px] font-mono text-stone-300 overflow-x-auto border border-stone-800 whitespace-pre-wrap break-all">
+                  {error?.stack || "No error stack"}
+                </pre>
               </div>
-            )}
+              {errorInfo?.componentStack && (
+                <div>
+                  <span className="text-[10px] uppercase font-bold text-stone-500 tracking-wider block mb-1">
+                    Component Stack
+                  </span>
+                  <pre className="bg-stone-900 p-3 rounded-lg text-[11px] font-mono text-stone-400 overflow-x-auto border border-stone-800 whitespace-pre-wrap break-all">
+                    {errorInfo.componentStack}
+                  </pre>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       );
