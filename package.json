@@ -7,14 +7,16 @@
     "dev": "node scripts/dev.js",
     "build": "node scripts/build.js",
     "preview": "vite preview",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist node_modules/.cache bun.lockb bun.lock",
     "lint": "eslint . && tsc --noEmit",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "knip": "knip",
-    "audit": "npm run knip && npm run lint && npm run format:check",
-    "test:seo": "node scripts/verify-seo-lcp.mjs"
+    "test:seo": "node scripts/verify-seo-lcp.mjs",
+    "test": "npm run test:seo",
+    "rebuild": "npm run clean && npm run build",
+    "audit": "npm run knip && npm run lint && npm run format:check && npm run test"
   },
   "dependencies": {
     "@tinacms/bridge": "^0.3.1",

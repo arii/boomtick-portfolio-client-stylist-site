@@ -60,6 +60,7 @@ const PAGE_CONTENT_QUERY = `
         ogImageAlt
         portfolioList {
           id
+          title
           image
           alt
           tag

@@ -45,24 +45,28 @@
     "portfolioList": [
       {
         "id": "vintage-victory-rolls",
+        "title": "Vintage Victory Rolls",
         "image": "/assets/portfolio-1.webp",
         "alt": "Classic 1940s victory rolls and retro updo styling",
         "tag": "Updos"
       },
       {
         "id": "natural-curl-shaping",
+        "title": "Natural Curl Shaping",
         "image": "/assets/portfolio-2.webp",
         "alt": "Defined natural curls after precision dry haircut",
         "tag": "Curly Cut"
       },
       {
         "id": "hollywood-waves",
+        "title": "Hollywood Waves",
         "image": "/assets/portfolio-3.webp",
         "alt": "Polished vintage Hollywood waves on dark hair",
         "tag": "Vintage Styling"
       },
       {
         "id": "editorial-pinup",
+        "title": "Editorial Pin-Up Styling",
         "image": "/assets/portfolio-4.webp",
         "alt": "Vintage styled bumper bangs and victory rolls profile",
         "tag": "Events & Production"
@@ -165,13 +169,8 @@
       "latitude": 37.7749,
       "longitude": -122.4194
     },
-    "areaServed": [
-      "San Francisco",
-      "San Francisco Bay Area"
-    ],
-    "openingDays": [
-      "Tuesday"
-    ],
+    "areaServed": ["San Francisco", "San Francisco Bay Area"],
+    "openingDays": ["Tuesday"],
     "openingHours": {
       "opens": "09:00",
       "closes": "18:00"

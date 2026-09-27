@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
+import { execSync } from "child_process";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -317,6 +318,11 @@ html = html.replace(
 );
 
 fs.writeFileSync(indexPath, html, "utf8");
+try {
+  execSync("npx prettier --write index.html", { stdio: "ignore" });
+} catch (e) {
+  // Ignore formatting failures in isolated environments
+}
 
 // Also copy to dist if dist exists
 const distDir = path.join(rootDir, "dist");

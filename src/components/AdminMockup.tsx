@@ -15,6 +15,9 @@ import {
   Terminal,
   ExternalLink,
   Bug,
+  Lock,
+  ChevronDown,
+  ChevronRight,
 } from "lucide-react";
 import type {
   HeroContent,
@@ -92,6 +95,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
   const [selectedPortfolioIndex, setSelectedPortfolioIndex] =
     useState<number>(0);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
+  const [isAdvancedServicesOpen, setIsAdvancedServicesOpen] = useState(false);
 
   // Diagnostic states
   const [isSimulatingError, setIsSimulatingError] = useState(false);
@@ -720,6 +724,10 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                       : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                   }`}
                 />
+                <p className="text-[10px] text-stone-400 italic">
+                  Credentials or experience highlight displayed above the
+                  headline
+                </p>
                 {getFieldError("hero", "badge") && (
                   <p className="text-[11px] text-red-400 flex items-center gap-1 font-mono">
                     <AlertCircle className="w-3 h-3 shrink-0" />
@@ -757,6 +765,9 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                       : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                   }`}
                 />
+                <p className="text-[10px] text-stone-400 italic">
+                  Primary attention-grabbing headline for the hero section
+                </p>
                 {getFieldError("hero", "headline") && (
                   <p className="text-[11px] text-red-400 flex items-center gap-1 font-mono">
                     <AlertCircle className="w-3 h-3 shrink-0" />
@@ -788,6 +799,10 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                       : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                   }`}
                 />
+                <p className="text-[10px] text-stone-400 italic">
+                  Secondary explanatory copy detailing your specialty, hair
+                  philosophy, and location
+                </p>
                 {getFieldError("hero", "subheading") && (
                   <p className="text-[11px] text-red-400 flex items-center gap-1 font-mono">
                     <AlertCircle className="w-3 h-3 shrink-0" />
@@ -819,6 +834,9 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                       : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                   }`}
                 />
+                <p className="text-[10px] text-stone-400 italic">
+                  Live scheduling and availability notice shown in the banner
+                </p>
                 {getFieldError("hero", "availabilityNotice") && (
                   <p className="text-[11px] text-red-400 flex items-center gap-1 font-mono">
                     <AlertCircle className="w-3 h-3 shrink-0" />
@@ -857,6 +875,10 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                   }`}
                   placeholder="@hair.by.april_209"
                 />
+                <p className="text-[10px] text-stone-400 italic">
+                  Instagram username only without @ symbol (e.g.
+                  hair.by.april_209)
+                </p>
                 {getFieldError("hero", "instagram") && (
                   <p className="text-[11px] text-red-400 flex items-center gap-1 font-mono">
                     <AlertCircle className="w-3 h-3 shrink-0" />
@@ -887,6 +909,9 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                         : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                     }`}
                   />
+                  <p className="text-[10px] text-stone-400 italic">
+                    Primary business contact email address for client routing
+                  </p>
                   {getFieldError("hero", "email") && (
                     <p className="text-[11px] text-red-400 flex items-center gap-1 font-mono">
                       <AlertCircle className="w-3 h-3 shrink-0" />
@@ -911,6 +936,9 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                         : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                     }`}
                   />
+                  <p className="text-[10px] text-stone-400 italic">
+                    Direct phone number (formats automatically on site links)
+                  </p>
                   {getFieldError("hero", "phone") && (
                     <p className="text-[11px] text-amber-400 flex items-center gap-1 font-mono">
                       <AlertTriangle className="w-3 h-3 shrink-0" />
@@ -984,6 +1012,10 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                           : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                       }`}
                     />
+                    <p className="text-[10px] text-stone-400 italic">
+                      Client-facing service title displayed on the public site
+                      and booking menu
+                    </p>
                     {getFieldError(
                       "services",
                       "name",
@@ -1029,6 +1061,9 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                         }`}
                         placeholder="$175"
                       />
+                      <p className="text-[10px] text-stone-400 italic">
+                        Published starting rate or standard fee (e.g. $175)
+                      </p>
                       {getFieldError(
                         "services",
                         "price",
@@ -1051,18 +1086,17 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
 
                     <div className="space-y-1">
                       <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
-                        <span>Duration Display</span>
+                        <span>Estimated Duration</span>
                         <span className="text-[9px] text-stone-500 lowercase font-mono">
-                          string • required
+                          preset select
                         </span>
                       </label>
-                      <input
-                        type="text"
+                      <select
                         value={servicesContent[selectedServiceIndex].duration}
                         onChange={(e) =>
                           handleServiceChange("duration", e.target.value)
                         }
-                        className={`w-full bg-stone-900 border rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none transition ${
+                        className={`w-full bg-stone-900 border rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none transition cursor-pointer ${
                           getFieldError(
                             "services",
                             "duration",
@@ -1071,8 +1105,28 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                             ? "border-red-500 focus:border-red-500 focus:ring-1 focus:ring-red-500"
                             : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                         }`}
-                        placeholder="90 mins"
-                      />
+                      >
+                        {[
+                          "30 mins",
+                          "45 mins",
+                          "60 mins",
+                          "75 mins",
+                          "90 mins",
+                          "2 hours",
+                          "2.5 hours",
+                          "3 hours",
+                          "3.5 hours",
+                          "4 hours",
+                          "Custom / Half-Day",
+                        ].map((opt) => (
+                          <option key={opt} value={opt}>
+                            {opt}
+                          </option>
+                        ))}
+                      </select>
+                      <p className="text-[10px] text-stone-400 italic">
+                        Standard duration preset to prevent typos
+                      </p>
                     </div>
                   </div>
 
@@ -1099,14 +1153,24 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                           : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                       }`}
                     />
+                    <p className="text-[10px] text-stone-400 italic">
+                      Overview of curl pattern suitability, styling methodology,
+                      and consultation details
+                    </p>
                   </div>
 
                   {/* Deliverables List */}
                   <div className="space-y-2.5">
                     <div className="flex items-center justify-between border-t border-stone-800/80 pt-3">
-                      <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
-                        Deliverables List (Array)
-                      </label>
+                      <div>
+                        <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider block">
+                          Included Features (Deliverables)
+                        </label>
+                        <p className="text-[10px] text-stone-400 italic">
+                          Bullet points detailing consultations, treatments, or
+                          take-home coaching
+                        </p>
+                      </div>
                       <button
                         onClick={handleAddDeliverable}
                         className="px-2 py-1 bg-stone-800 hover:bg-stone-700 text-orange-400 hover:text-orange-300 text-[10px] font-medium rounded flex items-center gap-0.5 transition cursor-pointer"
@@ -1138,6 +1202,91 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                         )
                       )}
                     </div>
+                  </div>
+
+                  {/* Collapsible Advanced Settings (Slug & Booking Overrides) */}
+                  <div className="border border-stone-800/80 rounded-lg overflow-hidden bg-stone-900/40 mt-4">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setIsAdvancedServicesOpen(!isAdvancedServicesOpen)
+                      }
+                      className="w-full p-3 flex items-center justify-between text-left hover:bg-stone-850/50 transition cursor-pointer"
+                    >
+                      <div className="flex items-center gap-2">
+                        {isAdvancedServicesOpen ? (
+                          <ChevronDown className="w-3.5 h-3.5 text-orange-400" />
+                        ) : (
+                          <ChevronRight className="w-3.5 h-3.5 text-stone-500" />
+                        )}
+                        <div>
+                          <span className="text-xs font-semibold text-stone-200 block">
+                            Advanced Settings
+                          </span>
+                          <span className="text-[10px] text-stone-400 block">
+                            URL slug ID, Cal.com scheduling override
+                          </span>
+                        </div>
+                      </div>
+                      <span className="text-[9px] px-2 py-0.5 rounded bg-stone-800 text-stone-400 font-mono">
+                        {isAdvancedServicesOpen ? "Collapse" : "Expand"}
+                      </span>
+                    </button>
+
+                    {isAdvancedServicesOpen && (
+                      <div className="p-3.5 border-t border-stone-800/80 space-y-3.5 bg-stone-950/60">
+                        {/* Field: Service Slug ID (Locked) */}
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
+                            <span className="flex items-center gap-1.5 text-stone-300">
+                              <Lock className="w-3 h-3 text-amber-500" />
+                              Service Slug ID (Locked)
+                            </span>
+                            <span className="text-[9px] text-amber-400/90 bg-amber-500/10 px-1.5 py-0.5 rounded font-mono">
+                              read-only
+                            </span>
+                          </label>
+                          <input
+                            type="text"
+                            value={servicesContent[selectedServiceIndex].id}
+                            readOnly
+                            disabled
+                            className="w-full bg-stone-900/60 border border-stone-800/80 rounded-lg px-3.5 py-2 text-xs text-stone-400 font-mono cursor-not-allowed select-none"
+                          />
+                          <p className="text-[10px] text-stone-400 italic">
+                            Permanent system identifier locked to protect
+                            inbound links and Cal.com integration.
+                          </p>
+                        </div>
+
+                        {/* Field: Cal.com Scheduling Slug Override */}
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
+                            <span>Cal.com Scheduling Slug Override</span>
+                            <span className="text-[9px] text-stone-500 lowercase font-mono">
+                              string • optional
+                            </span>
+                          </label>
+                          <input
+                            type="text"
+                            value={
+                              servicesContent[selectedServiceIndex].calSlug ||
+                              ""
+                            }
+                            onChange={(e) =>
+                              handleServiceChange("calSlug", e.target.value)
+                            }
+                            placeholder="april-demo"
+                            className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500"
+                          />
+                          <p className="text-[10px] text-stone-400 italic">
+                            Optional override slug for this specific service.
+                            Leave blank to use default Cal.com slug from Site
+                            Settings.
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -1205,18 +1354,25 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                   </p>
                 </div>
 
-                <div className="flex flex-wrap gap-1.5 p-1 bg-stone-900/60 rounded-lg">
+                <div className="grid grid-cols-2 gap-1.5 p-1 bg-stone-900/60 rounded-lg">
                   {portfolioContent.map((item, idx) => (
                     <button
                       key={item.id || idx}
                       onClick={() => setSelectedPortfolioIndex(idx)}
-                      className={`flex-1 px-2.5 py-1 text-[10px] rounded text-center transition ${
+                      className={`px-2.5 py-1.5 text-[11px] rounded text-left transition truncate flex items-center justify-between gap-1.5 cursor-pointer ${
                         selectedPortfolioIndex === idx
-                          ? "bg-stone-850 text-orange-400 font-bold border border-stone-700"
+                          ? "bg-stone-850 text-orange-400 font-bold border border-stone-750 shadow-sm"
                           : "text-stone-400 hover:text-stone-200 border border-transparent"
                       }`}
                     >
-                      Slot {idx + 1}
+                      <span className="truncate">
+                        {item.title ||
+                          item.alt?.slice(0, 20) ||
+                          `Image ${idx + 1}`}
+                      </span>
+                      <span className="text-[9px] text-stone-500 font-mono shrink-0">
+                        #{idx + 1}
+                      </span>
                     </button>
                   ))}
                 </div>
@@ -1232,6 +1388,30 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                     </div>
 
                     <div className="space-y-1">
+                      <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
+                        <span>Style Title / Caption</span>
+                        <span className="text-[9px] text-stone-500 lowercase font-mono">
+                          string
+                        </span>
+                      </label>
+                      <input
+                        type="text"
+                        value={
+                          portfolioContent[selectedPortfolioIndex].title || ""
+                        }
+                        onChange={(e) =>
+                          handlePortfolioChange("title", e.target.value)
+                        }
+                        placeholder="e.g. Vintage Victory Rolls"
+                        className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                      />
+                      <p className="text-[10px] text-stone-400 italic">
+                        Human-readable label for this style (e.g. 'Vintage
+                        Victory Rolls')
+                      </p>
+                    </div>
+
+                    <div className="space-y-1">
                       <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider">
                         Style Category Tag
                       </label>
@@ -1243,6 +1423,10 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                         }
                         className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                       />
+                      <p className="text-[10px] text-stone-400 italic">
+                        Specialty classification for filtering and portfolio
+                        grouping
+                      </p>
                     </div>
 
                     <div className="space-y-1">
@@ -1264,6 +1448,10 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                             : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                         }`}
                       />
+                      <p className="text-[10px] text-stone-400 italic">
+                        Descriptive accessibility and image SEO text explaining
+                        the style and texture
+                      </p>
                       {getFieldError(
                         "images",
                         "alt",
@@ -1326,6 +1514,9 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                       : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                   }`}
                 />
+                <p className="text-[10px] text-stone-400 italic">
+                  Main section heading for inquiry & mailing list form
+                </p>
               </div>
 
               <div className="space-y-1">
@@ -1350,6 +1541,9 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                       : "border-stone-800 focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
                   }`}
                 />
+                <p className="text-[10px] text-stone-400 italic">
+                  Header copy explaining inquiry or mailing list details
+                </p>
               </div>
 
               <div className="pt-3 border-t border-stone-800 space-y-2">
@@ -1417,12 +1611,26 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                   {(eventsContent.formFields || []).map((field, fIdx) => (
                     <div
                       key={fIdx}
-                      className="p-3 bg-stone-900/90 border border-stone-800 rounded-lg space-y-2"
+                      className="p-3.5 bg-stone-900/90 border border-stone-800 rounded-lg space-y-2.5"
                     >
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono text-orange-400 uppercase tracking-wider">
-                          Field #{fIdx + 1} ({field._template})
-                        </span>
+                      <div className="flex items-center justify-between pb-2 border-b border-stone-800/60">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-bold text-stone-100">
+                            {field.label || `Field #${fIdx + 1}`}
+                          </span>
+                          <span className="text-[9px] px-1.5 py-0.5 rounded bg-orange-500/20 text-orange-400 font-mono">
+                            {field._template === "inputField"
+                              ? `Text (${field.fieldType || "text"})`
+                              : field._template === "selectField"
+                                ? "Select Menu"
+                                : "Textarea"}
+                          </span>
+                          {field.required && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-stone-800 text-amber-400 font-mono">
+                              Required
+                            </span>
+                          )}
+                        </div>
                         <button
                           type="button"
                           onClick={() => {
@@ -1435,7 +1643,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                               formFields: newFields,
                             });
                           }}
-                          className="text-stone-500 hover:text-red-400 transition p-1"
+                          className="text-stone-500 hover:text-red-400 transition p-1 cursor-pointer"
                           title="Remove Field"
                         >
                           <Trash2 className="w-3.5 h-3.5" />
@@ -1444,8 +1652,8 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                         <div>
-                          <label className="text-[10px] text-stone-400 block mb-1">
-                            Label
+                          <label className="text-[10px] text-stone-400 block mb-1 font-semibold">
+                            Field Label
                           </label>
                           <input
                             type="text"
@@ -1465,10 +1673,13 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                             }}
                             className="w-full bg-stone-950 border border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-orange-500"
                           />
+                          <span className="text-[9px] text-stone-400 italic block mt-0.5">
+                            Prompt shown above the input
+                          </span>
                         </div>
 
                         <div>
-                          <label className="text-[10px] text-stone-400 block mb-1">
+                          <label className="text-[10px] text-stone-400 block mb-1 font-semibold">
                             Type / Template
                           </label>
                           <select
@@ -1493,11 +1704,17 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                                 formFields: newFields,
                               });
                             }}
-                            className="w-full bg-stone-950 border border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-orange-500"
+                            className="w-full bg-stone-950 border border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-200 focus:outline-none focus:border-orange-500 cursor-pointer"
                           >
-                            <option value="inputField">Text/Input Field</option>
-                            <option value="selectField">Dropdown Select</option>
-                            <option value="textareaField">Textarea</option>
+                            <option value="inputField">
+                              Text / Contact Input
+                            </option>
+                            <option value="selectField">
+                              Dropdown Select Menu
+                            </option>
+                            <option value="textareaField">
+                              Multi-line Text Area
+                            </option>
                           </select>
                         </div>
                       </div>
