@@ -26,12 +26,6 @@ const BookingModal = lazy(() =>
   }))
 );
 
-const AdminMockup = lazy(() =>
-  import("./components/AdminMockup").then((mod) => ({
-    default: mod.AdminMockup,
-  }))
-);
-
 // Single, Unified GraphQL Query for the Home Page collection
 const PAGE_CONTENT_QUERY = `
   query PageContent($relativePath: String!) {
@@ -132,15 +126,6 @@ export default function App() {
   );
   const [customCalSlug, setCustomCalSlug] = useState<string | null>(null);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      return (
-        params.get("admin") === "true" || window.location.hash === "#admin"
-      );
-    }
-    return false;
-  });
 
   // Consolidated CMS State serving as local fallback and reactive Single Source of Truth (SSOT)
   const [cmsState, setCmsState] = useState<{
@@ -453,7 +438,7 @@ export default function App() {
     return { ...f, _template: template };
   });
 
-  const mainSiteContent = (
+  return (
     <div className="min-h-screen bg-stone-50 text-stone-900 font-sans selection:bg-rose-100 selection:text-rose-900">
       {/* Dynamic Reactive Schema.org JSON-LD & SEO Controller */}
       <SchemaOrg
@@ -598,9 +583,6 @@ export default function App() {
       {/* Footer Branding & Navigation */}
       <Footer
         onBookAppointment={() => handleOpenBooking()}
-        onToggleAdmin={() => {
-          setIsAdminOpen(true);
-        }}
         studioName={String(liveSite.studioName || SITE_CONFIG.studioName)}
         email={String(liveSite.email || SITE_CONFIG.email)}
         phone={String(liveSite.phone || SITE_CONFIG.phone)}
@@ -637,110 +619,4 @@ export default function App() {
       )}
     </div>
   );
-
-  if (isAdminOpen) {
-    return (
-      <Suspense
-        fallback={
-          <div className="min-h-screen bg-stone-950 text-stone-200 flex items-center justify-center font-mono text-sm">
-            Loading CMS Portal...
-          </div>
-        }
-      >
-        <AdminMockup
-          heroContent={cmsState.hero}
-          setHeroContent={(newHero) => {
-            setCmsState((prev) => {
-              const h =
-                typeof newHero === "function" ? newHero(prev.hero) : newHero;
-              return { ...prev, hero: h };
-            });
-          }}
-          eventsContent={cmsState.events}
-          setEventsContent={(newEvents) => {
-            setCmsState((prev) => {
-              const ev =
-                typeof newEvents === "function"
-                  ? newEvents(prev.events)
-                  : newEvents;
-              return { ...prev, events: ev };
-            });
-          }}
-          servicesContent={cmsState.services.servicesList}
-          setServicesContent={(newServices) => {
-            setCmsState((prev) => {
-              const list =
-                typeof newServices === "function"
-                  ? newServices(prev.services.servicesList)
-                  : newServices;
-              return {
-                ...prev,
-                services: { ...prev.services, servicesList: list },
-              };
-            });
-          }}
-          portfolioContent={cmsState.portfolio.portfolioList}
-          setPortfolioContent={(newPortfolio) => {
-            setCmsState((prev) => {
-              const list =
-                typeof newPortfolio === "function"
-                  ? newPortfolio(prev.portfolio.portfolioList)
-                  : newPortfolio;
-              return {
-                ...prev,
-                portfolio: { ...prev.portfolio, portfolioList: list },
-              };
-            });
-          }}
-          onClose={() => setIsAdminOpen(false)}
-          email={cmsState.site.email || SITE_CONFIG.email}
-          setEmail={(email: string) => {
-            setCmsState((p) => ({
-              ...p,
-              site: { ...p.site, email },
-            }));
-          }}
-          phone={cmsState.site.phone || SITE_CONFIG.phone}
-          setPhone={(phone: string) => {
-            setCmsState((p) => ({
-              ...p,
-              site: { ...p.site, phone },
-            }));
-          }}
-          instagram={String(
-            cmsState.site.instagram ||
-              (cmsState.site.instagramHandle
-                ? `@${String(cmsState.site.instagramHandle).replace(/^@/, "")}`
-                : "")
-          )}
-          setInstagram={(instagram: string) => {
-            setCmsState((p) => ({
-              ...p,
-              site: { ...p.site, instagram },
-            }));
-          }}
-          instagramUrl={String(
-            cmsState.site.instagramUrl || SITE_CONFIG.instagramUrl
-          )}
-          setInstagramUrl={(instagramUrl: string) => {
-            setCmsState((p) => ({
-              ...p,
-              site: { ...p.site, instagramUrl },
-            }));
-          }}
-          heroImage={cmsState.portfolio.heroImage || SITE_CONFIG.heroImage}
-          setHeroImage={(image: string) => {
-            setCmsState((p) => ({
-              ...p,
-              portfolio: { ...p.portfolio, heroImage: image },
-            }));
-          }}
-        >
-          {mainSiteContent}
-        </AdminMockup>
-      </Suspense>
-    );
-  }
-
-  return mainSiteContent;
 }

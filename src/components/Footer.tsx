@@ -5,7 +5,6 @@ import { SITE_CONFIG } from "../config/site";
 
 interface FooterProps {
   onBookAppointment: () => void;
-  onToggleAdmin?: () => void;
   studioName?: string;
   email?: string;
   phone?: string;
@@ -15,7 +14,6 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({
   onBookAppointment,
-  onToggleAdmin,
   studioName = SITE_CONFIG.studioName,
   email = SITE_CONFIG.email,
   phone = SITE_CONFIG.phone,
@@ -110,18 +108,14 @@ export const Footer: React.FC<FooterProps> = ({
               &copy; {new Date().getFullYear()} {studioName}. All rights
               reserved.
             </span>
-            {onToggleAdmin && (
-              <>
-                <span className="text-stone-700 select-none">•</span>
-                <button
-                  id="footer-admin-link"
-                  onClick={onToggleAdmin}
-                  className="text-stone-500 hover:text-stone-300 transition cursor-pointer bg-transparent border-0 p-0 font-sans text-[11px]"
-                >
-                  Admin Login
-                </button>
-              </>
-            )}
+            <span className="text-stone-700 select-none">•</span>
+            <a
+              id="footer-admin-link"
+              href="/admin/index.html"
+              className="text-stone-500 hover:text-stone-300 transition cursor-pointer bg-transparent border-0 p-0 font-sans text-[11px]"
+            >
+              Admin Login
+            </a>
           </div>
           <p>
             Developed by{" "}

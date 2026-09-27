@@ -22,17 +22,17 @@ A high-performance, SEO-optimized, and fully configurable web application crafte
 
 The project features a **centralized configuration and content architecture** designed for easy client customization without modifying component code:
 
-- **Single Source of Truth (`src/config/site.ts` & `src/content/`)**:
-  All content is decoupled into structured JSON files under `src/content/`:
-  - `site.json`: Business identity, contact details, geo coordinates, opening hours, address, and metadata.
-  - `hero.json`: Credentials badge, primary headline, subheading, availability notice, and Instagram links.
-  - `services.json`: Array of service offerings, durations, pricing, deliverables, and Cal.com slugs.
-  - `portfolio.json`: Showcase gallery images, alt texts, and style category tags.
-  - `events.json`: On-location collaborations, bridal party, and event styling descriptions.
+- **Single Source of Truth (`src/config/site.ts` & `src/content/page.json`)**:
+  All content is consolidated into `src/content/page.json` conforming to TinaCMS's unified schema:
+  - `site`: Business identity, contact details, geo coordinates, opening hours, address, and metadata.
+  - `hero`: Credentials badge, primary headline, subheading, availability notice.
+  - `services`: Section title, array of service offerings, durations, pricing, deliverables, and Cal.com slugs.
+  - `portfolio`: Hero image, OG image metadata, and showcase gallery items with category tags.
+  - `events`: On-location collaborations, bridal party copy, form toggles, and dynamic fields.
 - **Unified Config Module (`src/config/site.ts`)**:
   Exports typed configurations (`SITE_CONFIG`, `HERO_CONTENT`, `EVENTS_CONTENT`, `SERVICES_CONTENT`, `PORTFOLIO_CONTENT`) and dynamically constructs Schema.org `HairSalon` JSON-LD payloads without arbitrary fallbacks or multiple `||` chains.
 - **Vite Performance Best Practices**:
-  - Modal code-splitting via `React.lazy` (`BookingModal` and `AdminMockup`) to ensure a lean initial JavaScript bundle.
+  - Modal code-splitting via `React.lazy` (`BookingModal`) to ensure a lean initial JavaScript bundle.
   - High-priority LCP preloading for the hero image (`fetchpriority="high"`, WebP format).
   - Modern typography preconnecting to Google Fonts with `font-display: swap`.
 
@@ -57,7 +57,7 @@ To prevent silent failures and ensure issues are immediately visible during deve
 
 ## 🔑 Environment Variables Reference
 
-Visual styling, branding, contact info, hours, and descriptions are stored in `src/content/site.json`. Technical integrations and hosting settings remain in `.env`:
+Visual styling, branding, contact info, hours, and descriptions are stored in `src/content/page.json`. Technical integrations and hosting settings remain in `.env`:
 
 | Variable Name           | Default / Example                | Purpose                                                            |
 | :---------------------- | :------------------------------- | :----------------------------------------------------------------- |
@@ -73,14 +73,13 @@ Visual styling, branding, contact info, hours, and descriptions are stored in `s
 
 This project integrates TinaCMS for full visual and headless content management:
 
-- **Tina Dashboard**: Navigate to `/admin/index.html` to access the live Tina Cloud editor.
-- **Collections**:
-  - `hero`: Headline, credentials badge, availability notice, subheading, Instagram.
-  - `services`: Complete list of services, prices, durations, and deliverables.
-  - `portfolio`: Showcase gallery images, alt text, and tags.
-  - `events`: Title and copy for collaborations.
-  - `site`: Studio name, stylist name, browser title, meta description, contact email/phone, and address.
-- **Sandbox Preview**: Add `?admin=true` or `#admin` to the site URL to preview content adjustments in real time with interactive controls.
+- **Tina Dashboard**: Navigate to `/admin/index.html` (or click "Admin Login" in the footer) to access the live Tina Cloud editor.
+- **Unified Page Collection**:
+  - `hero`: Headline, credentials badge, availability notice, and subheading.
+  - `services`: Section title, service names, prices, durations, descriptions, deliverables, and booking slugs.
+  - `portfolio`: Hero image, OG meta images, and showcase gallery items.
+  - `events`: Title, descriptions, inquiry form controls, and custom form field schemas.
+  - `site`: Studio name, stylist name, browser title, meta description, contact email/phone, Instagram handles, default Cal.com slug, and business address/hours.
 
 ---
 
