@@ -11,12 +11,14 @@ import { SITE_CONFIG } from "./config/site";
 import { tinaClient } from "./lib/tinaClient";
 import { TOKENS } from "./styles/tokens";
 import { Clock, ArrowRight, Check, Calendar } from "lucide-react";
+import pageData from "./content/page.json";
 import type {
   HeroContent,
   ServiceItem,
   PortfolioContent,
   EventsContent,
   SiteContent,
+  PageContent,
 } from "./types/content";
 
 // Code-split heavy modals to optimize initial bundle and LCP
@@ -127,203 +129,10 @@ export default function App() {
   const [customCalSlug, setCustomCalSlug] = useState<string | null>(null);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
-  // Consolidated CMS State serving as local fallback and reactive Single Source of Truth (SSOT)
-  const [cmsState, setCmsState] = useState<{
-    hero: HeroContent;
-    site: SiteContent;
-    services: {
-      sectionTitle?: string;
-      servicesList: ServiceItem[];
-    };
-    portfolio: PortfolioContent;
-    events: EventsContent;
-  }>(() => {
-    const rawSite = SITE_CONFIG as unknown as SiteContent;
-    return {
-      hero: {
-        badge: "Licensed Professional",
-        headline: "Curly Hair Cuts & Vintage Styling specialist",
-        subheading:
-          "April specializes in custom dry curly cuts, classic victory rolls, waves, retro pageantry hair, and commercial production styling across the San Francisco Bay Area.",
-        availabilityNotice:
-          "Taking Select New Clients for Autumn • Book via Cal.com",
-      },
-      site: {
-        ...rawSite,
-        studioName: SITE_CONFIG.studioName,
-        stylistName: SITE_CONFIG.stylistName,
-        email: SITE_CONFIG.email,
-        phone: SITE_CONFIG.phone,
-        instagramHandle: (SITE_CONFIG.instagram || "").replace(/^@/, ""),
-        instagram: SITE_CONFIG.instagram,
-        instagramUrl: SITE_CONFIG.instagramUrl,
-        calUsername: SITE_CONFIG.calUsername,
-        calDefaultSlug: SITE_CONFIG.calDefaultSlug,
-        locationDisplay: SITE_CONFIG.locationDisplay,
-        address: SITE_CONFIG.address || {
-          locality: "San Francisco",
-          region: "CA",
-          country: "US",
-        },
-        geo: SITE_CONFIG.geo || { latitude: 37.7749, longitude: -122.4194 },
-        areaServed: SITE_CONFIG.areaServed || ["San Francisco, CA", "Bay Area"],
-        openingDays: SITE_CONFIG.openingDays || ["Tuesday"],
-        openingHours: SITE_CONFIG.openingHours || {
-          opens: "09:00",
-          closes: "18:00",
-        },
-        priceRange: SITE_CONFIG.priceRange || "$$",
-        title: SITE_CONFIG.title,
-        description: SITE_CONFIG.description,
-        keywords: SITE_CONFIG.keywords || [],
-      },
-      services: {
-        sectionTitle: "Services & Pricing",
-        servicesList: [
-          {
-            id: "curly-cut",
-            name: "Dry Curly Cut & Styled Finish",
-            price: "$175",
-            duration: "2 hours",
-            description:
-              "Customized dry-cutting method designed specifically for your natural texture, curl pattern, and density. Includes detox wash, deep hydration styling, and step-by-step coaching on maintenance.",
-            deliverables: [
-              "Detailed dry-shaping consultation based on lifestyle and hair goals",
-              "Precision dry curly cut tailored to your unique bounce & pattern",
-              "Botanical detox wash & custom deep conditioning treatment",
-              "Interactive styling session with step-by-step guidance",
-              "Diffused finish or hood dry setting with premium curl products",
-            ],
-            calSlug: "april-demo",
-          },
-          {
-            id: "vintage-updo",
-            name: "Classic Vintage Hair & Special Event Updos",
-            price: "$145",
-            duration: "90 minutes",
-            description:
-              "Authentic victory rolls, vintage bumper bangs, sleek Hollywood waves, and classic pin-up styling. Built with meticulous backcombing, pinning, and setting techniques for maximum durability and longevity.",
-            deliverables: [
-              "Individual consultation to match styling with vintage era outfits",
-              "Hair preparation with vintage-appropriate hold and texture sprays",
-              "Setting curl patterns and custom sculpting for victory rolls or retro waves",
-              "Sturdy pin placement and structural setting spray application",
-              "Longevity finish designed to survive all-day events and swing dancing",
-            ],
-            calSlug: "april-demo",
-          },
-        ],
-      },
-      portfolio: {
-        heroImage: "/assets/portfolio-4.webp",
-        ogImage: "/assets/portfolio-4.webp",
-        ogImageAlt:
-          "Hair by April - Vintage Hair Styling & Curly Hair Specialist in San Francisco",
-        portfolioList: [
-          {
-            id: "retro-updo",
-            image: "/assets/portfolio-1.webp",
-            alt: "Polished vintage victory rolls styling on customer",
-            tag: "Updos",
-          },
-          {
-            id: "natural-curly",
-            image: "/assets/portfolio-2.webp",
-            alt: "Dry curly haircut highlighting natural springy spirals",
-            tag: "Curly Cut",
-          },
-          {
-            id: "vintage-waves",
-            image: "/assets/portfolio-3.webp",
-            alt: "Classic Hollywood waves styling on on-location photoshoot client",
-            tag: "Vintage Styling",
-          },
-          {
-            id: "sculpted-retro",
-            image: "/assets/portfolio-4.webp",
-            alt: "Side profile of vintage styled victory rolls and bumper bangs",
-            tag: "Events & Production",
-          },
-          {
-            id: "springy-spirals",
-            image: "/assets/portfolio-5.webp",
-            alt: "Bouncy, well-defined custom dry curly cut showcasing volume",
-            tag: "Curly Cut",
-          },
-        ],
-      },
-      events: {
-        title: "Events & Collaborations",
-        description:
-          "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance camps, and retro pageants across the Bay Area.",
-        showForm: true,
-        formFields: [
-          {
-            label: "Your Name",
-            fieldType: "text",
-            placeholder: "Jane Doe",
-            required: true,
-            _template: "inputField",
-          },
-          {
-            label: "Email Address",
-            fieldType: "email",
-            placeholder: "jane@example.com",
-            required: true,
-            _template: "inputField",
-          },
-          {
-            label: "Phone Number",
-            fieldType: "tel",
-            placeholder: "(415) 555-0192",
-            required: true,
-            _template: "inputField",
-          },
-          {
-            label: "Event / Inquiry Type",
-            options: [
-              "Wedding / Bridal Party",
-              "Editorial & Commercial Photoshoot",
-              "Swing Dance Camp / Festival",
-              "Retro Pageant / Special Event",
-              "Private Group Styling Session",
-            ],
-            required: true,
-            _template: "selectField",
-          },
-          {
-            label: "Estimated Party Size",
-            options: [
-              "1 Person",
-              "2-4 People",
-              "5-8 People",
-              "9+ People (Large Bridal / Production Group)",
-            ],
-            required: true,
-            _template: "selectField",
-          },
-          {
-            label: "Target Date & Location (City or Venue)",
-            fieldType: "text",
-            placeholder:
-              "e.g., October 14, 2026 • San Francisco or Bay Area venue",
-            required: true,
-            _template: "inputField",
-          },
-          {
-            label: "Styling Notes / Desired Aesthetics",
-            placeholder:
-              "Mention desired styles (e.g. vintage victory rolls, natural curl styling, 1940s waves), call-times, or group details...",
-            required: false,
-            _template: "textareaField",
-          },
-        ],
-        formOptions: {
-          submitButtonText: "Submit Booking Inquiry",
-        },
-      },
-    };
-  });
+  // Consolidated CMS State initialized from page.json and synchronized reactively
+  const [cmsState, setCmsState] = useState<PageContent>(
+    () => pageData as unknown as PageContent
+  );
 
   // Single useTina hook registered on the unified page schema
   const { data: liveData } = useTina({
