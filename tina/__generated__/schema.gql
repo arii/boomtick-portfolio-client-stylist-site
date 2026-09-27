@@ -98,12 +98,12 @@ type PageHero {
 }
 
 type PageServicesServicesList {
-  id: String!
   name: String!
   price: String!
   duration: String
   description: String
   deliverables: [String]
+  id: String!
   calSlug: String
 }
 
@@ -113,6 +113,7 @@ type PageServices {
 }
 
 type PagePortfolioPortfolioList {
+  title: String
   id: String!
   image: String!
   alt: String!
@@ -221,12 +222,12 @@ input PageHeroFilter {
 }
 
 input PageServicesServicesListFilter {
-  id: StringFilter
   name: StringFilter
   price: StringFilter
   duration: StringFilter
   description: StringFilter
   deliverables: StringFilter
+  id: StringFilter
   calSlug: StringFilter
 }
 
@@ -243,6 +244,7 @@ input ImageFilter {
 }
 
 input PagePortfolioPortfolioListFilter {
+  title: StringFilter
   id: StringFilter
   image: ImageFilter
   alt: StringFilter
@@ -390,12 +392,12 @@ input PageHeroMutation {
 }
 
 input PageServicesServicesListMutation {
-  id: String
   name: String
   price: String
   duration: String
   description: String
   deliverables: [String]
+  id: String
   calSlug: String
 }
 
@@ -405,6 +407,7 @@ input PageServicesMutation {
 }
 
 input PagePortfolioPortfolioListMutation {
+  title: String
   id: String
   image: String
   alt: String

@@ -20,12 +20,12 @@ export const PagePartsFragmentDoc = gql`
     sectionTitle
     servicesList {
       __typename
-      id
       name
       price
       duration
       description
       deliverables
+      id
       calSlug
     }
   }
@@ -36,6 +36,7 @@ export const PagePartsFragmentDoc = gql`
     ogImageAlt
     portfolioList {
       __typename
+      title
       id
       image
       alt

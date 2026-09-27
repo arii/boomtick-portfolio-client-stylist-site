@@ -12,12 +12,12 @@ fragment PageParts on Page {
     sectionTitle
     servicesList {
       __typename
-      id
       name
       price
       duration
       description
       deliverables
+      id
       calSlug
     }
   }
@@ -28,6 +28,7 @@ fragment PageParts on Page {
     ogImageAlt
     portfolioList {
       __typename
+      title
       id
       image
       alt
