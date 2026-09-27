@@ -84,16 +84,8 @@ export type Query = {
   collections: Array<Collection>;
   node: Node;
   document: DocumentNode;
-  site: Site;
-  siteConnection: SiteConnection;
-  hero: Hero;
-  heroConnection: HeroConnection;
-  portfolio: Portfolio;
-  portfolioConnection: PortfolioConnection;
-  services: Services;
-  servicesConnection: ServicesConnection;
-  events: Events;
-  eventsConnection: EventsConnection;
+  page: Page;
+  pageConnection: PageConnection;
 };
 
 
@@ -118,86 +110,22 @@ export type QueryDocumentArgs = {
 };
 
 
-export type QuerySiteArgs = {
+export type QueryPageArgs = {
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 
-export type QuerySiteConnectionArgs = {
+export type QueryPageConnectionArgs = {
   before?: InputMaybe<Scalars['String']['input']>;
   after?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Float']['input']>;
   last?: InputMaybe<Scalars['Float']['input']>;
   sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<SiteFilter>;
-};
-
-
-export type QueryHeroArgs = {
-  relativePath?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryHeroConnectionArgs = {
-  before?: InputMaybe<Scalars['String']['input']>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Float']['input']>;
-  last?: InputMaybe<Scalars['Float']['input']>;
-  sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<HeroFilter>;
-};
-
-
-export type QueryPortfolioArgs = {
-  relativePath?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryPortfolioConnectionArgs = {
-  before?: InputMaybe<Scalars['String']['input']>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Float']['input']>;
-  last?: InputMaybe<Scalars['Float']['input']>;
-  sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<PortfolioFilter>;
-};
-
-
-export type QueryServicesArgs = {
-  relativePath?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryServicesConnectionArgs = {
-  before?: InputMaybe<Scalars['String']['input']>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Float']['input']>;
-  last?: InputMaybe<Scalars['Float']['input']>;
-  sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<ServicesFilter>;
-};
-
-
-export type QueryEventsArgs = {
-  relativePath?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryEventsConnectionArgs = {
-  before?: InputMaybe<Scalars['String']['input']>;
-  after?: InputMaybe<Scalars['String']['input']>;
-  first?: InputMaybe<Scalars['Float']['input']>;
-  last?: InputMaybe<Scalars['Float']['input']>;
-  sort?: InputMaybe<Scalars['String']['input']>;
-  filter?: InputMaybe<EventsFilter>;
+  filter?: InputMaybe<PageFilter>;
 };
 
 export type DocumentFilter = {
-  site?: InputMaybe<SiteFilter>;
-  hero?: InputMaybe<HeroFilter>;
-  portfolio?: InputMaybe<PortfolioFilter>;
-  services?: InputMaybe<ServicesFilter>;
-  events?: InputMaybe<EventsFilter>;
+  page?: InputMaybe<PageFilter>;
 };
 
 export type DocumentConnectionEdges = {
@@ -237,62 +165,134 @@ export type CollectionDocumentsArgs = {
   folder?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type DocumentNode = Site | Hero | Portfolio | Services | Events | Folder;
+export type DocumentNode = Page | Folder;
 
-export type SiteAddress = {
-  __typename?: 'SiteAddress';
+export type PageHero = {
+  __typename?: 'PageHero';
+  badge?: Maybe<Scalars['String']['output']>;
+  headline: Scalars['String']['output'];
+  subheading?: Maybe<Scalars['String']['output']>;
+  availabilityNotice: Scalars['String']['output'];
+};
+
+export type PageServicesServicesList = {
+  __typename?: 'PageServicesServicesList';
+  id: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  price: Scalars['String']['output'];
+  duration?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  deliverables?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  calSlug?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageServices = {
+  __typename?: 'PageServices';
+  sectionTitle?: Maybe<Scalars['String']['output']>;
+  servicesList?: Maybe<Array<Maybe<PageServicesServicesList>>>;
+};
+
+export type PagePortfolioPortfolioList = {
+  __typename?: 'PagePortfolioPortfolioList';
+  id: Scalars['String']['output'];
+  image: Scalars['String']['output'];
+  alt: Scalars['String']['output'];
+  tag?: Maybe<Scalars['String']['output']>;
+};
+
+export type PagePortfolio = {
+  __typename?: 'PagePortfolio';
+  heroImage?: Maybe<Scalars['String']['output']>;
+  ogImage?: Maybe<Scalars['String']['output']>;
+  ogImageAlt?: Maybe<Scalars['String']['output']>;
+  portfolioList?: Maybe<Array<Maybe<PagePortfolioPortfolioList>>>;
+};
+
+export type PageEventsFormFieldsInputField = {
+  __typename?: 'PageEventsFormFieldsInputField';
+  label: Scalars['String']['output'];
+  fieldType?: Maybe<Scalars['String']['output']>;
+  placeholder?: Maybe<Scalars['String']['output']>;
+  required?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type PageEventsFormFieldsSelectField = {
+  __typename?: 'PageEventsFormFieldsSelectField';
+  label: Scalars['String']['output'];
+  options?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+  required?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type PageEventsFormFieldsTextareaField = {
+  __typename?: 'PageEventsFormFieldsTextareaField';
+  label: Scalars['String']['output'];
+  placeholder?: Maybe<Scalars['String']['output']>;
+  required?: Maybe<Scalars['Boolean']['output']>;
+};
+
+export type PageEventsFormFields = PageEventsFormFieldsInputField | PageEventsFormFieldsSelectField | PageEventsFormFieldsTextareaField;
+
+export type PageEventsFormOptions = {
+  __typename?: 'PageEventsFormOptions';
+  submitButtonText?: Maybe<Scalars['String']['output']>;
+};
+
+export type PageEvents = {
+  __typename?: 'PageEvents';
+  title?: Maybe<Scalars['String']['output']>;
+  description?: Maybe<Scalars['String']['output']>;
+  showForm?: Maybe<Scalars['Boolean']['output']>;
+  formFields?: Maybe<Array<Maybe<PageEventsFormFields>>>;
+  formOptions?: Maybe<PageEventsFormOptions>;
+};
+
+export type PageSiteAddress = {
+  __typename?: 'PageSiteAddress';
   locality?: Maybe<Scalars['String']['output']>;
   region?: Maybe<Scalars['String']['output']>;
   country?: Maybe<Scalars['String']['output']>;
 };
 
-export type SiteGeo = {
-  __typename?: 'SiteGeo';
+export type PageSiteGeo = {
+  __typename?: 'PageSiteGeo';
   latitude?: Maybe<Scalars['Float']['output']>;
   longitude?: Maybe<Scalars['Float']['output']>;
 };
 
-export type SiteOpeningHours = {
-  __typename?: 'SiteOpeningHours';
+export type PageSiteOpeningHours = {
+  __typename?: 'PageSiteOpeningHours';
   opens?: Maybe<Scalars['String']['output']>;
   closes?: Maybe<Scalars['String']['output']>;
 };
 
-export type Site = Node & Document & {
-  __typename?: 'Site';
+export type PageSite = {
+  __typename?: 'PageSite';
   studioName: Scalars['String']['output'];
   stylistName: Scalars['String']['output'];
-  credentials?: Maybe<Scalars['String']['output']>;
   title?: Maybe<Scalars['String']['output']>;
-  browserTitle?: Maybe<Scalars['String']['output']>;
   description?: Maybe<Scalars['String']['output']>;
-  metaDescription?: Maybe<Scalars['String']['output']>;
   keywords?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   email?: Maybe<Scalars['String']['output']>;
   phone?: Maybe<Scalars['String']['output']>;
-  emailFallback?: Maybe<Scalars['String']['output']>;
-  phoneFallback?: Maybe<Scalars['String']['output']>;
   instagramHandle?: Maybe<Scalars['String']['output']>;
   locationDisplay?: Maybe<Scalars['String']['output']>;
-  availabilityBanner?: Maybe<Scalars['String']['output']>;
-  logisticsNotice?: Maybe<Scalars['String']['output']>;
   calUsername?: Maybe<Scalars['String']['output']>;
   calDefaultSlug?: Maybe<Scalars['String']['output']>;
-  address?: Maybe<SiteAddress>;
-  geo?: Maybe<SiteGeo>;
+  address?: Maybe<PageSiteAddress>;
+  geo?: Maybe<PageSiteGeo>;
   areaServed?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
   openingDays?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  openingHours?: Maybe<SiteOpeningHours>;
+  openingHours?: Maybe<PageSiteOpeningHours>;
   priceRange?: Maybe<Scalars['String']['output']>;
-  heroHeading?: Maybe<Scalars['String']['output']>;
-  heroSubtext?: Maybe<Scalars['String']['output']>;
-  ogImageRelative?: Maybe<Scalars['String']['output']>;
-  ogImageFallbackRelative?: Maybe<Scalars['String']['output']>;
-  ogImageAlt?: Maybe<Scalars['String']['output']>;
-  ogImageWidth?: Maybe<Scalars['Float']['output']>;
-  ogImageHeight?: Maybe<Scalars['Float']['output']>;
-  heroPreloadImage?: Maybe<Scalars['String']['output']>;
-  portfolioImagesRelative?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+};
+
+export type Page = Node & Document & {
+  __typename?: 'Page';
+  hero?: Maybe<PageHero>;
+  services?: Maybe<PageServices>;
+  portfolio?: Maybe<PagePortfolio>;
+  events?: Maybe<PageEvents>;
+  site?: Maybe<PageSite>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
@@ -305,7 +305,92 @@ export type StringFilter = {
   in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-export type SiteAddressFilter = {
+export type PageHeroFilter = {
+  badge?: InputMaybe<StringFilter>;
+  headline?: InputMaybe<StringFilter>;
+  subheading?: InputMaybe<StringFilter>;
+  availabilityNotice?: InputMaybe<StringFilter>;
+};
+
+export type PageServicesServicesListFilter = {
+  id?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  price?: InputMaybe<StringFilter>;
+  duration?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  deliverables?: InputMaybe<StringFilter>;
+  calSlug?: InputMaybe<StringFilter>;
+};
+
+export type PageServicesFilter = {
+  sectionTitle?: InputMaybe<StringFilter>;
+  servicesList?: InputMaybe<PageServicesServicesListFilter>;
+};
+
+export type ImageFilter = {
+  startsWith?: InputMaybe<Scalars['String']['input']>;
+  eq?: InputMaybe<Scalars['String']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type PagePortfolioPortfolioListFilter = {
+  id?: InputMaybe<StringFilter>;
+  image?: InputMaybe<ImageFilter>;
+  alt?: InputMaybe<StringFilter>;
+  tag?: InputMaybe<StringFilter>;
+};
+
+export type PagePortfolioFilter = {
+  heroImage?: InputMaybe<ImageFilter>;
+  ogImage?: InputMaybe<ImageFilter>;
+  ogImageAlt?: InputMaybe<StringFilter>;
+  portfolioList?: InputMaybe<PagePortfolioPortfolioListFilter>;
+};
+
+export type BooleanFilter = {
+  eq?: InputMaybe<Scalars['Boolean']['input']>;
+  exists?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type PageEventsFormFieldsInputFieldFilter = {
+  label?: InputMaybe<StringFilter>;
+  fieldType?: InputMaybe<StringFilter>;
+  placeholder?: InputMaybe<StringFilter>;
+  required?: InputMaybe<BooleanFilter>;
+};
+
+export type PageEventsFormFieldsSelectFieldFilter = {
+  label?: InputMaybe<StringFilter>;
+  options?: InputMaybe<StringFilter>;
+  required?: InputMaybe<BooleanFilter>;
+};
+
+export type PageEventsFormFieldsTextareaFieldFilter = {
+  label?: InputMaybe<StringFilter>;
+  placeholder?: InputMaybe<StringFilter>;
+  required?: InputMaybe<BooleanFilter>;
+};
+
+export type PageEventsFormFieldsFilter = {
+  inputField?: InputMaybe<PageEventsFormFieldsInputFieldFilter>;
+  selectField?: InputMaybe<PageEventsFormFieldsSelectFieldFilter>;
+  textareaField?: InputMaybe<PageEventsFormFieldsTextareaFieldFilter>;
+};
+
+export type PageEventsFormOptionsFilter = {
+  submitButtonText?: InputMaybe<StringFilter>;
+};
+
+export type PageEventsFilter = {
+  title?: InputMaybe<StringFilter>;
+  description?: InputMaybe<StringFilter>;
+  showForm?: InputMaybe<BooleanFilter>;
+  formFields?: InputMaybe<PageEventsFormFieldsFilter>;
+  formOptions?: InputMaybe<PageEventsFormOptionsFilter>;
+};
+
+export type PageSiteAddressFilter = {
   locality?: InputMaybe<StringFilter>;
   region?: InputMaybe<StringFilter>;
   country?: InputMaybe<StringFilter>;
@@ -321,287 +406,55 @@ export type NumberFilter = {
   in?: InputMaybe<Array<InputMaybe<Scalars['Float']['input']>>>;
 };
 
-export type SiteGeoFilter = {
+export type PageSiteGeoFilter = {
   latitude?: InputMaybe<NumberFilter>;
   longitude?: InputMaybe<NumberFilter>;
 };
 
-export type SiteOpeningHoursFilter = {
+export type PageSiteOpeningHoursFilter = {
   opens?: InputMaybe<StringFilter>;
   closes?: InputMaybe<StringFilter>;
 };
 
-export type ImageFilter = {
-  startsWith?: InputMaybe<Scalars['String']['input']>;
-  eq?: InputMaybe<Scalars['String']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-  in?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type SiteFilter = {
+export type PageSiteFilter = {
   studioName?: InputMaybe<StringFilter>;
   stylistName?: InputMaybe<StringFilter>;
-  credentials?: InputMaybe<StringFilter>;
   title?: InputMaybe<StringFilter>;
-  browserTitle?: InputMaybe<StringFilter>;
   description?: InputMaybe<StringFilter>;
-  metaDescription?: InputMaybe<StringFilter>;
   keywords?: InputMaybe<StringFilter>;
   email?: InputMaybe<StringFilter>;
   phone?: InputMaybe<StringFilter>;
-  emailFallback?: InputMaybe<StringFilter>;
-  phoneFallback?: InputMaybe<StringFilter>;
   instagramHandle?: InputMaybe<StringFilter>;
   locationDisplay?: InputMaybe<StringFilter>;
-  availabilityBanner?: InputMaybe<StringFilter>;
-  logisticsNotice?: InputMaybe<StringFilter>;
   calUsername?: InputMaybe<StringFilter>;
   calDefaultSlug?: InputMaybe<StringFilter>;
-  address?: InputMaybe<SiteAddressFilter>;
-  geo?: InputMaybe<SiteGeoFilter>;
+  address?: InputMaybe<PageSiteAddressFilter>;
+  geo?: InputMaybe<PageSiteGeoFilter>;
   areaServed?: InputMaybe<StringFilter>;
   openingDays?: InputMaybe<StringFilter>;
-  openingHours?: InputMaybe<SiteOpeningHoursFilter>;
+  openingHours?: InputMaybe<PageSiteOpeningHoursFilter>;
   priceRange?: InputMaybe<StringFilter>;
-  heroHeading?: InputMaybe<StringFilter>;
-  heroSubtext?: InputMaybe<StringFilter>;
-  ogImageRelative?: InputMaybe<ImageFilter>;
-  ogImageFallbackRelative?: InputMaybe<ImageFilter>;
-  ogImageAlt?: InputMaybe<StringFilter>;
-  ogImageWidth?: InputMaybe<NumberFilter>;
-  ogImageHeight?: InputMaybe<NumberFilter>;
-  heroPreloadImage?: InputMaybe<ImageFilter>;
-  portfolioImagesRelative?: InputMaybe<ImageFilter>;
 };
 
-export type SiteConnectionEdges = {
-  __typename?: 'SiteConnectionEdges';
+export type PageFilter = {
+  hero?: InputMaybe<PageHeroFilter>;
+  services?: InputMaybe<PageServicesFilter>;
+  portfolio?: InputMaybe<PagePortfolioFilter>;
+  events?: InputMaybe<PageEventsFilter>;
+  site?: InputMaybe<PageSiteFilter>;
+};
+
+export type PageConnectionEdges = {
+  __typename?: 'PageConnectionEdges';
   cursor: Scalars['String']['output'];
-  node?: Maybe<Site>;
+  node?: Maybe<Page>;
 };
 
-export type SiteConnection = Connection & {
-  __typename?: 'SiteConnection';
+export type PageConnection = Connection & {
+  __typename?: 'PageConnection';
   pageInfo: PageInfo;
   totalCount: Scalars['Float']['output'];
-  edges?: Maybe<Array<Maybe<SiteConnectionEdges>>>;
-};
-
-export type Hero = Node & Document & {
-  __typename?: 'Hero';
-  badge?: Maybe<Scalars['String']['output']>;
-  headline: Scalars['String']['output'];
-  subheading?: Maybe<Scalars['String']['output']>;
-  availabilityNotice: Scalars['String']['output'];
-  calSlug?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
-  _sys: SystemInfo;
-  _values: Scalars['JSON']['output'];
-};
-
-export type HeroFilter = {
-  badge?: InputMaybe<StringFilter>;
-  headline?: InputMaybe<StringFilter>;
-  subheading?: InputMaybe<StringFilter>;
-  availabilityNotice?: InputMaybe<StringFilter>;
-  calSlug?: InputMaybe<StringFilter>;
-};
-
-export type HeroConnectionEdges = {
-  __typename?: 'HeroConnectionEdges';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Hero>;
-};
-
-export type HeroConnection = Connection & {
-  __typename?: 'HeroConnection';
-  pageInfo: PageInfo;
-  totalCount: Scalars['Float']['output'];
-  edges?: Maybe<Array<Maybe<HeroConnectionEdges>>>;
-};
-
-export type PortfolioPortfolioList = {
-  __typename?: 'PortfolioPortfolioList';
-  id: Scalars['String']['output'];
-  image: Scalars['String']['output'];
-  alt: Scalars['String']['output'];
-  tag?: Maybe<Scalars['String']['output']>;
-};
-
-export type Portfolio = Node & Document & {
-  __typename?: 'Portfolio';
-  portfolioList?: Maybe<Array<Maybe<PortfolioPortfolioList>>>;
-  id: Scalars['ID']['output'];
-  _sys: SystemInfo;
-  _values: Scalars['JSON']['output'];
-};
-
-export type PortfolioPortfolioListFilter = {
-  id?: InputMaybe<StringFilter>;
-  image?: InputMaybe<ImageFilter>;
-  alt?: InputMaybe<StringFilter>;
-  tag?: InputMaybe<StringFilter>;
-};
-
-export type PortfolioFilter = {
-  portfolioList?: InputMaybe<PortfolioPortfolioListFilter>;
-};
-
-export type PortfolioConnectionEdges = {
-  __typename?: 'PortfolioConnectionEdges';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Portfolio>;
-};
-
-export type PortfolioConnection = Connection & {
-  __typename?: 'PortfolioConnection';
-  pageInfo: PageInfo;
-  totalCount: Scalars['Float']['output'];
-  edges?: Maybe<Array<Maybe<PortfolioConnectionEdges>>>;
-};
-
-export type ServicesServicesList = {
-  __typename?: 'ServicesServicesList';
-  id: Scalars['String']['output'];
-  name: Scalars['String']['output'];
-  price: Scalars['String']['output'];
-  duration?: Maybe<Scalars['String']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  deliverables?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  calSlug?: Maybe<Scalars['String']['output']>;
-};
-
-export type Services = Node & Document & {
-  __typename?: 'Services';
-  sectionTitle?: Maybe<Scalars['String']['output']>;
-  servicesList?: Maybe<Array<Maybe<ServicesServicesList>>>;
-  id: Scalars['ID']['output'];
-  _sys: SystemInfo;
-  _values: Scalars['JSON']['output'];
-};
-
-export type ServicesServicesListFilter = {
-  id?: InputMaybe<StringFilter>;
-  name?: InputMaybe<StringFilter>;
-  price?: InputMaybe<StringFilter>;
-  duration?: InputMaybe<StringFilter>;
-  description?: InputMaybe<StringFilter>;
-  deliverables?: InputMaybe<StringFilter>;
-  calSlug?: InputMaybe<StringFilter>;
-};
-
-export type ServicesFilter = {
-  sectionTitle?: InputMaybe<StringFilter>;
-  servicesList?: InputMaybe<ServicesServicesListFilter>;
-};
-
-export type ServicesConnectionEdges = {
-  __typename?: 'ServicesConnectionEdges';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Services>;
-};
-
-export type ServicesConnection = Connection & {
-  __typename?: 'ServicesConnection';
-  pageInfo: PageInfo;
-  totalCount: Scalars['Float']['output'];
-  edges?: Maybe<Array<Maybe<ServicesConnectionEdges>>>;
-};
-
-export type EventsFormFieldsInputField = {
-  __typename?: 'EventsFormFieldsInputField';
-  label: Scalars['String']['output'];
-  fieldType?: Maybe<Scalars['String']['output']>;
-  placeholder?: Maybe<Scalars['String']['output']>;
-  required?: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type EventsFormFieldsSelectField = {
-  __typename?: 'EventsFormFieldsSelectField';
-  label: Scalars['String']['output'];
-  options?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
-  required?: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type EventsFormFieldsTextareaField = {
-  __typename?: 'EventsFormFieldsTextareaField';
-  label: Scalars['String']['output'];
-  placeholder?: Maybe<Scalars['String']['output']>;
-  required?: Maybe<Scalars['Boolean']['output']>;
-};
-
-export type EventsFormFields = EventsFormFieldsInputField | EventsFormFieldsSelectField | EventsFormFieldsTextareaField;
-
-export type EventsFormOptions = {
-  __typename?: 'EventsFormOptions';
-  submitButtonText?: Maybe<Scalars['String']['output']>;
-};
-
-export type Events = Node & Document & {
-  __typename?: 'Events';
-  title?: Maybe<Scalars['String']['output']>;
-  description?: Maybe<Scalars['String']['output']>;
-  showForm?: Maybe<Scalars['Boolean']['output']>;
-  formFields?: Maybe<Array<Maybe<EventsFormFields>>>;
-  formOptions?: Maybe<EventsFormOptions>;
-  id: Scalars['ID']['output'];
-  _sys: SystemInfo;
-  _values: Scalars['JSON']['output'];
-};
-
-export type BooleanFilter = {
-  eq?: InputMaybe<Scalars['Boolean']['input']>;
-  exists?: InputMaybe<Scalars['Boolean']['input']>;
-};
-
-export type EventsFormFieldsInputFieldFilter = {
-  label?: InputMaybe<StringFilter>;
-  fieldType?: InputMaybe<StringFilter>;
-  placeholder?: InputMaybe<StringFilter>;
-  required?: InputMaybe<BooleanFilter>;
-};
-
-export type EventsFormFieldsSelectFieldFilter = {
-  label?: InputMaybe<StringFilter>;
-  options?: InputMaybe<StringFilter>;
-  required?: InputMaybe<BooleanFilter>;
-};
-
-export type EventsFormFieldsTextareaFieldFilter = {
-  label?: InputMaybe<StringFilter>;
-  placeholder?: InputMaybe<StringFilter>;
-  required?: InputMaybe<BooleanFilter>;
-};
-
-export type EventsFormFieldsFilter = {
-  inputField?: InputMaybe<EventsFormFieldsInputFieldFilter>;
-  selectField?: InputMaybe<EventsFormFieldsSelectFieldFilter>;
-  textareaField?: InputMaybe<EventsFormFieldsTextareaFieldFilter>;
-};
-
-export type EventsFormOptionsFilter = {
-  submitButtonText?: InputMaybe<StringFilter>;
-};
-
-export type EventsFilter = {
-  title?: InputMaybe<StringFilter>;
-  description?: InputMaybe<StringFilter>;
-  showForm?: InputMaybe<BooleanFilter>;
-  formFields?: InputMaybe<EventsFormFieldsFilter>;
-  formOptions?: InputMaybe<EventsFormOptionsFilter>;
-};
-
-export type EventsConnectionEdges = {
-  __typename?: 'EventsConnectionEdges';
-  cursor: Scalars['String']['output'];
-  node?: Maybe<Events>;
-};
-
-export type EventsConnection = Connection & {
-  __typename?: 'EventsConnection';
-  pageInfo: PageInfo;
-  totalCount: Scalars['Float']['output'];
-  edges?: Maybe<Array<Maybe<EventsConnectionEdges>>>;
+  edges?: Maybe<Array<Maybe<PageConnectionEdges>>>;
 };
 
 export type Mutation = {
@@ -611,16 +464,8 @@ export type Mutation = {
   deleteDocument: DocumentNode;
   createDocument: DocumentNode;
   createFolder: DocumentNode;
-  updateSite: Site;
-  createSite: Site;
-  updateHero: Hero;
-  createHero: Hero;
-  updatePortfolio: Portfolio;
-  createPortfolio: Portfolio;
-  updateServices: Services;
-  createServices: Services;
-  updateEvents: Events;
-  createEvents: Events;
+  updatePage: Page;
+  createPage: Page;
 };
 
 
@@ -657,154 +502,34 @@ export type MutationCreateFolderArgs = {
 };
 
 
-export type MutationUpdateSiteArgs = {
+export type MutationUpdatePageArgs = {
   relativePath: Scalars['String']['input'];
-  params: SiteMutation;
+  params: PageMutation;
 };
 
 
-export type MutationCreateSiteArgs = {
+export type MutationCreatePageArgs = {
   relativePath: Scalars['String']['input'];
-  params: SiteMutation;
-};
-
-
-export type MutationUpdateHeroArgs = {
-  relativePath: Scalars['String']['input'];
-  params: HeroMutation;
-};
-
-
-export type MutationCreateHeroArgs = {
-  relativePath: Scalars['String']['input'];
-  params: HeroMutation;
-};
-
-
-export type MutationUpdatePortfolioArgs = {
-  relativePath: Scalars['String']['input'];
-  params: PortfolioMutation;
-};
-
-
-export type MutationCreatePortfolioArgs = {
-  relativePath: Scalars['String']['input'];
-  params: PortfolioMutation;
-};
-
-
-export type MutationUpdateServicesArgs = {
-  relativePath: Scalars['String']['input'];
-  params: ServicesMutation;
-};
-
-
-export type MutationCreateServicesArgs = {
-  relativePath: Scalars['String']['input'];
-  params: ServicesMutation;
-};
-
-
-export type MutationUpdateEventsArgs = {
-  relativePath: Scalars['String']['input'];
-  params: EventsMutation;
-};
-
-
-export type MutationCreateEventsArgs = {
-  relativePath: Scalars['String']['input'];
-  params: EventsMutation;
+  params: PageMutation;
 };
 
 export type DocumentUpdateMutation = {
-  site?: InputMaybe<SiteMutation>;
-  hero?: InputMaybe<HeroMutation>;
-  portfolio?: InputMaybe<PortfolioMutation>;
-  services?: InputMaybe<ServicesMutation>;
-  events?: InputMaybe<EventsMutation>;
+  page?: InputMaybe<PageMutation>;
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DocumentMutation = {
-  site?: InputMaybe<SiteMutation>;
-  hero?: InputMaybe<HeroMutation>;
-  portfolio?: InputMaybe<PortfolioMutation>;
-  services?: InputMaybe<ServicesMutation>;
-  events?: InputMaybe<EventsMutation>;
+  page?: InputMaybe<PageMutation>;
 };
 
-export type SiteAddressMutation = {
-  locality?: InputMaybe<Scalars['String']['input']>;
-  region?: InputMaybe<Scalars['String']['input']>;
-  country?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type SiteGeoMutation = {
-  latitude?: InputMaybe<Scalars['Float']['input']>;
-  longitude?: InputMaybe<Scalars['Float']['input']>;
-};
-
-export type SiteOpeningHoursMutation = {
-  opens?: InputMaybe<Scalars['String']['input']>;
-  closes?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type SiteMutation = {
-  studioName?: InputMaybe<Scalars['String']['input']>;
-  stylistName?: InputMaybe<Scalars['String']['input']>;
-  credentials?: InputMaybe<Scalars['String']['input']>;
-  title?: InputMaybe<Scalars['String']['input']>;
-  browserTitle?: InputMaybe<Scalars['String']['input']>;
-  description?: InputMaybe<Scalars['String']['input']>;
-  metaDescription?: InputMaybe<Scalars['String']['input']>;
-  keywords?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  email?: InputMaybe<Scalars['String']['input']>;
-  phone?: InputMaybe<Scalars['String']['input']>;
-  emailFallback?: InputMaybe<Scalars['String']['input']>;
-  phoneFallback?: InputMaybe<Scalars['String']['input']>;
-  instagramHandle?: InputMaybe<Scalars['String']['input']>;
-  locationDisplay?: InputMaybe<Scalars['String']['input']>;
-  availabilityBanner?: InputMaybe<Scalars['String']['input']>;
-  logisticsNotice?: InputMaybe<Scalars['String']['input']>;
-  calUsername?: InputMaybe<Scalars['String']['input']>;
-  calDefaultSlug?: InputMaybe<Scalars['String']['input']>;
-  address?: InputMaybe<SiteAddressMutation>;
-  geo?: InputMaybe<SiteGeoMutation>;
-  areaServed?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  openingDays?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  openingHours?: InputMaybe<SiteOpeningHoursMutation>;
-  priceRange?: InputMaybe<Scalars['String']['input']>;
-  heroHeading?: InputMaybe<Scalars['String']['input']>;
-  heroSubtext?: InputMaybe<Scalars['String']['input']>;
-  ogImageRelative?: InputMaybe<Scalars['String']['input']>;
-  ogImageFallbackRelative?: InputMaybe<Scalars['String']['input']>;
-  ogImageAlt?: InputMaybe<Scalars['String']['input']>;
-  ogImageWidth?: InputMaybe<Scalars['Float']['input']>;
-  ogImageHeight?: InputMaybe<Scalars['Float']['input']>;
-  heroPreloadImage?: InputMaybe<Scalars['String']['input']>;
-  portfolioImagesRelative?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type HeroMutation = {
+export type PageHeroMutation = {
   badge?: InputMaybe<Scalars['String']['input']>;
   headline?: InputMaybe<Scalars['String']['input']>;
   subheading?: InputMaybe<Scalars['String']['input']>;
   availabilityNotice?: InputMaybe<Scalars['String']['input']>;
-  calSlug?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type PortfolioPortfolioListMutation = {
-  id?: InputMaybe<Scalars['String']['input']>;
-  image?: InputMaybe<Scalars['String']['input']>;
-  alt?: InputMaybe<Scalars['String']['input']>;
-  tag?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type PortfolioMutation = {
-  portfolioList?: InputMaybe<Array<InputMaybe<PortfolioPortfolioListMutation>>>;
-};
-
-export type ServicesServicesListMutation = {
+export type PageServicesServicesListMutation = {
   id?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['String']['input']>;
@@ -814,46 +539,104 @@ export type ServicesServicesListMutation = {
   calSlug?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type ServicesMutation = {
+export type PageServicesMutation = {
   sectionTitle?: InputMaybe<Scalars['String']['input']>;
-  servicesList?: InputMaybe<Array<InputMaybe<ServicesServicesListMutation>>>;
+  servicesList?: InputMaybe<Array<InputMaybe<PageServicesServicesListMutation>>>;
 };
 
-export type EventsFormFieldsInputFieldMutation = {
+export type PagePortfolioPortfolioListMutation = {
+  id?: InputMaybe<Scalars['String']['input']>;
+  image?: InputMaybe<Scalars['String']['input']>;
+  alt?: InputMaybe<Scalars['String']['input']>;
+  tag?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PagePortfolioMutation = {
+  heroImage?: InputMaybe<Scalars['String']['input']>;
+  ogImage?: InputMaybe<Scalars['String']['input']>;
+  ogImageAlt?: InputMaybe<Scalars['String']['input']>;
+  portfolioList?: InputMaybe<Array<InputMaybe<PagePortfolioPortfolioListMutation>>>;
+};
+
+export type PageEventsFormFieldsInputFieldMutation = {
   label?: InputMaybe<Scalars['String']['input']>;
   fieldType?: InputMaybe<Scalars['String']['input']>;
   placeholder?: InputMaybe<Scalars['String']['input']>;
   required?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type EventsFormFieldsSelectFieldMutation = {
+export type PageEventsFormFieldsSelectFieldMutation = {
   label?: InputMaybe<Scalars['String']['input']>;
   options?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
   required?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type EventsFormFieldsTextareaFieldMutation = {
+export type PageEventsFormFieldsTextareaFieldMutation = {
   label?: InputMaybe<Scalars['String']['input']>;
   placeholder?: InputMaybe<Scalars['String']['input']>;
   required?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type EventsFormFieldsMutation = {
-  inputField?: InputMaybe<EventsFormFieldsInputFieldMutation>;
-  selectField?: InputMaybe<EventsFormFieldsSelectFieldMutation>;
-  textareaField?: InputMaybe<EventsFormFieldsTextareaFieldMutation>;
+export type PageEventsFormFieldsMutation = {
+  inputField?: InputMaybe<PageEventsFormFieldsInputFieldMutation>;
+  selectField?: InputMaybe<PageEventsFormFieldsSelectFieldMutation>;
+  textareaField?: InputMaybe<PageEventsFormFieldsTextareaFieldMutation>;
 };
 
-export type EventsFormOptionsMutation = {
+export type PageEventsFormOptionsMutation = {
   submitButtonText?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type EventsMutation = {
+export type PageEventsMutation = {
   title?: InputMaybe<Scalars['String']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   showForm?: InputMaybe<Scalars['Boolean']['input']>;
-  formFields?: InputMaybe<Array<InputMaybe<EventsFormFieldsMutation>>>;
-  formOptions?: InputMaybe<EventsFormOptionsMutation>;
+  formFields?: InputMaybe<Array<InputMaybe<PageEventsFormFieldsMutation>>>;
+  formOptions?: InputMaybe<PageEventsFormOptionsMutation>;
+};
+
+export type PageSiteAddressMutation = {
+  locality?: InputMaybe<Scalars['String']['input']>;
+  region?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageSiteGeoMutation = {
+  latitude?: InputMaybe<Scalars['Float']['input']>;
+  longitude?: InputMaybe<Scalars['Float']['input']>;
+};
+
+export type PageSiteOpeningHoursMutation = {
+  opens?: InputMaybe<Scalars['String']['input']>;
+  closes?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageSiteMutation = {
+  studioName?: InputMaybe<Scalars['String']['input']>;
+  stylistName?: InputMaybe<Scalars['String']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  keywords?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  phone?: InputMaybe<Scalars['String']['input']>;
+  instagramHandle?: InputMaybe<Scalars['String']['input']>;
+  locationDisplay?: InputMaybe<Scalars['String']['input']>;
+  calUsername?: InputMaybe<Scalars['String']['input']>;
+  calDefaultSlug?: InputMaybe<Scalars['String']['input']>;
+  address?: InputMaybe<PageSiteAddressMutation>;
+  geo?: InputMaybe<PageSiteGeoMutation>;
+  areaServed?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  openingDays?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  openingHours?: InputMaybe<PageSiteOpeningHoursMutation>;
+  priceRange?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PageMutation = {
+  hero?: InputMaybe<PageHeroMutation>;
+  services?: InputMaybe<PageServicesMutation>;
+  portfolio?: InputMaybe<PagePortfolioMutation>;
+  events?: InputMaybe<PageEventsMutation>;
+  site?: InputMaybe<PageSiteMutation>;
 };
 
 export type StringFilter = {
@@ -863,7 +646,92 @@ export type StringFilter = {
   in?: Array<string | null | undefined> | null | undefined;
 };
 
-export type SiteAddressFilter = {
+export type PageHeroFilter = {
+  badge?: StringFilter | null | undefined;
+  headline?: StringFilter | null | undefined;
+  subheading?: StringFilter | null | undefined;
+  availabilityNotice?: StringFilter | null | undefined;
+};
+
+export type PageServicesServicesListFilter = {
+  id?: StringFilter | null | undefined;
+  name?: StringFilter | null | undefined;
+  price?: StringFilter | null | undefined;
+  duration?: StringFilter | null | undefined;
+  description?: StringFilter | null | undefined;
+  deliverables?: StringFilter | null | undefined;
+  calSlug?: StringFilter | null | undefined;
+};
+
+export type PageServicesFilter = {
+  sectionTitle?: StringFilter | null | undefined;
+  servicesList?: PageServicesServicesListFilter | null | undefined;
+};
+
+export type ImageFilter = {
+  startsWith?: string | null | undefined;
+  eq?: string | null | undefined;
+  exists?: boolean | null | undefined;
+  in?: Array<string | null | undefined> | null | undefined;
+};
+
+export type PagePortfolioPortfolioListFilter = {
+  id?: StringFilter | null | undefined;
+  image?: ImageFilter | null | undefined;
+  alt?: StringFilter | null | undefined;
+  tag?: StringFilter | null | undefined;
+};
+
+export type PagePortfolioFilter = {
+  heroImage?: ImageFilter | null | undefined;
+  ogImage?: ImageFilter | null | undefined;
+  ogImageAlt?: StringFilter | null | undefined;
+  portfolioList?: PagePortfolioPortfolioListFilter | null | undefined;
+};
+
+export type BooleanFilter = {
+  eq?: boolean | null | undefined;
+  exists?: boolean | null | undefined;
+};
+
+export type PageEventsFormFieldsInputFieldFilter = {
+  label?: StringFilter | null | undefined;
+  fieldType?: StringFilter | null | undefined;
+  placeholder?: StringFilter | null | undefined;
+  required?: BooleanFilter | null | undefined;
+};
+
+export type PageEventsFormFieldsSelectFieldFilter = {
+  label?: StringFilter | null | undefined;
+  options?: StringFilter | null | undefined;
+  required?: BooleanFilter | null | undefined;
+};
+
+export type PageEventsFormFieldsTextareaFieldFilter = {
+  label?: StringFilter | null | undefined;
+  placeholder?: StringFilter | null | undefined;
+  required?: BooleanFilter | null | undefined;
+};
+
+export type PageEventsFormFieldsFilter = {
+  inputField?: PageEventsFormFieldsInputFieldFilter | null | undefined;
+  selectField?: PageEventsFormFieldsSelectFieldFilter | null | undefined;
+  textareaField?: PageEventsFormFieldsTextareaFieldFilter | null | undefined;
+};
+
+export type PageEventsFormOptionsFilter = {
+  submitButtonText?: StringFilter | null | undefined;
+};
+
+export type PageEventsFilter = {
+  title?: StringFilter | null | undefined;
+  description?: StringFilter | null | undefined;
+  showForm?: BooleanFilter | null | undefined;
+  formFields?: PageEventsFormFieldsFilter | null | undefined;
+  formOptions?: PageEventsFormOptionsFilter | null | undefined;
+};
+
+export type PageSiteAddressFilter = {
   locality?: StringFilter | null | undefined;
   region?: StringFilter | null | undefined;
   country?: StringFilter | null | undefined;
@@ -879,375 +747,181 @@ export type NumberFilter = {
   in?: Array<number | null | undefined> | null | undefined;
 };
 
-export type SiteGeoFilter = {
+export type PageSiteGeoFilter = {
   latitude?: NumberFilter | null | undefined;
   longitude?: NumberFilter | null | undefined;
 };
 
-export type SiteOpeningHoursFilter = {
+export type PageSiteOpeningHoursFilter = {
   opens?: StringFilter | null | undefined;
   closes?: StringFilter | null | undefined;
 };
 
-export type ImageFilter = {
-  startsWith?: string | null | undefined;
-  eq?: string | null | undefined;
-  exists?: boolean | null | undefined;
-  in?: Array<string | null | undefined> | null | undefined;
-};
-
-export type SiteFilter = {
+export type PageSiteFilter = {
   studioName?: StringFilter | null | undefined;
   stylistName?: StringFilter | null | undefined;
-  credentials?: StringFilter | null | undefined;
   title?: StringFilter | null | undefined;
-  browserTitle?: StringFilter | null | undefined;
   description?: StringFilter | null | undefined;
-  metaDescription?: StringFilter | null | undefined;
   keywords?: StringFilter | null | undefined;
   email?: StringFilter | null | undefined;
   phone?: StringFilter | null | undefined;
-  emailFallback?: StringFilter | null | undefined;
-  phoneFallback?: StringFilter | null | undefined;
   instagramHandle?: StringFilter | null | undefined;
   locationDisplay?: StringFilter | null | undefined;
-  availabilityBanner?: StringFilter | null | undefined;
-  logisticsNotice?: StringFilter | null | undefined;
   calUsername?: StringFilter | null | undefined;
   calDefaultSlug?: StringFilter | null | undefined;
-  address?: SiteAddressFilter | null | undefined;
-  geo?: SiteGeoFilter | null | undefined;
+  address?: PageSiteAddressFilter | null | undefined;
+  geo?: PageSiteGeoFilter | null | undefined;
   areaServed?: StringFilter | null | undefined;
   openingDays?: StringFilter | null | undefined;
-  openingHours?: SiteOpeningHoursFilter | null | undefined;
+  openingHours?: PageSiteOpeningHoursFilter | null | undefined;
   priceRange?: StringFilter | null | undefined;
-  heroHeading?: StringFilter | null | undefined;
-  heroSubtext?: StringFilter | null | undefined;
-  ogImageRelative?: ImageFilter | null | undefined;
-  ogImageFallbackRelative?: ImageFilter | null | undefined;
-  ogImageAlt?: StringFilter | null | undefined;
-  ogImageWidth?: NumberFilter | null | undefined;
-  ogImageHeight?: NumberFilter | null | undefined;
-  heroPreloadImage?: ImageFilter | null | undefined;
-  portfolioImagesRelative?: ImageFilter | null | undefined;
 };
 
-export type HeroFilter = {
-  badge?: StringFilter | null | undefined;
-  headline?: StringFilter | null | undefined;
-  subheading?: StringFilter | null | undefined;
-  availabilityNotice?: StringFilter | null | undefined;
-  calSlug?: StringFilter | null | undefined;
+export type PageFilter = {
+  hero?: PageHeroFilter | null | undefined;
+  services?: PageServicesFilter | null | undefined;
+  portfolio?: PagePortfolioFilter | null | undefined;
+  events?: PageEventsFilter | null | undefined;
+  site?: PageSiteFilter | null | undefined;
 };
 
-export type PortfolioPortfolioListFilter = {
-  id?: StringFilter | null | undefined;
-  image?: ImageFilter | null | undefined;
-  alt?: StringFilter | null | undefined;
-  tag?: StringFilter | null | undefined;
-};
+export type PagePartsFragment = { __typename: 'Page', hero: { __typename: 'PageHero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string } | null, services: { __typename: 'PageServices', sectionTitle: string | null, servicesList: Array<{ __typename: 'PageServicesServicesList', id: string, name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null } | null, portfolio: { __typename: 'PagePortfolio', heroImage: string | null, ogImage: string | null, ogImageAlt: string | null, portfolioList: Array<{ __typename: 'PagePortfolioPortfolioList', id: string, image: string, alt: string, tag: string | null } | null> | null } | null, events: { __typename: 'PageEvents', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
+      | { __typename: 'PageEventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
+      | { __typename: 'PageEventsFormFieldsSelectField', label: string, options: Array<string | null> | null, required: boolean | null }
+      | { __typename: 'PageEventsFormFieldsTextareaField', label: string, placeholder: string | null, required: boolean | null }
+     | null> | null, formOptions: { __typename: 'PageEventsFormOptions', submitButtonText: string | null } | null } | null, site: { __typename: 'PageSite', studioName: string, stylistName: string, title: string | null, description: string | null, keywords: Array<string | null> | null, email: string | null, phone: string | null, instagramHandle: string | null, locationDisplay: string | null, calUsername: string | null, calDefaultSlug: string | null, areaServed: Array<string | null> | null, openingDays: Array<string | null> | null, priceRange: string | null, address: { __typename: 'PageSiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'PageSiteGeo', latitude: number | null, longitude: number | null } | null, openingHours: { __typename: 'PageSiteOpeningHours', opens: string | null, closes: string | null } | null } | null };
 
-export type PortfolioFilter = {
-  portfolioList?: PortfolioPortfolioListFilter | null | undefined;
-};
-
-export type ServicesServicesListFilter = {
-  id?: StringFilter | null | undefined;
-  name?: StringFilter | null | undefined;
-  price?: StringFilter | null | undefined;
-  duration?: StringFilter | null | undefined;
-  description?: StringFilter | null | undefined;
-  deliverables?: StringFilter | null | undefined;
-  calSlug?: StringFilter | null | undefined;
-};
-
-export type ServicesFilter = {
-  sectionTitle?: StringFilter | null | undefined;
-  servicesList?: ServicesServicesListFilter | null | undefined;
-};
-
-export type BooleanFilter = {
-  eq?: boolean | null | undefined;
-  exists?: boolean | null | undefined;
-};
-
-export type EventsFormFieldsInputFieldFilter = {
-  label?: StringFilter | null | undefined;
-  fieldType?: StringFilter | null | undefined;
-  placeholder?: StringFilter | null | undefined;
-  required?: BooleanFilter | null | undefined;
-};
-
-export type EventsFormFieldsSelectFieldFilter = {
-  label?: StringFilter | null | undefined;
-  options?: StringFilter | null | undefined;
-  required?: BooleanFilter | null | undefined;
-};
-
-export type EventsFormFieldsTextareaFieldFilter = {
-  label?: StringFilter | null | undefined;
-  placeholder?: StringFilter | null | undefined;
-  required?: BooleanFilter | null | undefined;
-};
-
-export type EventsFormFieldsFilter = {
-  inputField?: EventsFormFieldsInputFieldFilter | null | undefined;
-  selectField?: EventsFormFieldsSelectFieldFilter | null | undefined;
-  textareaField?: EventsFormFieldsTextareaFieldFilter | null | undefined;
-};
-
-export type EventsFormOptionsFilter = {
-  submitButtonText?: StringFilter | null | undefined;
-};
-
-export type EventsFilter = {
-  title?: StringFilter | null | undefined;
-  description?: StringFilter | null | undefined;
-  showForm?: BooleanFilter | null | undefined;
-  formFields?: EventsFormFieldsFilter | null | undefined;
-  formOptions?: EventsFormOptionsFilter | null | undefined;
-};
-
-export type SitePartsFragment = { __typename: 'Site', studioName: string, stylistName: string, credentials: string | null, title: string | null, browserTitle: string | null, description: string | null, metaDescription: string | null, keywords: Array<string | null> | null, email: string | null, phone: string | null, emailFallback: string | null, phoneFallback: string | null, instagramHandle: string | null, locationDisplay: string | null, availabilityBanner: string | null, logisticsNotice: string | null, calUsername: string | null, calDefaultSlug: string | null, areaServed: Array<string | null> | null, openingDays: Array<string | null> | null, priceRange: string | null, heroHeading: string | null, heroSubtext: string | null, ogImageRelative: string | null, ogImageFallbackRelative: string | null, ogImageAlt: string | null, ogImageWidth: number | null, ogImageHeight: number | null, heroPreloadImage: string | null, portfolioImagesRelative: Array<string | null> | null, address: { __typename: 'SiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'SiteGeo', latitude: number | null, longitude: number | null } | null, openingHours: { __typename: 'SiteOpeningHours', opens: string | null, closes: string | null } | null };
-
-export type HeroPartsFragment = { __typename: 'Hero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string, calSlug: string | null };
-
-export type PortfolioPartsFragment = { __typename: 'Portfolio', portfolioList: Array<{ __typename: 'PortfolioPortfolioList', id: string, image: string, alt: string, tag: string | null } | null> | null };
-
-export type ServicesPartsFragment = { __typename: 'Services', sectionTitle: string | null, servicesList: Array<{ __typename: 'ServicesServicesList', id: string, name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null };
-
-export type EventsPartsFragment = { __typename: 'Events', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
-    | { __typename: 'EventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
-    | { __typename: 'EventsFormFieldsSelectField', label: string, options: Array<string | null> | null, required: boolean | null }
-    | { __typename: 'EventsFormFieldsTextareaField', label: string, placeholder: string | null, required: boolean | null }
-   | null> | null, formOptions: { __typename: 'EventsFormOptions', submitButtonText: string | null } | null };
-
-export type SiteQueryVariables = Exact<{
+export type PageQueryVariables = Exact<{
   relativePath: string;
 }>;
 
 
-export type SiteQuery = { site: { __typename: 'Site', id: string, studioName: string, stylistName: string, credentials: string | null, title: string | null, browserTitle: string | null, description: string | null, metaDescription: string | null, keywords: Array<string | null> | null, email: string | null, phone: string | null, emailFallback: string | null, phoneFallback: string | null, instagramHandle: string | null, locationDisplay: string | null, availabilityBanner: string | null, logisticsNotice: string | null, calUsername: string | null, calDefaultSlug: string | null, areaServed: Array<string | null> | null, openingDays: Array<string | null> | null, priceRange: string | null, heroHeading: string | null, heroSubtext: string | null, ogImageRelative: string | null, ogImageFallbackRelative: string | null, ogImageAlt: string | null, ogImageWidth: number | null, ogImageHeight: number | null, heroPreloadImage: string | null, portfolioImagesRelative: Array<string | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, address: { __typename: 'SiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'SiteGeo', latitude: number | null, longitude: number | null } | null, openingHours: { __typename: 'SiteOpeningHours', opens: string | null, closes: string | null } | null } };
+export type PageQuery = { page: { __typename: 'Page', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'PageHero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string } | null, services: { __typename: 'PageServices', sectionTitle: string | null, servicesList: Array<{ __typename: 'PageServicesServicesList', id: string, name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null } | null, portfolio: { __typename: 'PagePortfolio', heroImage: string | null, ogImage: string | null, ogImageAlt: string | null, portfolioList: Array<{ __typename: 'PagePortfolioPortfolioList', id: string, image: string, alt: string, tag: string | null } | null> | null } | null, events: { __typename: 'PageEvents', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
+        | { __typename: 'PageEventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
+        | { __typename: 'PageEventsFormFieldsSelectField', label: string, options: Array<string | null> | null, required: boolean | null }
+        | { __typename: 'PageEventsFormFieldsTextareaField', label: string, placeholder: string | null, required: boolean | null }
+       | null> | null, formOptions: { __typename: 'PageEventsFormOptions', submitButtonText: string | null } | null } | null, site: { __typename: 'PageSite', studioName: string, stylistName: string, title: string | null, description: string | null, keywords: Array<string | null> | null, email: string | null, phone: string | null, instagramHandle: string | null, locationDisplay: string | null, calUsername: string | null, calDefaultSlug: string | null, areaServed: Array<string | null> | null, openingDays: Array<string | null> | null, priceRange: string | null, address: { __typename: 'PageSiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'PageSiteGeo', latitude: number | null, longitude: number | null } | null, openingHours: { __typename: 'PageSiteOpeningHours', opens: string | null, closes: string | null } | null } | null } };
 
-export type SiteConnectionQueryVariables = Exact<{
+export type PageConnectionQueryVariables = Exact<{
   before?: string | null | undefined;
   after?: string | null | undefined;
   first?: number | null | undefined;
   last?: number | null | undefined;
   sort?: string | null | undefined;
-  filter?: SiteFilter | null | undefined;
+  filter?: PageFilter | null | undefined;
 }>;
 
 
-export type SiteConnectionQuery = { siteConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Site', id: string, studioName: string, stylistName: string, credentials: string | null, title: string | null, browserTitle: string | null, description: string | null, metaDescription: string | null, keywords: Array<string | null> | null, email: string | null, phone: string | null, emailFallback: string | null, phoneFallback: string | null, instagramHandle: string | null, locationDisplay: string | null, availabilityBanner: string | null, logisticsNotice: string | null, calUsername: string | null, calDefaultSlug: string | null, areaServed: Array<string | null> | null, openingDays: Array<string | null> | null, priceRange: string | null, heroHeading: string | null, heroSubtext: string | null, ogImageRelative: string | null, ogImageFallbackRelative: string | null, ogImageAlt: string | null, ogImageWidth: number | null, ogImageHeight: number | null, heroPreloadImage: string | null, portfolioImagesRelative: Array<string | null> | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, address: { __typename: 'SiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'SiteGeo', latitude: number | null, longitude: number | null } | null, openingHours: { __typename: 'SiteOpeningHours', opens: string | null, closes: string | null } | null } | null } | null> | null } };
+export type PageConnectionQuery = { pageConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Page', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'PageHero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string } | null, services: { __typename: 'PageServices', sectionTitle: string | null, servicesList: Array<{ __typename: 'PageServicesServicesList', id: string, name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null } | null, portfolio: { __typename: 'PagePortfolio', heroImage: string | null, ogImage: string | null, ogImageAlt: string | null, portfolioList: Array<{ __typename: 'PagePortfolioPortfolioList', id: string, image: string, alt: string, tag: string | null } | null> | null } | null, events: { __typename: 'PageEvents', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
+            | { __typename: 'PageEventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
+            | { __typename: 'PageEventsFormFieldsSelectField', label: string, options: Array<string | null> | null, required: boolean | null }
+            | { __typename: 'PageEventsFormFieldsTextareaField', label: string, placeholder: string | null, required: boolean | null }
+           | null> | null, formOptions: { __typename: 'PageEventsFormOptions', submitButtonText: string | null } | null } | null, site: { __typename: 'PageSite', studioName: string, stylistName: string, title: string | null, description: string | null, keywords: Array<string | null> | null, email: string | null, phone: string | null, instagramHandle: string | null, locationDisplay: string | null, calUsername: string | null, calDefaultSlug: string | null, areaServed: Array<string | null> | null, openingDays: Array<string | null> | null, priceRange: string | null, address: { __typename: 'PageSiteAddress', locality: string | null, region: string | null, country: string | null } | null, geo: { __typename: 'PageSiteGeo', latitude: number | null, longitude: number | null } | null, openingHours: { __typename: 'PageSiteOpeningHours', opens: string | null, closes: string | null } | null } | null } | null } | null> | null } };
 
-export type HeroQueryVariables = Exact<{
-  relativePath: string;
-}>;
-
-
-export type HeroQuery = { hero: { __typename: 'Hero', id: string, badge: string | null, headline: string, subheading: string | null, availabilityNotice: string, calSlug: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
-
-export type HeroConnectionQueryVariables = Exact<{
-  before?: string | null | undefined;
-  after?: string | null | undefined;
-  first?: number | null | undefined;
-  last?: number | null | undefined;
-  sort?: string | null | undefined;
-  filter?: HeroFilter | null | undefined;
-}>;
-
-
-export type HeroConnectionQuery = { heroConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Hero', id: string, badge: string | null, headline: string, subheading: string | null, availabilityNotice: string, calSlug: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
-
-export type PortfolioQueryVariables = Exact<{
-  relativePath: string;
-}>;
-
-
-export type PortfolioQuery = { portfolio: { __typename: 'Portfolio', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, portfolioList: Array<{ __typename: 'PortfolioPortfolioList', id: string, image: string, alt: string, tag: string | null } | null> | null } };
-
-export type PortfolioConnectionQueryVariables = Exact<{
-  before?: string | null | undefined;
-  after?: string | null | undefined;
-  first?: number | null | undefined;
-  last?: number | null | undefined;
-  sort?: string | null | undefined;
-  filter?: PortfolioFilter | null | undefined;
-}>;
-
-
-export type PortfolioConnectionQuery = { portfolioConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Portfolio', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, portfolioList: Array<{ __typename: 'PortfolioPortfolioList', id: string, image: string, alt: string, tag: string | null } | null> | null } | null } | null> | null } };
-
-export type ServicesQueryVariables = Exact<{
-  relativePath: string;
-}>;
-
-
-export type ServicesQuery = { services: { __typename: 'Services', id: string, sectionTitle: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, servicesList: Array<{ __typename: 'ServicesServicesList', id: string, name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null } };
-
-export type ServicesConnectionQueryVariables = Exact<{
-  before?: string | null | undefined;
-  after?: string | null | undefined;
-  first?: number | null | undefined;
-  last?: number | null | undefined;
-  sort?: string | null | undefined;
-  filter?: ServicesFilter | null | undefined;
-}>;
-
-
-export type ServicesConnectionQuery = { servicesConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Services', id: string, sectionTitle: string | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, servicesList: Array<{ __typename: 'ServicesServicesList', id: string, name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, calSlug: string | null } | null> | null } | null } | null> | null } };
-
-export type EventsQueryVariables = Exact<{
-  relativePath: string;
-}>;
-
-
-export type EventsQuery = { events: { __typename: 'Events', id: string, title: string | null, description: string | null, showForm: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, formFields: Array<
-      | { __typename: 'EventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
-      | { __typename: 'EventsFormFieldsSelectField', label: string, options: Array<string | null> | null, required: boolean | null }
-      | { __typename: 'EventsFormFieldsTextareaField', label: string, placeholder: string | null, required: boolean | null }
-     | null> | null, formOptions: { __typename: 'EventsFormOptions', submitButtonText: string | null } | null } };
-
-export type EventsConnectionQueryVariables = Exact<{
-  before?: string | null | undefined;
-  after?: string | null | undefined;
-  first?: number | null | undefined;
-  last?: number | null | undefined;
-  sort?: string | null | undefined;
-  filter?: EventsFilter | null | undefined;
-}>;
-
-
-export type EventsConnectionQuery = { eventsConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Events', id: string, title: string | null, description: string | null, showForm: boolean | null, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, formFields: Array<
-          | { __typename: 'EventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
-          | { __typename: 'EventsFormFieldsSelectField', label: string, options: Array<string | null> | null, required: boolean | null }
-          | { __typename: 'EventsFormFieldsTextareaField', label: string, placeholder: string | null, required: boolean | null }
-         | null> | null, formOptions: { __typename: 'EventsFormOptions', submitButtonText: string | null } | null } | null } | null> | null } };
-
-export const SitePartsFragmentDoc = gql`
-    fragment SiteParts on Site {
+export const PagePartsFragmentDoc = gql`
+    fragment PageParts on Page {
   __typename
-  studioName
-  stylistName
-  credentials
-  title
-  browserTitle
-  description
-  metaDescription
-  keywords
-  email
-  phone
-  emailFallback
-  phoneFallback
-  instagramHandle
-  locationDisplay
-  availabilityBanner
-  logisticsNotice
-  calUsername
-  calDefaultSlug
-  address {
+  hero {
     __typename
-    locality
-    region
-    country
+    badge
+    headline
+    subheading
+    availabilityNotice
   }
-  geo {
+  services {
     __typename
-    latitude
-    longitude
+    sectionTitle
+    servicesList {
+      __typename
+      id
+      name
+      price
+      duration
+      description
+      deliverables
+      calSlug
+    }
   }
-  areaServed
-  openingDays
-  openingHours {
+  portfolio {
     __typename
-    opens
-    closes
+    heroImage
+    ogImage
+    ogImageAlt
+    portfolioList {
+      __typename
+      id
+      image
+      alt
+      tag
+    }
   }
-  priceRange
-  heroHeading
-  heroSubtext
-  ogImageRelative
-  ogImageFallbackRelative
-  ogImageAlt
-  ogImageWidth
-  ogImageHeight
-  heroPreloadImage
-  portfolioImagesRelative
-}
-    `;
-export const HeroPartsFragmentDoc = gql`
-    fragment HeroParts on Hero {
-  __typename
-  badge
-  headline
-  subheading
-  availabilityNotice
-  calSlug
-}
-    `;
-export const PortfolioPartsFragmentDoc = gql`
-    fragment PortfolioParts on Portfolio {
-  __typename
-  portfolioList {
+  events {
     __typename
-    id
-    image
-    alt
-    tag
-  }
-}
-    `;
-export const ServicesPartsFragmentDoc = gql`
-    fragment ServicesParts on Services {
-  __typename
-  sectionTitle
-  servicesList {
-    __typename
-    id
-    name
-    price
-    duration
+    title
     description
-    deliverables
-    calSlug
+    showForm
+    formFields {
+      __typename
+      ... on PageEventsFormFieldsInputField {
+        label
+        fieldType
+        placeholder
+        required
+      }
+      ... on PageEventsFormFieldsSelectField {
+        label
+        options
+        required
+      }
+      ... on PageEventsFormFieldsTextareaField {
+        label
+        placeholder
+        required
+      }
+    }
+    formOptions {
+      __typename
+      submitButtonText
+    }
+  }
+  site {
+    __typename
+    studioName
+    stylistName
+    title
+    description
+    keywords
+    email
+    phone
+    instagramHandle
+    locationDisplay
+    calUsername
+    calDefaultSlug
+    address {
+      __typename
+      locality
+      region
+      country
+    }
+    geo {
+      __typename
+      latitude
+      longitude
+    }
+    areaServed
+    openingDays
+    openingHours {
+      __typename
+      opens
+      closes
+    }
+    priceRange
   }
 }
     `;
-export const EventsPartsFragmentDoc = gql`
-    fragment EventsParts on Events {
-  __typename
-  title
-  description
-  showForm
-  formFields {
-    __typename
-    ... on EventsFormFieldsInputField {
-      label
-      fieldType
-      placeholder
-      required
-    }
-    ... on EventsFormFieldsSelectField {
-      label
-      options
-      required
-    }
-    ... on EventsFormFieldsTextareaField {
-      label
-      placeholder
-      required
-    }
-  }
-  formOptions {
-    __typename
-    submitButtonText
-  }
-}
-    `;
-export const SiteDocument = gql`
-    query site($relativePath: String!) {
-  site(relativePath: $relativePath) {
+export const PageDocument = gql`
+    query page($relativePath: String!) {
+  page(relativePath: $relativePath) {
     ... on Document {
       _sys {
         filename
@@ -1260,13 +934,13 @@ export const SiteDocument = gql`
       }
       id
     }
-    ...SiteParts
+    ...PageParts
   }
 }
-    ${SitePartsFragmentDoc}`;
-export const SiteConnectionDocument = gql`
-    query siteConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: SiteFilter) {
-  siteConnection(
+    ${PagePartsFragmentDoc}`;
+export const PageConnectionDocument = gql`
+    query pageConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PageFilter) {
+  pageConnection(
     before: $before
     after: $after
     first: $first
@@ -1296,272 +970,20 @@ export const SiteConnectionDocument = gql`
           }
           id
         }
-        ...SiteParts
+        ...PageParts
       }
     }
   }
 }
-    ${SitePartsFragmentDoc}`;
-export const HeroDocument = gql`
-    query hero($relativePath: String!) {
-  hero(relativePath: $relativePath) {
-    ... on Document {
-      _sys {
-        filename
-        basename
-        hasReferences
-        breadcrumbs
-        path
-        relativePath
-        extension
-      }
-      id
-    }
-    ...HeroParts
-  }
-}
-    ${HeroPartsFragmentDoc}`;
-export const HeroConnectionDocument = gql`
-    query heroConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: HeroFilter) {
-  heroConnection(
-    before: $before
-    after: $after
-    first: $first
-    last: $last
-    sort: $sort
-    filter: $filter
-  ) {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            hasReferences
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
-        }
-        ...HeroParts
-      }
-    }
-  }
-}
-    ${HeroPartsFragmentDoc}`;
-export const PortfolioDocument = gql`
-    query portfolio($relativePath: String!) {
-  portfolio(relativePath: $relativePath) {
-    ... on Document {
-      _sys {
-        filename
-        basename
-        hasReferences
-        breadcrumbs
-        path
-        relativePath
-        extension
-      }
-      id
-    }
-    ...PortfolioParts
-  }
-}
-    ${PortfolioPartsFragmentDoc}`;
-export const PortfolioConnectionDocument = gql`
-    query portfolioConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: PortfolioFilter) {
-  portfolioConnection(
-    before: $before
-    after: $after
-    first: $first
-    last: $last
-    sort: $sort
-    filter: $filter
-  ) {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            hasReferences
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
-        }
-        ...PortfolioParts
-      }
-    }
-  }
-}
-    ${PortfolioPartsFragmentDoc}`;
-export const ServicesDocument = gql`
-    query services($relativePath: String!) {
-  services(relativePath: $relativePath) {
-    ... on Document {
-      _sys {
-        filename
-        basename
-        hasReferences
-        breadcrumbs
-        path
-        relativePath
-        extension
-      }
-      id
-    }
-    ...ServicesParts
-  }
-}
-    ${ServicesPartsFragmentDoc}`;
-export const ServicesConnectionDocument = gql`
-    query servicesConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: ServicesFilter) {
-  servicesConnection(
-    before: $before
-    after: $after
-    first: $first
-    last: $last
-    sort: $sort
-    filter: $filter
-  ) {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            hasReferences
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
-        }
-        ...ServicesParts
-      }
-    }
-  }
-}
-    ${ServicesPartsFragmentDoc}`;
-export const EventsDocument = gql`
-    query events($relativePath: String!) {
-  events(relativePath: $relativePath) {
-    ... on Document {
-      _sys {
-        filename
-        basename
-        hasReferences
-        breadcrumbs
-        path
-        relativePath
-        extension
-      }
-      id
-    }
-    ...EventsParts
-  }
-}
-    ${EventsPartsFragmentDoc}`;
-export const EventsConnectionDocument = gql`
-    query eventsConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: EventsFilter) {
-  eventsConnection(
-    before: $before
-    after: $after
-    first: $first
-    last: $last
-    sort: $sort
-    filter: $filter
-  ) {
-    pageInfo {
-      hasPreviousPage
-      hasNextPage
-      startCursor
-      endCursor
-    }
-    totalCount
-    edges {
-      cursor
-      node {
-        ... on Document {
-          _sys {
-            filename
-            basename
-            hasReferences
-            breadcrumbs
-            path
-            relativePath
-            extension
-          }
-          id
-        }
-        ...EventsParts
-      }
-    }
-  }
-}
-    ${EventsPartsFragmentDoc}`;
+    ${PagePartsFragmentDoc}`;
 export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
   export function getSdk<C>(requester: Requester<C>) {
     return {
-      site(variables: SiteQueryVariables, options?: C): Promise<{data: SiteQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteQueryVariables, query: string}> {
-        return requester<{data: SiteQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteQueryVariables, query: string}, SiteQueryVariables>(SiteDocument, variables, options);
+      page(variables: PageQueryVariables, options?: C): Promise<{data: PageQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PageQueryVariables, query: string}> {
+        return requester<{data: PageQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PageQueryVariables, query: string}, PageQueryVariables>(PageDocument, variables, options);
       },
-    siteConnection(variables?: SiteConnectionQueryVariables, options?: C): Promise<{data: SiteConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteConnectionQueryVariables, query: string}> {
-        return requester<{data: SiteConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteConnectionQueryVariables, query: string}, SiteConnectionQueryVariables>(SiteConnectionDocument, variables, options);
-      },
-    hero(variables: HeroQueryVariables, options?: C): Promise<{data: HeroQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: HeroQueryVariables, query: string}> {
-        return requester<{data: HeroQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: HeroQueryVariables, query: string}, HeroQueryVariables>(HeroDocument, variables, options);
-      },
-    heroConnection(variables?: HeroConnectionQueryVariables, options?: C): Promise<{data: HeroConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: HeroConnectionQueryVariables, query: string}> {
-        return requester<{data: HeroConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: HeroConnectionQueryVariables, query: string}, HeroConnectionQueryVariables>(HeroConnectionDocument, variables, options);
-      },
-    portfolio(variables: PortfolioQueryVariables, options?: C): Promise<{data: PortfolioQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioQueryVariables, query: string}> {
-        return requester<{data: PortfolioQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioQueryVariables, query: string}, PortfolioQueryVariables>(PortfolioDocument, variables, options);
-      },
-    portfolioConnection(variables?: PortfolioConnectionQueryVariables, options?: C): Promise<{data: PortfolioConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioConnectionQueryVariables, query: string}> {
-        return requester<{data: PortfolioConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PortfolioConnectionQueryVariables, query: string}, PortfolioConnectionQueryVariables>(PortfolioConnectionDocument, variables, options);
-      },
-    services(variables: ServicesQueryVariables, options?: C): Promise<{data: ServicesQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ServicesQueryVariables, query: string}> {
-        return requester<{data: ServicesQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ServicesQueryVariables, query: string}, ServicesQueryVariables>(ServicesDocument, variables, options);
-      },
-    servicesConnection(variables?: ServicesConnectionQueryVariables, options?: C): Promise<{data: ServicesConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ServicesConnectionQueryVariables, query: string}> {
-        return requester<{data: ServicesConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: ServicesConnectionQueryVariables, query: string}, ServicesConnectionQueryVariables>(ServicesConnectionDocument, variables, options);
-      },
-    events(variables: EventsQueryVariables, options?: C): Promise<{data: EventsQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: EventsQueryVariables, query: string}> {
-        return requester<{data: EventsQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: EventsQueryVariables, query: string}, EventsQueryVariables>(EventsDocument, variables, options);
-      },
-    eventsConnection(variables?: EventsConnectionQueryVariables, options?: C): Promise<{data: EventsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: EventsConnectionQueryVariables, query: string}> {
-        return requester<{data: EventsConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: EventsConnectionQueryVariables, query: string}, EventsConnectionQueryVariables>(EventsConnectionDocument, variables, options);
+    pageConnection(variables?: PageConnectionQueryVariables, options?: C): Promise<{data: PageConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PageConnectionQueryVariables, query: string}> {
+        return requester<{data: PageConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: PageConnectionQueryVariables, query: string}, PageConnectionQueryVariables>(PageConnectionDocument, variables, options);
       }
     };
   }

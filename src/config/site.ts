@@ -5,28 +5,24 @@
  * canonical URLs, scheduling details, and dynamic Schema.org generation.
  */
 
-import siteContent from "../content/site.json";
-import heroData from "../content/hero.json";
-import eventsData from "../content/events.json";
-import servicesData from "../content/services.json";
-import portfolioData from "../content/portfolio.json";
+import pageData from "../content/page.json";
 import type {
   SiteContent,
   HeroContent,
   EventsContent,
   ServiceItem,
   PortfolioItem,
+  PageContent,
 } from "../types/content";
 
-const SITE_CONTENT: SiteContent = siteContent as SiteContent;
-export const HERO_CONTENT: HeroContent = heroData as HeroContent;
-export const EVENTS_CONTENT: EventsContent = eventsData as EventsContent;
-export const SERVICES_CONTENT: ServiceItem[] =
-  (servicesData as unknown as { servicesList: ServiceItem[] }).servicesList ||
-  (servicesData as unknown as ServiceItem[]);
+const rawPage = pageData as PageContent;
+
+const SITE_CONTENT: SiteContent = rawPage.site;
+export const HERO_CONTENT: HeroContent = rawPage.hero;
+export const EVENTS_CONTENT: EventsContent = rawPage.events;
+export const SERVICES_CONTENT: ServiceItem[] = rawPage.services.servicesList;
 export const PORTFOLIO_CONTENT: PortfolioItem[] =
-  (portfolioData as unknown as { portfolioList: PortfolioItem[] })
-    .portfolioList || (portfolioData as unknown as PortfolioItem[]);
+  rawPage.portfolio.portfolioList;
 
 /**
  * Resolve deployment canonical URL for Cloudflare Pages and local dev.
@@ -63,8 +59,8 @@ export const SITE_CONFIG = {
   studioName: SITE_CONTENT.studioName,
   stylistName: SITE_CONTENT.stylistName,
   credentials: HERO_CONTENT.badge,
-  title: SITE_CONTENT.browserTitle || SITE_CONTENT.title,
-  description: SITE_CONTENT.metaDescription || SITE_CONTENT.description,
+  title: SITE_CONTENT.title,
+  description: SITE_CONTENT.description,
   keywords: SITE_CONTENT.keywords,
 
   // Contact Info
@@ -86,7 +82,7 @@ export const SITE_CONFIG = {
     "",
   locationDisplay: SITE_CONTENT.locationDisplay,
   logisticsNotice:
-    SITE_CONTENT.availabilityBanner ||
+    HERO_CONTENT.availabilityNotice ||
     "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
 
   // Address & Hours
@@ -101,20 +97,16 @@ export const SITE_CONFIG = {
   heroHeading: HERO_CONTENT.headline,
   heroSubtext: HERO_CONTENT.subheading,
 
-  // Media
-  ogImage: `${cleanSiteUrl}/assets/portfolio-4.webp`,
-  ogImageFallback: `${cleanSiteUrl}/assets/og-cover.jpg`,
-  ogImageAlt: SITE_CONTENT.title,
+  // Media (Configured in Portfolio section)
+  heroImage: rawPage.portfolio.heroImage || "/assets/portfolio-4.webp",
+  heroPreloadImage: rawPage.portfolio.heroImage || "/assets/portfolio-4.webp",
+  ogImage: `${cleanSiteUrl}${rawPage.portfolio.ogImage || "/assets/portfolio-4.webp"}`,
+  ogImageAlt: rawPage.portfolio.ogImageAlt || SITE_CONTENT.title,
   ogImageWidth: 620,
   ogImageHeight: 758,
-  heroPreloadImage: "/assets/portfolio-4.webp",
-  portfolioImages: [
-    `${cleanSiteUrl}/assets/portfolio-4.webp`,
-    `${cleanSiteUrl}/assets/portfolio-1.webp`,
-    `${cleanSiteUrl}/assets/portfolio-2.webp`,
-    `${cleanSiteUrl}/assets/portfolio-3.webp`,
-    `${cleanSiteUrl}/assets/portfolio-5.webp`,
-  ],
+  portfolioImages: rawPage.portfolio.portfolioList.map(
+    (p) => `${cleanSiteUrl}${p.image}`
+  ),
 };
 
 export type SiteConfig = typeof SITE_CONFIG;
@@ -124,7 +116,8 @@ export type SiteConfig = typeof SITE_CONFIG;
  */
 export function generateSiteSchema(
   config: Partial<SiteContent> & Partial<SiteConfig> = SITE_CONFIG,
-  services: ServiceItem[] = SERVICES_CONTENT
+  services: ServiceItem[] = SERVICES_CONTENT,
+  portfolioList: PortfolioItem[] = PORTFOLIO_CONTENT
 ) {
   const merged = {
     ...SITE_CONFIG,
@@ -206,19 +199,25 @@ export function generateSiteSchema(
     },
   } as unknown as (typeof itemListElement)[0]);
 
+  const schemaImages = (portfolioList || PORTFOLIO_CONTENT).map(
+    (p) => `${baseUrl}${p.image}`
+  );
+
   return {
     "@context": "https://schema.org",
     "@type": "HairSalon",
     name: merged.studioName || SITE_CONFIG.studioName,
-    image: [
-      `${baseUrl}/assets/portfolio-4.webp`,
-      `${baseUrl}/assets/portfolio-1.webp`,
-      `${baseUrl}/assets/portfolio-2.webp`,
-      `${baseUrl}/assets/portfolio-3.webp`,
-      `${baseUrl}/assets/portfolio-5.webp`,
-    ],
-    description:
-      merged.metaDescription || merged.description || SITE_CONFIG.description,
+    image:
+      schemaImages.length > 0
+        ? schemaImages
+        : [
+            `${baseUrl}/assets/portfolio-4.webp`,
+            `${baseUrl}/assets/portfolio-1.webp`,
+            `${baseUrl}/assets/portfolio-2.webp`,
+            `${baseUrl}/assets/portfolio-3.webp`,
+            `${baseUrl}/assets/portfolio-5.webp`,
+          ],
+    description: merged.description || SITE_CONFIG.description,
     telephone: telephoneSchema,
     email: merged.email || SITE_CONFIG.email,
     url: merged.canonicalUrl || SITE_CONFIG.canonicalUrl,

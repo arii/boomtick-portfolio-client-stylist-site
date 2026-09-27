@@ -1,114 +1,99 @@
-fragment SiteParts on Site {
+fragment PageParts on Page {
   __typename
-  studioName
-  stylistName
-  credentials
-  title
-  browserTitle
-  description
-  metaDescription
-  keywords
-  email
-  phone
-  emailFallback
-  phoneFallback
-  instagramHandle
-  locationDisplay
-  availabilityBanner
-  logisticsNotice
-  calUsername
-  calDefaultSlug
-  address {
+  hero {
     __typename
-    locality
-    region
-    country
+    badge
+    headline
+    subheading
+    availabilityNotice
   }
-  geo {
+  services {
     __typename
-    latitude
-    longitude
+    sectionTitle
+    servicesList {
+      __typename
+      id
+      name
+      price
+      duration
+      description
+      deliverables
+      calSlug
+    }
   }
-  areaServed
-  openingDays
-  openingHours {
+  portfolio {
     __typename
-    opens
-    closes
+    heroImage
+    ogImage
+    ogImageAlt
+    portfolioList {
+      __typename
+      id
+      image
+      alt
+      tag
+    }
   }
-  priceRange
-  heroHeading
-  heroSubtext
-  ogImageRelative
-  ogImageFallbackRelative
-  ogImageAlt
-  ogImageWidth
-  ogImageHeight
-  heroPreloadImage
-  portfolioImagesRelative
-}
-
-fragment HeroParts on Hero {
-  __typename
-  badge
-  headline
-  subheading
-  availabilityNotice
-  calSlug
-}
-
-fragment PortfolioParts on Portfolio {
-  __typename
-  portfolioList {
+  events {
     __typename
-    id
-    image
-    alt
-    tag
-  }
-}
-
-fragment ServicesParts on Services {
-  __typename
-  sectionTitle
-  servicesList {
-    __typename
-    id
-    name
-    price
-    duration
+    title
     description
-    deliverables
-    calSlug
-  }
-}
-
-fragment EventsParts on Events {
-  __typename
-  title
-  description
-  showForm
-  formFields {
-    __typename
-    ... on EventsFormFieldsInputField {
-      label
-      fieldType
-      placeholder
-      required
+    showForm
+    formFields {
+      __typename
+      ... on PageEventsFormFieldsInputField {
+        label
+        fieldType
+        placeholder
+        required
+      }
+      ... on PageEventsFormFieldsSelectField {
+        label
+        options
+        required
+      }
+      ... on PageEventsFormFieldsTextareaField {
+        label
+        placeholder
+        required
+      }
     }
-    ... on EventsFormFieldsSelectField {
-      label
-      options
-      required
-    }
-    ... on EventsFormFieldsTextareaField {
-      label
-      placeholder
-      required
+    formOptions {
+      __typename
+      submitButtonText
     }
   }
-  formOptions {
+  site {
     __typename
-    submitButtonText
+    studioName
+    stylistName
+    title
+    description
+    keywords
+    email
+    phone
+    instagramHandle
+    locationDisplay
+    calUsername
+    calDefaultSlug
+    address {
+      __typename
+      locality
+      region
+      country
+    }
+    geo {
+      __typename
+      latitude
+      longitude
+    }
+    areaServed
+    openingDays
+    openingHours {
+      __typename
+      opens
+      closes
+    }
+    priceRange
   }
 }

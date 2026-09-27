@@ -3,13 +3,20 @@ import {
   generateSiteSchema,
   SITE_CONFIG,
   SERVICES_CONTENT,
+  PORTFOLIO_CONTENT,
   type SiteConfig,
 } from "../config/site";
-import type { ServiceItem, SiteContent } from "../types/content";
+import type {
+  ServiceItem,
+  SiteContent,
+  PortfolioContent,
+  PortfolioItem,
+} from "../types/content";
 
 interface SchemaOrgProps {
   siteConfig?: Partial<SiteContent> & Partial<SiteConfig>;
   services?: ServiceItem[];
+  portfolio?: PortfolioContent | PortfolioItem[];
 }
 
 /**
@@ -18,6 +25,7 @@ interface SchemaOrgProps {
 export const SchemaOrg: React.FC<SchemaOrgProps> = ({
   siteConfig,
   services = SERVICES_CONTENT,
+  portfolio,
 }) => {
   useEffect(() => {
     let script = document.getElementById(
@@ -30,14 +38,22 @@ export const SchemaOrg: React.FC<SchemaOrgProps> = ({
       document.head.appendChild(script);
     }
     const mergedConfig = { ...SITE_CONFIG, ...siteConfig };
-    const schemaData = generateSiteSchema(mergedConfig, services);
+    const portfolioList: PortfolioItem[] = Array.isArray(portfolio)
+      ? portfolio
+      : portfolio?.portfolioList || PORTFOLIO_CONTENT;
+
+    const schemaData = generateSiteSchema(
+      mergedConfig,
+      services,
+      portfolioList
+    );
     script.textContent = JSON.stringify(schemaData, null, 2);
 
-    const ogImageSrc =
-      mergedConfig.ogImage ||
-      (mergedConfig.ogImageRelative
-        ? `${(mergedConfig.canonicalUrl || SITE_CONFIG.canonicalUrl).replace(/\/+$/, "")}${mergedConfig.ogImageRelative}`
-        : SITE_CONFIG.ogImage);
+    const ogImageRelative =
+      (!Array.isArray(portfolio) && portfolio?.ogImage) || mergedConfig.ogImage;
+    const ogImageSrc = ogImageRelative?.startsWith("http")
+      ? ogImageRelative
+      : `${(mergedConfig.canonicalUrl || SITE_CONFIG.canonicalUrl).replace(/\/+$/, "")}${ogImageRelative}`;
 
     if (ogImageSrc) {
       const ogImg = document.querySelector('meta[property="og:image"]');
@@ -46,7 +62,7 @@ export const SchemaOrg: React.FC<SchemaOrgProps> = ({
       if (twImg) twImg.setAttribute("content", ogImageSrc);
     }
 
-    const title = mergedConfig.browserTitle || mergedConfig.title;
+    const title = mergedConfig.title;
     if (title) {
       document.title = title;
       const ogTitle = document.querySelector('meta[property="og:title"]');
@@ -55,8 +71,7 @@ export const SchemaOrg: React.FC<SchemaOrgProps> = ({
       if (twTitle) twTitle.setAttribute("content", title);
     }
 
-    const description =
-      mergedConfig.metaDescription || mergedConfig.description;
+    const description = mergedConfig.description;
     if (description) {
       const metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) metaDesc.setAttribute("content", description);
@@ -65,7 +80,7 @@ export const SchemaOrg: React.FC<SchemaOrgProps> = ({
       const twDesc = document.querySelector('meta[name="twitter:description"]');
       if (twDesc) twDesc.setAttribute("content", description);
     }
-  }, [siteConfig, services]);
+  }, [siteConfig, services, portfolio]);
 
   return null;
 };

@@ -98,7 +98,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
   const [simulatedHeadline, setSimulatedHeadline] = useState("");
   const [auditConsoleLogs, setAuditConsoleLogs] = useState<string[]>([
     `[${new Date().toLocaleTimeString()}] TinaCMS Schema Engine initialized.`,
-    `[${new Date().toLocaleTimeString()}] Loaded 5 collections from tina/config.ts.`,
+    `[${new Date().toLocaleTimeString()}] Loaded unified 'page' collection from tina/config.ts.`,
     `[${new Date().toLocaleTimeString()}] Ready for live schema validation and content audits.`,
   ]);
   const [isAuditing, setIsAuditing] = useState(false);
@@ -462,7 +462,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
             <div className="p-3 bg-stone-900/80 rounded-lg border border-stone-800 text-left space-y-1">
               <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-semibold">
                 <CheckCircle2 className="w-3.5 h-3.5" />
-                <span>Tina Schema Verified: 5 Collections</span>
+                <span>Tina Schema Verified: Unified Page Collection</span>
               </div>
               <p className="text-[11px] text-stone-400">
                 Directly authenticated via TinaCMS Git & Auth server layer.
@@ -829,23 +829,13 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                 )}
               </div>
 
-              {/* Cal.com Booking Event Slug */}
-              <div className="space-y-1">
-                <label className="text-[11px] font-bold text-stone-400 uppercase tracking-wider flex items-center justify-between">
-                  <span>Cal.com Event Slug</span>
-                  <span className="text-[9px] text-stone-500 lowercase font-mono">
-                    string
-                  </span>
-                </label>
-                <input
-                  type="text"
-                  value={heroContent.calSlug || "april-demo"}
-                  onChange={(e) =>
-                    setHeroContent({ ...heroContent, calSlug: e.target.value })
-                  }
-                  className="w-full bg-stone-900 border border-stone-800 rounded-lg px-3.5 py-2 text-sm text-stone-100 focus:outline-none focus:border-orange-500"
-                  placeholder="april-demo"
-                />
+              {/* Booking notice note referencing Site Settings */}
+              <div className="p-2.5 bg-stone-900/60 rounded-lg border border-stone-850 text-[11px] text-stone-400">
+                <span className="text-orange-400 font-semibold">
+                  Cal.com Scheduling:
+                </span>{" "}
+                Hero booking button automatically uses the default Cal.com slug
+                configured in Site Settings.
               </div>
 
               {/* Single Social Field: Instagram Handle */}
@@ -1662,7 +1652,7 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                     <h3 className="font-bold text-sm">
                       {errorCount > 0
                         ? `${errorCount} Active Schema Violation${errorCount > 1 ? "s" : ""}`
-                        : "All 5 Tina Collections Pass Schema Validation"}
+                        : "Unified Page Collection Passes Schema Validation"}
                     </h3>
                     <p className="text-xs opacity-80 mt-1 leading-relaxed">
                       {errorCount > 0
@@ -1734,46 +1724,16 @@ export const AdminMockup: React.FC<AdminMockupProps> = ({
                 <div className="border border-stone-800 rounded-xl overflow-hidden text-xs">
                   <div className="grid grid-cols-12 bg-stone-900 p-2.5 font-semibold text-stone-400 border-b border-stone-800 text-[10px] uppercase">
                     <span className="col-span-3">Collection</span>
-                    <span className="col-span-5">Path & Match</span>
-                    <span className="col-span-2">Fields</span>
+                    <span className="col-span-5">Path & Schema Model</span>
+                    <span className="col-span-2">Section Objects</span>
                     <span className="col-span-2 text-right">Status</span>
                   </div>
                   {[
                     {
-                      name: "hero",
-                      path: "src/content/hero.json",
-                      fields: "5 fields",
-                      valid: !schemaErrors.some((e) => e.collection === "hero"),
-                    },
-                    {
-                      name: "events",
-                      path: "src/content/events.json",
-                      fields: "2 fields",
-                      valid: !schemaErrors.some(
-                        (e) => e.collection === "events"
-                      ),
-                    },
-                    {
-                      name: "services",
-                      path: "src/content/services.json",
-                      fields: "7 fields",
-                      valid: !schemaErrors.some(
-                        (e) => e.collection === "services"
-                      ),
-                    },
-                    {
-                      name: "portfolio",
-                      path: "src/content/portfolio.json",
-                      fields: "4 fields",
-                      valid: !schemaErrors.some(
-                        (e) => e.collection === "portfolio"
-                      ),
-                    },
-                    {
-                      name: "site",
-                      path: "src/content/site.json",
-                      fields: "9 fields",
-                      valid: !schemaErrors.some((e) => e.collection === "site"),
+                      name: "page (Home Page)",
+                      path: "src/content/page.json",
+                      fields: "5 section objects",
+                      valid: schemaErrors.length === 0,
                     },
                   ].map((col, idx) => (
                     <div

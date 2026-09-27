@@ -1,0 +1,181 @@
+{
+  "hero": {
+    "badge": "Licensed Professional • 15 Years Experience",
+    "headline": "Curly hair cuts & authentic vintage styling.",
+    "subheading": "San Francisco stylist specializing in curly cuts and classic vintage hair, with custom on-location styling available for events and productions.",
+    "availabilityNotice": "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays."
+  },
+  "services": {
+    "sectionTitle": "Services & Pricing",
+    "servicesList": [
+      {
+        "id": "curly-cut-finish",
+        "name": "Dry Curly Cut & Styled Finish",
+        "price": "$175",
+        "duration": "2 hours",
+        "description": "Custom dry-cutting tailored to your unique curl pattern and density. Includes detox wash, deep conditioning, and step-by-step styling coaching.",
+        "deliverables": [
+          "In-depth texture and lifestyle consultation",
+          "Dry precision curl-by-curl shaping",
+          "Botanical detox wash & deep hydration treatment",
+          "Diffused styling and home maintenance coaching"
+        ],
+        "calSlug": "april-demo"
+      },
+      {
+        "id": "vintage-set-updo",
+        "name": "Vintage Styling & Classic Updos",
+        "price": "$145",
+        "duration": "90 mins",
+        "description": "Authentic victory rolls, retro waves, and pin-up styling crafted for longevity, events, swing dancing, and photo shoots.",
+        "deliverables": [
+          "Period-accurate styling consultation",
+          "Precision pin placement and structural setting",
+          "Longevity finish designed for all-day wear",
+          "Accessories and veil placement if needed"
+        ],
+        "calSlug": "april-demo"
+      }
+    ]
+  },
+  "portfolio": {
+    "heroImage": "/assets/portfolio-4.webp",
+    "ogImage": "/assets/portfolio-4.webp",
+    "ogImageAlt": "Hair by April - Vintage Hair Styling & Curly Hair Specialist in San Francisco",
+    "portfolioList": [
+      {
+        "id": "vintage-victory-rolls",
+        "image": "/assets/portfolio-1.webp",
+        "alt": "Classic 1940s victory rolls and retro updo styling",
+        "tag": "Updos"
+      },
+      {
+        "id": "natural-curl-shaping",
+        "image": "/assets/portfolio-2.webp",
+        "alt": "Defined natural curls after precision dry haircut",
+        "tag": "Curly Cut"
+      },
+      {
+        "id": "hollywood-waves",
+        "image": "/assets/portfolio-3.webp",
+        "alt": "Polished vintage Hollywood waves on dark hair",
+        "tag": "Vintage Styling"
+      },
+      {
+        "id": "editorial-pinup",
+        "image": "/assets/portfolio-4.webp",
+        "alt": "Vintage styled bumper bangs and victory rolls profile",
+        "tag": "Events & Production"
+      }
+    ]
+  },
+  "events": {
+    "title": "Events & Collaborations",
+    "description": "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance camps, and retro pageants across the Bay Area.",
+    "showForm": true,
+    "formFields": [
+      {
+        "label": "Your Name",
+        "fieldType": "text",
+        "placeholder": "Jane Doe",
+        "required": true,
+        "_template": "inputField"
+      },
+      {
+        "label": "Email Address",
+        "fieldType": "email",
+        "placeholder": "jane@example.com",
+        "required": true,
+        "_template": "inputField"
+      },
+      {
+        "label": "Phone Number",
+        "fieldType": "tel",
+        "placeholder": "(415) 555-0192",
+        "required": true,
+        "_template": "inputField"
+      },
+      {
+        "label": "Event / Inquiry Type",
+        "options": [
+          "Wedding / Bridal Party",
+          "Editorial & Commercial Photoshoot",
+          "Swing Dance Camp / Festival",
+          "Retro Pageant / Special Event",
+          "Private Group Styling Session"
+        ],
+        "required": true,
+        "_template": "selectField"
+      },
+      {
+        "label": "Estimated Party Size",
+        "options": [
+          "1 Person",
+          "2-4 People",
+          "5-8 People",
+          "9+ People (Large Bridal / Production Group)"
+        ],
+        "required": true,
+        "_template": "selectField"
+      },
+      {
+        "label": "Target Date & Location (City or Venue)",
+        "fieldType": "text",
+        "placeholder": "e.g., October 14, 2026 • San Francisco or Bay Area venue",
+        "required": true,
+        "_template": "inputField"
+      },
+      {
+        "label": "Styling Notes / Desired Aesthetics",
+        "placeholder": "Mention desired styles (e.g. vintage victory rolls, natural curl styling, 1940s waves), call-times, or group details...",
+        "required": false,
+        "_template": "textareaField"
+      }
+    ],
+    "formOptions": {
+      "submitButtonText": "Submit Booking Inquiry"
+    }
+  },
+  "site": {
+    "studioName": "Hair by April",
+    "stylistName": "April",
+    "title": "Hair by April | Curly Cuts & Vintage Hair Stylist San Francisco",
+    "description": "Licensed professional specializing in curly hair cuts, vintage pin-up styling, and on-location events in San Francisco.",
+    "keywords": [
+      "curly hair cuts San Francisco",
+      "vintage hair stylist",
+      "victory rolls",
+      "pin-up hair SF",
+      "natural curl specialist",
+      "bridal hair SF",
+      "retro hair styling San Francisco"
+    ],
+    "email": "hello@hairbyapril.com",
+    "phone": "(415) 555-0192",
+    "instagramHandle": "hair.by.april_209",
+    "locationDisplay": "San Francisco, CA",
+    "calUsername": "ariel-anders",
+    "calDefaultSlug": "april-demo",
+    "address": {
+      "locality": "San Francisco",
+      "region": "CA",
+      "country": "US"
+    },
+    "geo": {
+      "latitude": 37.7749,
+      "longitude": -122.4194
+    },
+    "areaServed": [
+      "San Francisco",
+      "San Francisco Bay Area"
+    ],
+    "openingDays": [
+      "Tuesday"
+    ],
+    "openingHours": {
+      "opens": "09:00",
+      "closes": "18:00"
+    },
+    "priceRange": "$$"
+  }
+}

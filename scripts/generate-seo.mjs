@@ -6,25 +6,41 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, "..");
 
+const pagePath = path.join(rootDir, "src/content/page.json");
 const sitePath = path.join(rootDir, "src/content/site.json");
 const heroPath = path.join(rootDir, "src/content/hero.json");
 const servicesPath = path.join(rootDir, "src/content/services.json");
+const portfolioPath = path.join(rootDir, "src/content/portfolio.json");
 
-if (
-  !fs.existsSync(sitePath) ||
-  !fs.existsSync(heroPath) ||
-  !fs.existsSync(servicesPath)
+let site, hero, services, portfolio;
+
+if (fs.existsSync(pagePath)) {
+  const page = JSON.parse(fs.readFileSync(pagePath, "utf8"));
+  site = page.site;
+  hero = page.hero;
+  portfolio = page.portfolio || {};
+  const servicesRaw = page.services;
+  services = Array.isArray(servicesRaw)
+    ? servicesRaw
+    : servicesRaw?.servicesList || [];
+} else if (
+  fs.existsSync(sitePath) &&
+  fs.existsSync(heroPath) &&
+  fs.existsSync(servicesPath)
 ) {
+  site = JSON.parse(fs.readFileSync(sitePath, "utf8"));
+  hero = JSON.parse(fs.readFileSync(heroPath, "utf8"));
+  portfolio = fs.existsSync(portfolioPath)
+    ? JSON.parse(fs.readFileSync(portfolioPath, "utf8"))
+    : {};
+  const servicesRaw = JSON.parse(fs.readFileSync(servicesPath, "utf8"));
+  services = Array.isArray(servicesRaw)
+    ? servicesRaw
+    : servicesRaw.servicesList || [];
+} else {
   console.error("❌ Missing required CMS content files in src/content/");
   process.exit(1);
 }
-
-const site = JSON.parse(fs.readFileSync(sitePath, "utf8"));
-const hero = JSON.parse(fs.readFileSync(heroPath, "utf8"));
-const servicesRaw = JSON.parse(fs.readFileSync(servicesPath, "utf8"));
-const services = Array.isArray(servicesRaw)
-  ? servicesRaw
-  : servicesRaw.servicesList || [];
 
 const siteUrl = (
   process.env.CF_PAGES_URL ||
@@ -164,11 +180,35 @@ serviceOffers.push({
 const cleanPhoneDigits = (site.phone || "").replace(/[^0-9]/g, "");
 const telephoneSchema = `+1-${cleanPhoneDigits.slice(0, 3)}-${cleanPhoneDigits.slice(3, 6)}-${cleanPhoneDigits.slice(6)}`;
 
+const portfolioList = Array.isArray(portfolio)
+  ? portfolio
+  : portfolio.portfolioList || [];
+const portfolioImageUrls = portfolioList.map((p) => `${siteUrl}${p.image}`);
+
+const ogImagePath =
+  portfolio.ogImage || portfolio.heroImage || "/assets/portfolio-4.webp";
+const ogImageUrl = ogImagePath.startsWith("http")
+  ? ogImagePath
+  : `${siteUrl}${ogImagePath}`;
+const ogImageAlt =
+  portfolio.ogImageAlt ||
+  site.title ||
+  "Hair by April - Curly Cuts & Vintage Hair Stylist San Francisco";
+
 const schemaOrgData = {
   "@context": "https://schema.org",
   "@type": "HairSalon",
   name: site.studioName,
-  image: (site.portfolioImagesRelative || []).map((p) => `${siteUrl}${p}`),
+  image:
+    portfolioImageUrls.length > 0
+      ? portfolioImageUrls
+      : [
+          `${siteUrl}/assets/portfolio-4.webp`,
+          `${siteUrl}/assets/portfolio-1.webp`,
+          `${siteUrl}/assets/portfolio-2.webp`,
+          `${siteUrl}/assets/portfolio-3.webp`,
+          `${siteUrl}/assets/portfolio-5.webp`,
+        ],
   description: site.description,
   telephone: telephoneSchema,
   email: site.email,
@@ -249,11 +289,11 @@ html = html.replace(
 );
 html = html.replace(
   /<meta\s+property="og:image"\s+content="[^"]*"/i,
-  `<meta property="og:image" content="${siteUrl}${site.ogImageRelative}"`
+  `<meta property="og:image" content="${ogImageUrl}"`
 );
 html = html.replace(
   /<meta\s+property="og:image:alt"\s+content="[^"]*"/i,
-  `<meta property="og:image:alt" content="${site.ogImageAlt}"`
+  `<meta property="og:image:alt" content="${ogImageAlt}"`
 );
 html = html.replace(
   /<meta\s+name="twitter:title"\s+content="[^"]*"/i,
@@ -265,11 +305,11 @@ html = html.replace(
 );
 html = html.replace(
   /<meta\s+name="twitter:image"\s+content="[^"]*"/i,
-  `<meta name="twitter:image" content="${siteUrl}${site.ogImageRelative}"`
+  `<meta name="twitter:image" content="${ogImageUrl}"`
 );
 html = html.replace(
   /<meta\s+name="twitter:image:alt"\s+content="[^"]*"/i,
-  `<meta name="twitter:image:alt" content="${site.ogImageAlt}"`
+  `<meta name="twitter:image:alt" content="${ogImageAlt}"`
 );
 html = html.replace(
   /<script\s+type="application\/ld\+json"\s+id="schema-org-jsonld">[\s\S]*?<\/script>/i,

@@ -14,7 +14,7 @@ import { Clock, ArrowRight, Check, Calendar } from "lucide-react";
 import type {
   HeroContent,
   ServiceItem,
-  PortfolioItem,
+  PortfolioContent,
   EventsContent,
   SiteContent,
 } from "./types/content";
@@ -32,106 +32,94 @@ const AdminMockup = lazy(() =>
   }))
 );
 
-// Single, Unified GraphQL Query for all 5 TinaCMS Collections
-const ALL_CONTENT_QUERY = `
-  query AllContent($heroPath: String!, $sitePath: String!, $servicesPath: String!, $portfolioPath: String!, $eventsPath: String!) {
-    hero(relativePath: $heroPath) {
-      badge
-      headline
-      subheading
-      availabilityNotice
-      calSlug
-    }
-    site(relativePath: $sitePath) {
-      studioName
-      stylistName
-      credentials
-      title
-      browserTitle
-      description
-      metaDescription
-      keywords
-      email
-      phone
-      emailFallback
-      phoneFallback
-      instagramHandle
-      locationDisplay
-      availabilityBanner
-      logisticsNotice
-      calUsername
-      calDefaultSlug
-      address {
-        locality
-        region
-        country
+// Single, Unified GraphQL Query for the Home Page collection
+const PAGE_CONTENT_QUERY = `
+  query PageContent($relativePath: String!) {
+    page(relativePath: $relativePath) {
+      hero {
+        badge
+        headline
+        subheading
+        availabilityNotice
       }
-      geo {
-        latitude
-        longitude
+      services {
+        sectionTitle
+        servicesList {
+          id
+          name
+          price
+          duration
+          description
+          deliverables
+          calSlug
+        }
       }
-      areaServed
-      openingDays
-      openingHours {
-        opens
-        closes
+      portfolio {
+        heroImage
+        ogImage
+        ogImageAlt
+        portfolioList {
+          id
+          image
+          alt
+          tag
+        }
       }
-      priceRange
-      heroHeading
-      heroSubtext
-      ogImageRelative
-      ogImageFallbackRelative
-      ogImageAlt
-      ogImageWidth
-      ogImageHeight
-      heroPreloadImage
-      portfolioImagesRelative
-    }
-    services(relativePath: $servicesPath) {
-      sectionTitle
-      servicesList {
-        id
-        name
-        price
-        duration
+      events {
+        title
         description
-        deliverables
-        calSlug
-      }
-    }
-    portfolio(relativePath: $portfolioPath) {
-      portfolioList {
-        id
-        image
-        alt
-        tag
-      }
-    }
-    events(relativePath: $eventsPath) {
-      title
-      description
-      showForm
-      formFields {
-        __typename
-        ... on EventsFormFieldsInputField {
-          label
-          fieldType
-          placeholder
-          required
+        showForm
+        formFields {
+          __typename
+          ... on PageEventsFormFieldsInputField {
+            label
+            fieldType
+            placeholder
+            required
+          }
+          ... on PageEventsFormFieldsSelectField {
+            label
+            options
+            required
+          }
+          ... on PageEventsFormFieldsTextareaField {
+            label
+            placeholder
+            required
+          }
         }
-        ... on EventsFormFieldsSelectField {
-          label
-          options
-          required
-        }
-        ... on EventsFormFieldsTextareaField {
-          label
-          placeholder
-          required
+        formOptions {
+          submitButtonText
         }
       }
-      formOptions {
-        submitButtonText
+      site {
+        studioName
+        stylistName
+        title
+        description
+        keywords
+        email
+        phone
+        instagramHandle
+        locationDisplay
+        calUsername
+        calDefaultSlug
+        address {
+          locality
+          region
+          country
+        }
+        geo {
+          latitude
+          longitude
+        }
+        areaServed
+        openingDays
+        openingHours {
+          opens
+          closes
+        }
+        priceRange
       }
     }
   }
@@ -161,9 +149,7 @@ export default function App() {
       sectionTitle?: string;
       servicesList: ServiceItem[];
     };
-    portfolio: {
-      portfolioList: PortfolioItem[];
-    };
+    portfolio: PortfolioContent;
     events: EventsContent;
   }>(() => {
     const rawSite = SITE_CONFIG as unknown as SiteContent;
@@ -175,7 +161,6 @@ export default function App() {
           "April specializes in custom dry curly cuts, classic victory rolls, waves, retro pageantry hair, and commercial production styling across the San Francisco Bay Area.",
         availabilityNotice:
           "Taking Select New Clients for Autumn • Book via Cal.com",
-        calSlug: "april-demo",
       },
       site: {
         ...rawSite,
@@ -188,9 +173,7 @@ export default function App() {
         instagramUrl: SITE_CONFIG.instagramUrl,
         calUsername: SITE_CONFIG.calUsername,
         calDefaultSlug: SITE_CONFIG.calDefaultSlug,
-        availabilityBanner: SITE_CONFIG.logisticsNotice,
         locationDisplay: SITE_CONFIG.locationDisplay,
-        logisticsNotice: SITE_CONFIG.logisticsNotice,
         address: SITE_CONFIG.address || {
           locality: "San Francisco",
           region: "CA",
@@ -206,18 +189,7 @@ export default function App() {
         priceRange: SITE_CONFIG.priceRange || "$$",
         title: SITE_CONFIG.title,
         description: SITE_CONFIG.description,
-        browserTitle: SITE_CONFIG.title,
-        metaDescription: SITE_CONFIG.description,
         keywords: SITE_CONFIG.keywords || [],
-        ogImageRelative: "/assets/portfolio-4.webp",
-        ogImageFallbackRelative: "/assets/og-cover.jpg",
-        ogImageAlt: "Hair by April - Curly Cuts & Vintage Styling SF",
-        ogImageWidth: 620,
-        ogImageHeight: 758,
-        heroPreloadImage: "/assets/portfolio-4.webp",
-        portfolioImagesRelative: [],
-        heroHeading: "Curly Hair Cuts & Vintage Styling",
-        heroSubtext: "dry cutting and vintage victory rolls",
       },
       services: {
         sectionTitle: "Services & Pricing",
@@ -257,6 +229,10 @@ export default function App() {
         ],
       },
       portfolio: {
+        heroImage: "/assets/portfolio-4.webp",
+        ogImage: "/assets/portfolio-4.webp",
+        ogImageAlt:
+          "Hair by April - Vintage Hair Styling & Curly Hair Specialist in San Francisco",
         portfolioList: [
           {
             id: "retro-updo",
@@ -363,25 +339,26 @@ export default function App() {
     };
   });
 
-  // Single useTina hook registered to prevent multiple Tina hook conflicts!
+  // Single useTina hook registered on the unified page schema
   const { data: liveData } = useTina({
-    query: ALL_CONTENT_QUERY,
+    query: PAGE_CONTENT_QUERY,
     variables: {
-      heroPath: "hero.json",
-      sitePath: "site.json",
-      servicesPath: "services.json",
-      portfolioPath: "portfolio.json",
-      eventsPath: "events.json",
+      relativePath: "page.json",
     },
-    data: cmsState,
+    data: { page: cmsState },
   });
 
   // Extract resolved live content with fallback safety
-  const liveHero = liveData?.hero || cmsState.hero;
-  const liveSite = liveData?.site || cmsState.site;
-  const liveServices = liveData?.services || cmsState.services;
-  const livePortfolio = liveData?.portfolio || cmsState.portfolio;
-  const liveEvents = liveData?.events || cmsState.events;
+  const livePage = liveData?.page;
+  const liveHero = (livePage?.hero || cmsState.hero) as HeroContent;
+  const liveSite = (livePage?.site || cmsState.site) as SiteContent;
+  const liveServices = (livePage?.services || cmsState.services) as {
+    sectionTitle?: string;
+    servicesList: ServiceItem[];
+  };
+  const livePortfolio = (livePage?.portfolio ||
+    cmsState.portfolio) as PortfolioContent;
+  const liveEvents = (livePage?.events || cmsState.events) as EventsContent;
 
   // Single, efficient HTTP query to load content on mount
   useEffect(() => {
@@ -393,13 +370,9 @@ export default function App() {
 
         const result = await tinaClient.request(
           {
-            query: ALL_CONTENT_QUERY,
+            query: PAGE_CONTENT_QUERY,
             variables: {
-              heroPath: "hero.json",
-              sitePath: "site.json",
-              servicesPath: "services.json",
-              portfolioPath: "portfolio.json",
-              eventsPath: "events.json",
+              relativePath: "page.json",
             },
           },
           {}
@@ -407,18 +380,18 @@ export default function App() {
 
         if (!isMounted) return;
 
-        if (result?.data) {
+        if (result?.data?.page) {
+          const pageData = result.data.page;
           setCmsState({
-            hero: (result.data.hero || cmsState.hero) as HeroContent,
-            site: (result.data.site || cmsState.site) as SiteContent,
-            services: (result.data.services || cmsState.services) as {
+            hero: (pageData.hero || cmsState.hero) as HeroContent,
+            site: (pageData.site || cmsState.site) as SiteContent,
+            services: (pageData.services || cmsState.services) as {
               sectionTitle?: string;
               servicesList: ServiceItem[];
             },
-            portfolio: (result.data.portfolio || cmsState.portfolio) as {
-              portfolioList: PortfolioItem[];
-            },
-            events: (result.data.events || cmsState.events) as EventsContent,
+            portfolio: (pageData.portfolio ||
+              cmsState.portfolio) as PortfolioContent,
+            events: (pageData.events || cmsState.events) as EventsContent,
           });
         }
       } catch (err: unknown) {
@@ -465,9 +438,15 @@ export default function App() {
   const processedFormFields = (liveEvents?.formFields || []).map((f) => {
     if (f._template) return f;
     let template: "inputField" | "selectField" | "textareaField" = "inputField";
-    if (f.__typename === "EventsFormFieldsSelectField") {
+    if (
+      f.__typename === "PageEventsFormFieldsSelectField" ||
+      f.__typename === "EventsFormFieldsSelectField"
+    ) {
       template = "selectField";
-    } else if (f.__typename === "EventsFormFieldsTextareaField") {
+    } else if (
+      f.__typename === "PageEventsFormFieldsTextareaField" ||
+      f.__typename === "EventsFormFieldsTextareaField"
+    ) {
       template = "textareaField";
     }
     return { ...f, _template: template };
@@ -479,6 +458,7 @@ export default function App() {
       <SchemaOrg
         siteConfig={liveSite}
         services={liveServices?.servicesList || []}
+        portfolio={livePortfolio}
       />
 
       {/* Navigation */}
@@ -490,9 +470,11 @@ export default function App() {
 
       {/* 1. Primary Hero Section (LCP Optimized + Live Preview Hook) */}
       <Hero
-        onBookAppointment={() => handleOpenBooking(null, liveHero.calSlug)}
+        onBookAppointment={() =>
+          handleOpenBooking(null, liveSite.calDefaultSlug)
+        }
         heroContent={liveHero}
-        heroImage={SITE_CONFIG.heroPreloadImage}
+        heroImage={livePortfolio.heroImage || SITE_CONFIG.heroImage}
       />
 
       {/* 2. Signature Disciplines: Pin-Up & Curly Cuts Showcase Grid (Live Preview Hook) */}
@@ -518,10 +500,7 @@ export default function App() {
             <Calendar className={`w-4 h-4 ${TOKENS.accent.icon} shrink-0`} />
             <span>
               <strong>Scheduling Logistics:</strong>{" "}
-              {liveHero.availabilityNotice ||
-                liveSite.availabilityBanner ||
-                liveSite.logisticsNotice ||
-                SITE_CONFIG.logisticsNotice}
+              {liveHero.availabilityNotice || SITE_CONFIG.logisticsNotice}
             </span>
           </div>
 
@@ -587,7 +566,12 @@ export default function App() {
                 <div className="mt-8 pt-4 border-t border-stone-200/70">
                   <button
                     id={`book-service-btn-${service.id}`}
-                    onClick={() => handleOpenBooking(service, service.calSlug)}
+                    onClick={() =>
+                      handleOpenBooking(
+                        service,
+                        service.calSlug || liveSite.calDefaultSlug
+                      )
+                    }
                     className={TOKENS.button.primaryFull}
                   >
                     <span>Book Appointment</span>
@@ -632,7 +616,6 @@ export default function App() {
             eventSlug={String(
               customCalSlug ||
                 selectedService?.calSlug ||
-                liveHero.calSlug ||
                 liveSite.calDefaultSlug ||
                 SITE_CONFIG.calDefaultSlug
             )}
@@ -640,9 +623,7 @@ export default function App() {
               liveSite.calUsername || SITE_CONFIG.calUsername
             )}
             logisticsNotice={String(
-              liveSite.availabilityBanner ||
-                liveSite.logisticsNotice ||
-                SITE_CONFIG.logisticsNotice
+              liveHero.availabilityNotice || SITE_CONFIG.logisticsNotice
             )}
             locationDisplay={String(
               liveSite.locationDisplay || SITE_CONFIG.locationDisplay
@@ -746,8 +727,13 @@ export default function App() {
               site: { ...p.site, instagramUrl },
             }));
           }}
-          heroImage={SITE_CONFIG.heroPreloadImage}
-          setHeroImage={() => {}}
+          heroImage={cmsState.portfolio.heroImage || SITE_CONFIG.heroImage}
+          setHeroImage={(image: string) => {
+            setCmsState((p) => ({
+              ...p,
+              portfolio: { ...p.portfolio, heroImage: image },
+            }));
+          }}
         >
           {mainSiteContent}
         </AdminMockup>

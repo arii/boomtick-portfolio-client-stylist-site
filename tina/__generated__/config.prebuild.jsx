@@ -44,466 +44,422 @@ var config_default = defineConfig({
   },
   schema: {
     collections: [
-      // 1. GLOBAL SETTINGS (Single Source of Truth)
+      // SINGLE UNIFIED PAGE SCHEMA (Single Source of Truth for the Single-Page Site)
       {
-        name: "site",
-        label: "Site Settings & SEO",
+        name: "page",
+        label: "Home Page",
         path: "src/content",
-        match: { include: "site" },
+        match: { include: "page" },
         format: "json",
         ui: {
           router: () => "/",
           allowedActions: { create: false, delete: false }
         },
         fields: [
-          {
-            type: "string",
-            name: "studioName",
-            label: "Studio Name",
-            required: true
-          },
-          {
-            type: "string",
-            name: "stylistName",
-            label: "Stylist Name",
-            required: true
-          },
-          { type: "string", name: "credentials", label: "Credentials Badge" },
-          { type: "string", name: "title", label: "Default Site Title" },
-          {
-            type: "string",
-            name: "browserTitle",
-            label: "Browser Title (SEO)"
-          },
-          {
-            type: "string",
-            name: "description",
-            label: "Default Description",
-            ui: { component: "textarea" }
-          },
-          {
-            type: "string",
-            name: "metaDescription",
-            label: "Meta Description",
-            ui: { component: "textarea" }
-          },
-          {
-            type: "string",
-            name: "keywords",
-            label: "SEO Keywords",
-            list: true
-          },
-          {
-            type: "string",
-            name: "email",
-            label: "Direct Email Address",
-            description: "Used for public display and contact routing"
-          },
-          {
-            type: "string",
-            name: "phone",
-            label: "Direct Phone Number",
-            description: "Formats automatically on site links"
-          },
-          { type: "string", name: "emailFallback", label: "Email Fallback" },
-          { type: "string", name: "phoneFallback", label: "Phone Fallback" },
-          {
-            type: "string",
-            name: "instagramHandle",
-            label: "Instagram Handle (@...)",
-            description: "Enter handle only (e.g. hair.by.april_209)"
-          },
-          {
-            type: "string",
-            name: "locationDisplay",
-            label: "Location Display Text"
-          },
-          {
-            type: "string",
-            name: "availabilityBanner",
-            label: "Global Availability Notice",
-            description: "Displays above the services and appointment buttons"
-          },
-          {
-            type: "string",
-            name: "logisticsNotice",
-            label: "Logistics Notice",
-            ui: { component: "textarea" }
-          },
-          {
-            type: "string",
-            name: "calUsername",
-            label: "Cal.com Username",
-            description: "Your Cal.com scheduling username (e.g. ariel-anders)"
-          },
-          {
-            type: "string",
-            name: "calDefaultSlug",
-            label: "Cal.com Default Event Slug",
-            description: "Default event booking slug (e.g. april-demo)"
-          },
+          // 1. HERO SECTION
           {
             type: "object",
-            name: "address",
-            label: "Physical / Service Address",
+            name: "hero",
+            label: "Hero Section",
             fields: [
-              { type: "string", name: "locality", label: "City / Locality" },
-              { type: "string", name: "region", label: "State / Region" },
-              { type: "string", name: "country", label: "Country Code" }
-            ]
-          },
-          {
-            type: "object",
-            name: "geo",
-            label: "Geographic Coordinates",
-            fields: [
-              { type: "number", name: "latitude", label: "Latitude" },
-              { type: "number", name: "longitude", label: "Longitude" }
-            ]
-          },
-          {
-            type: "string",
-            name: "areaServed",
-            label: "Areas Served",
-            list: true
-          },
-          {
-            type: "string",
-            name: "openingDays",
-            label: "Opening Days",
-            list: true
-          },
-          {
-            type: "object",
-            name: "openingHours",
-            label: "Opening Hours",
-            fields: [
-              { type: "string", name: "opens", label: "Opening Time (HH:MM)" },
-              { type: "string", name: "closes", label: "Closing Time (HH:MM)" }
-            ]
-          },
-          { type: "string", name: "priceRange", label: "Price Range" },
-          {
-            type: "string",
-            name: "heroHeading",
-            label: "Hero Heading (Fallback)"
-          },
-          {
-            type: "string",
-            name: "heroSubtext",
-            label: "Hero Subtext (Fallback)",
-            ui: { component: "textarea" }
-          },
-          {
-            type: "image",
-            name: "ogImageRelative",
-            label: "OG Image Relative Path"
-          },
-          {
-            type: "image",
-            name: "ogImageFallbackRelative",
-            label: "OG Image Fallback Path"
-          },
-          { type: "string", name: "ogImageAlt", label: "OG Image Alt Text" },
-          { type: "number", name: "ogImageWidth", label: "OG Image Width" },
-          { type: "number", name: "ogImageHeight", label: "OG Image Height" },
-          {
-            type: "image",
-            name: "heroPreloadImage",
-            label: "Hero Preload Image"
-          },
-          {
-            type: "image",
-            name: "portfolioImagesRelative",
-            label: "Portfolio Images Relative Paths",
-            list: true
-          }
-        ]
-      },
-      // 2. HERO SECTION
-      {
-        name: "hero",
-        label: "Hero Section",
-        path: "src/content",
-        match: { include: "hero" },
-        format: "json",
-        ui: {
-          router: () => "/",
-          allowedActions: { create: false, delete: false }
-        },
-        fields: [
-          { type: "string", name: "badge", label: "Credentials Badge" },
-          {
-            type: "string",
-            name: "headline",
-            label: "Main Headline",
-            required: true
-          },
-          {
-            type: "string",
-            name: "subheading",
-            label: "Subheading Copy",
-            ui: { component: "textarea" }
-          },
-          {
-            type: "string",
-            name: "availabilityNotice",
-            label: "Availability Notice Banner",
-            required: true,
-            ui: { component: "textarea" }
-          },
-          {
-            type: "string",
-            name: "calSlug",
-            label: "Cal.com Booking Event Slug",
-            description: "Specific Cal.com event slug for the Hero button (e.g. april-demo)"
-          }
-        ]
-      },
-      // 3. PORTFOLIO SHOWCASE
-      {
-        name: "portfolio",
-        label: "Portfolio Showcase",
-        path: "src/content",
-        match: { include: "portfolio" },
-        format: "json",
-        ui: {
-          router: () => "/",
-          allowedActions: { create: false, delete: false }
-        },
-        fields: [
-          {
-            type: "object",
-            name: "portfolioList",
-            label: "Showcase Images List",
-            list: true,
-            ui: {
-              itemProps: (item) => ({
-                label: item?.id || "Portfolio Item"
-              })
-            },
-            fields: [
+              { type: "string", name: "badge", label: "Credentials Badge" },
               {
                 type: "string",
-                name: "id",
-                label: "Image ID (slug)",
-                required: true
-              },
-              { type: "image", name: "image", label: "Photo", required: true },
-              {
-                type: "string",
-                name: "alt",
-                label: "Alt Text Description",
+                name: "headline",
+                label: "Main Headline",
                 required: true
               },
               {
                 type: "string",
-                name: "tag",
-                label: "Style Category",
-                options: [
-                  "Curly Cut",
-                  "Vintage Styling",
-                  "Updos",
-                  "Events & Production"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      // 4. SERVICES & PRICING
-      {
-        name: "services",
-        label: "Services & Pricing",
-        path: "src/content",
-        match: { include: "services" },
-        format: "json",
-        ui: {
-          router: () => "/",
-          allowedActions: { create: false, delete: false }
-        },
-        fields: [
-          { type: "string", name: "sectionTitle", label: "Section Title" },
-          {
-            type: "object",
-            name: "servicesList",
-            label: "Service Offerings",
-            list: true,
-            ui: {
-              itemProps: (item) => ({
-                label: `${item?.name || "New Service"} (${item?.price || 0})`
-              })
-            },
-            fields: [
-              {
-                type: "string",
-                name: "id",
-                label: "Service Slug ID",
-                required: true
-              },
-              {
-                type: "string",
-                name: "name",
-                label: "Service Name",
-                required: true
-              },
-              {
-                type: "string",
-                name: "price",
-                label: "Price Display (e.g. $175)",
-                required: true
-              },
-              {
-                type: "string",
-                name: "duration",
-                label: "Estimated Duration",
-                description: "e.g., 2 hrs, 90 mins"
-              },
-              {
-                type: "string",
-                name: "description",
-                label: "Short Description",
+                name: "subheading",
+                label: "Subheading Copy",
                 ui: { component: "textarea" }
               },
               {
                 type: "string",
-                name: "deliverables",
-                label: "Included Features",
+                name: "availabilityNotice",
+                label: "Availability Notice Banner",
+                required: true,
+                ui: { component: "textarea" }
+              }
+            ]
+          },
+          // 2. SERVICES & PRICING
+          {
+            type: "object",
+            name: "services",
+            label: "Services & Pricing",
+            fields: [
+              { type: "string", name: "sectionTitle", label: "Section Title" },
+              {
+                type: "object",
+                name: "servicesList",
+                label: "Service Offerings",
                 list: true,
-                description: "Bullet points detailing what is included in this service"
+                ui: {
+                  itemProps: (item) => ({
+                    label: `${item?.name || "New Service"} (${item?.price || 0})`
+                  })
+                },
+                fields: [
+                  {
+                    type: "string",
+                    name: "id",
+                    label: "Service Slug ID",
+                    required: true
+                  },
+                  {
+                    type: "string",
+                    name: "name",
+                    label: "Service Name",
+                    required: true
+                  },
+                  {
+                    type: "string",
+                    name: "price",
+                    label: "Price Display (e.g. $175)",
+                    required: true
+                  },
+                  {
+                    type: "string",
+                    name: "duration",
+                    label: "Estimated Duration",
+                    description: "e.g., 2 hrs, 90 mins"
+                  },
+                  {
+                    type: "string",
+                    name: "description",
+                    label: "Short Description",
+                    ui: { component: "textarea" }
+                  },
+                  {
+                    type: "string",
+                    name: "deliverables",
+                    label: "Included Features",
+                    list: true,
+                    description: "Bullet points detailing what is included in this service"
+                  },
+                  {
+                    type: "string",
+                    name: "calSlug",
+                    label: "Cal.com Scheduling Slug Override",
+                    description: "Optional override slug for this specific service. Leave blank to use default Cal.com slug from Site Settings."
+                  }
+                ]
+              }
+            ]
+          },
+          // 3. PORTFOLIO & MEDIA SHOWCASE
+          {
+            type: "object",
+            name: "portfolio",
+            label: "Portfolio & Media Showcase",
+            fields: [
+              {
+                type: "image",
+                name: "heroImage",
+                label: "Hero Showcase Image (Preloaded)",
+                description: "Main hero image displayed on initial page load (optimized for LCP)"
+              },
+              {
+                type: "image",
+                name: "ogImage",
+                label: "Social Share Image (OpenGraph / Twitter)",
+                description: "Image displayed when sharing links on social media / iMessage"
               },
               {
                 type: "string",
-                name: "calSlug",
-                label: "Cal.com Scheduling Slug"
-              }
-            ]
-          }
-        ]
-      },
-      // 5. INQUIRY & MAILING LIST FORM SETUP
-      {
-        name: "events",
-        label: "Inquiry & Mailing List Form",
-        path: "src/content",
-        match: { include: "events" },
-        format: "json",
-        ui: {
-          router: () => "/",
-          allowedActions: { create: false, delete: false }
-        },
-        fields: [
-          {
-            type: "string",
-            name: "title",
-            label: "Form Section Title",
-            description: "Main section heading for inquiry & mailing list form"
-          },
-          {
-            type: "string",
-            name: "description",
-            label: "Form Section Description",
-            description: "Header copy explaining inquiry or mailing list details",
-            ui: { component: "textarea" }
-          },
-          {
-            type: "boolean",
-            name: "showForm",
-            label: "Display Inquiry Form on Site?",
-            description: "Toggle off to completely remove the form from the public website"
-          },
-          {
-            type: "object",
-            name: "formFields",
-            label: "Inquiry Form Fields",
-            list: true,
-            templates: [
-              {
-                name: "inputField",
-                label: "Text / Contact Input",
-                fields: [
-                  {
-                    type: "string",
-                    name: "label",
-                    label: "Field Label",
-                    required: true
-                  },
-                  {
-                    type: "string",
-                    name: "fieldType",
-                    label: "Input Type",
-                    options: ["text", "email", "tel", "date", "number"]
-                  },
-                  {
-                    type: "string",
-                    name: "placeholder",
-                    label: "Placeholder Hint"
-                  },
-                  {
-                    type: "boolean",
-                    name: "required",
-                    label: "Required Field?"
-                  }
-                ]
+                name: "ogImageAlt",
+                label: "Social Share Image Alt Text"
               },
               {
-                name: "selectField",
-                label: "Dropdown Select Menu",
+                type: "object",
+                name: "portfolioList",
+                label: "Showcase Images Gallery",
+                list: true,
+                ui: {
+                  itemProps: (item) => ({
+                    label: item?.id || "Portfolio Item"
+                  })
+                },
                 fields: [
                   {
                     type: "string",
-                    name: "label",
-                    label: "Field Label",
+                    name: "id",
+                    label: "Image ID (slug)",
+                    required: true
+                  },
+                  {
+                    type: "image",
+                    name: "image",
+                    label: "Photo",
                     required: true
                   },
                   {
                     type: "string",
-                    name: "options",
-                    label: "Dropdown Options",
-                    list: true,
-                    description: "Options the client can pick from"
-                  },
-                  {
-                    type: "boolean",
-                    name: "required",
-                    label: "Required Field?"
-                  }
-                ]
-              },
-              {
-                name: "textareaField",
-                label: "Multi-line Text Area",
-                fields: [
-                  {
-                    type: "string",
-                    name: "label",
-                    label: "Field Label",
+                    name: "alt",
+                    label: "Alt Text Description",
                     required: true
                   },
                   {
                     type: "string",
-                    name: "placeholder",
-                    label: "Placeholder Hint"
-                  },
-                  {
-                    type: "boolean",
-                    name: "required",
-                    label: "Required Field?"
+                    name: "tag",
+                    label: "Style Category",
+                    options: [
+                      "Curly Cut",
+                      "Vintage Styling",
+                      "Updos",
+                      "Events & Production"
+                    ]
                   }
                 ]
               }
             ]
           },
+          // 4. INQUIRY & MAILING LIST FORM
           {
             type: "object",
-            name: "formOptions",
-            label: "Inquiry Form Options",
+            name: "events",
+            label: "Inquiry & Mailing List Form",
             fields: [
               {
                 type: "string",
-                name: "submitButtonText",
-                label: "Submit Button Text"
+                name: "title",
+                label: "Form Section Title",
+                description: "Main section heading for inquiry & mailing list form"
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Form Section Description",
+                description: "Header copy explaining inquiry or mailing list details",
+                ui: { component: "textarea" }
+              },
+              {
+                type: "boolean",
+                name: "showForm",
+                label: "Display Inquiry Form on Site?",
+                description: "Toggle off to completely remove the form from the public website"
+              },
+              {
+                type: "object",
+                name: "formFields",
+                label: "Inquiry Form Fields",
+                list: true,
+                templates: [
+                  {
+                    name: "inputField",
+                    label: "Text / Contact Input",
+                    fields: [
+                      {
+                        type: "string",
+                        name: "label",
+                        label: "Field Label",
+                        required: true
+                      },
+                      {
+                        type: "string",
+                        name: "fieldType",
+                        label: "Input Type",
+                        options: ["text", "email", "tel", "date", "number"]
+                      },
+                      {
+                        type: "string",
+                        name: "placeholder",
+                        label: "Placeholder Hint"
+                      },
+                      {
+                        type: "boolean",
+                        name: "required",
+                        label: "Required Field?"
+                      }
+                    ]
+                  },
+                  {
+                    name: "selectField",
+                    label: "Dropdown Select Menu",
+                    fields: [
+                      {
+                        type: "string",
+                        name: "label",
+                        label: "Field Label",
+                        required: true
+                      },
+                      {
+                        type: "string",
+                        name: "options",
+                        label: "Dropdown Options",
+                        list: true,
+                        description: "Options the client can pick from"
+                      },
+                      {
+                        type: "boolean",
+                        name: "required",
+                        label: "Required Field?"
+                      }
+                    ]
+                  },
+                  {
+                    name: "textareaField",
+                    label: "Multi-line Text Area",
+                    fields: [
+                      {
+                        type: "string",
+                        name: "label",
+                        label: "Field Label",
+                        required: true
+                      },
+                      {
+                        type: "string",
+                        name: "placeholder",
+                        label: "Placeholder Hint"
+                      },
+                      {
+                        type: "boolean",
+                        name: "required",
+                        label: "Required Field?"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                type: "object",
+                name: "formOptions",
+                label: "Inquiry Form Options",
+                fields: [
+                  {
+                    type: "string",
+                    name: "submitButtonText",
+                    label: "Submit Button Text"
+                  }
+                ]
               }
+            ]
+          },
+          // 5. SITE SETTINGS & SEO
+          {
+            type: "object",
+            name: "site",
+            label: "Site Settings & SEO",
+            fields: [
+              {
+                type: "string",
+                name: "studioName",
+                label: "Studio Name",
+                required: true
+              },
+              {
+                type: "string",
+                name: "stylistName",
+                label: "Stylist Name",
+                required: true
+              },
+              {
+                type: "string",
+                name: "title",
+                label: "Browser Title (SEO)"
+              },
+              {
+                type: "string",
+                name: "description",
+                label: "Meta Description (SEO)",
+                ui: { component: "textarea" }
+              },
+              {
+                type: "string",
+                name: "keywords",
+                label: "SEO Keywords",
+                list: true
+              },
+              {
+                type: "string",
+                name: "email",
+                label: "Direct Email Address",
+                description: "Used for public display and contact routing"
+              },
+              {
+                type: "string",
+                name: "phone",
+                label: "Direct Phone Number",
+                description: "Formats automatically on site links"
+              },
+              {
+                type: "string",
+                name: "instagramHandle",
+                label: "Instagram Handle (@...)",
+                description: "Enter handle only (e.g. hair.by.april_209)"
+              },
+              {
+                type: "string",
+                name: "locationDisplay",
+                label: "Location Display Text"
+              },
+              {
+                type: "string",
+                name: "calUsername",
+                label: "Cal.com Username",
+                description: "Your Cal.com scheduling username (e.g. ariel-anders)"
+              },
+              {
+                type: "string",
+                name: "calDefaultSlug",
+                label: "Cal.com Default Event Slug",
+                description: "Default event booking slug used by the Hero and general booking buttons (e.g. april-demo)"
+              },
+              {
+                type: "object",
+                name: "address",
+                label: "Physical / Service Address",
+                fields: [
+                  {
+                    type: "string",
+                    name: "locality",
+                    label: "City / Locality"
+                  },
+                  { type: "string", name: "region", label: "State / Region" },
+                  { type: "string", name: "country", label: "Country Code" }
+                ]
+              },
+              {
+                type: "object",
+                name: "geo",
+                label: "Geographic Coordinates",
+                fields: [
+                  { type: "number", name: "latitude", label: "Latitude" },
+                  { type: "number", name: "longitude", label: "Longitude" }
+                ]
+              },
+              {
+                type: "string",
+                name: "areaServed",
+                label: "Areas Served",
+                list: true
+              },
+              {
+                type: "string",
+                name: "openingDays",
+                label: "Opening Days",
+                list: true
+              },
+              {
+                type: "object",
+                name: "openingHours",
+                label: "Opening Hours",
+                fields: [
+                  {
+                    type: "string",
+                    name: "opens",
+                    label: "Opening Time (HH:MM)"
+                  },
+                  {
+                    type: "string",
+                    name: "closes",
+                    label: "Closing Time (HH:MM)"
+                  }
+                ]
+              },
+              { type: "string", name: "priceRange", label: "Price Range" }
             ]
           }
         ]

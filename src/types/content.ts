@@ -3,8 +3,6 @@ export interface HeroContent {
   headline: string;
   subheading: string;
   availabilityNotice: string;
-  calSlug?: string;
-  instagramUrl?: string;
   [key: string]: unknown;
 }
 
@@ -24,6 +22,14 @@ export interface PortfolioItem {
   image: string;
   alt: string;
   tag: string;
+  [key: string]: unknown;
+}
+
+export interface PortfolioContent {
+  heroImage?: string;
+  ogImage?: string;
+  ogImageAlt?: string;
+  portfolioList: PortfolioItem[];
   [key: string]: unknown;
 }
 
@@ -51,22 +57,15 @@ export interface EventsContent {
 export interface SiteContent {
   studioName: string;
   stylistName: string;
-  credentials: string;
   title: string;
   description: string;
-  browserTitle?: string;
-  metaDescription?: string;
   keywords: string[];
   email: string;
   phone: string;
-  emailFallback?: string;
-  phoneFallback?: string;
   instagramHandle: string;
   locationDisplay: string;
-  logisticsNotice: string;
-  availabilityBanner?: string;
-  calUsername?: string;
-  calDefaultSlug?: string;
+  calUsername: string;
+  calDefaultSlug: string;
   address: {
     locality: string;
     region: string;
@@ -83,14 +82,16 @@ export interface SiteContent {
     closes: string;
   };
   priceRange: string;
-  heroHeading: string;
-  heroSubtext: string;
-  ogImageRelative: string;
-  ogImageFallbackRelative: string;
-  ogImageAlt: string;
-  ogImageWidth: number;
-  ogImageHeight: number;
-  heroPreloadImage: string;
-  portfolioImagesRelative: string[];
   [key: string]: unknown;
+}
+
+export interface PageContent {
+  hero: HeroContent;
+  services: {
+    sectionTitle?: string;
+    servicesList: ServiceItem[];
+  };
+  portfolio: PortfolioContent;
+  events: EventsContent;
+  site: SiteContent;
 }
