@@ -32,7 +32,12 @@ function resolveSiteUrl(): string {
     return window.location.origin;
   }
   if (typeof process !== "undefined" && process.env) {
-    if (process.env.VITE_SITE_URL) return process.env.VITE_SITE_URL;
+    if (
+      process.env.VITE_SITE_URL &&
+      !process.env.VITE_SITE_URL.includes("localhost")
+    ) {
+      return process.env.VITE_SITE_URL;
+    }
     if (process.env.CF_PAGES_URL) {
       const cf = process.env.CF_PAGES_URL;
       return cf.startsWith("http") ? cf : `https://${cf}`;

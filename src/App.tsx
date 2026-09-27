@@ -263,131 +263,134 @@ export default function App() {
         instagramUrl={String(liveSite.instagramUrl || SITE_CONFIG.instagramUrl)}
       />
 
-      {/* 1. Primary Hero Section (LCP Optimized + Live Preview Hook) */}
-      <Hero
-        onBookAppointment={() =>
-          handleOpenBooking(null, liveSite.calDefaultSlug)
-        }
-        heroContent={liveHero}
-        heroImage={livePortfolio.heroImage || SITE_CONFIG.heroImage}
-      />
-
-      {/* 2. Signature Disciplines: Pin-Up & Curly Cuts Showcase Grid (Live Preview Hook) */}
-      <StyleShowcase images={livePortfolio?.portfolioList || []} />
-
-      {/* 3. Services Menu (Live Preview Hook) */}
-      <section
-        id="services"
-        className="py-20 md:py-28 bg-white scroll-mt-20 border-b border-stone-200"
-      >
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="max-w-2xl mx-auto text-center mb-10">
-            <h2
-              data-tina-field={tinaField(liveServices, "sectionTitle")}
-              className="text-3xl md:text-4xl font-serif font-bold text-stone-900 tracking-tight"
-            >
-              {liveServices?.sectionTitle || "Services & Pricing"}
-            </h2>
-          </div>
-
-          {/* Consolidated Scheduling Callout Banner */}
-          <div className={`mb-10 max-w-2xl mx-auto ${TOKENS.card.callout}`}>
-            <Calendar className={`w-4 h-4 ${TOKENS.accent.icon} shrink-0`} />
-            <span>
-              <strong>Scheduling Logistics:</strong>{" "}
-              {liveHero.availabilityNotice || SITE_CONFIG.logisticsNotice}
-            </span>
-          </div>
-
-          {/* Clean Core Services Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 items-stretch">
-            {(liveServices?.servicesList || []).map((service) => (
-              <div
-                id={`service-card-${service.id}`}
-                key={service.id}
-                className={TOKENS.card.service}
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-end">
-                    <div
-                      data-tina-field={tinaField(service, "duration")}
-                      className="flex items-center gap-1 text-[11px] text-stone-500 shrink-0"
-                    >
-                      <Clock className="w-3 h-3 text-stone-400" />
-                      <span>{service.duration}</span>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3
-                      data-tina-field={tinaField(service, "name")}
-                      className="font-serif font-bold text-2xl text-stone-900 leading-snug"
-                    >
-                      {service.name}
-                    </h3>
-                    <div
-                      data-tina-field={tinaField(service, "price")}
-                      className="font-serif font-bold text-3xl text-stone-900 mt-1"
-                    >
-                      {service.price}
-                    </div>
-                  </div>
-
-                  <p
-                    data-tina-field={tinaField(service, "description")}
-                    className="text-stone-600 text-xs font-sans leading-relaxed"
-                  >
-                    {service.description}
-                  </p>
-
-                  <div className="pt-4 border-t border-stone-200/70">
-                    <span className="text-[11px] font-bold uppercase tracking-wider text-stone-400 block mb-2.5 font-sans">
-                      Included Deliverables:
-                    </span>
-                    <ul className="space-y-2.5">
-                      {(service.deliverables || []).map((item, i) => (
-                        <li
-                          key={i}
-                          className="flex items-start gap-2 text-xs text-stone-600 font-sans"
-                        >
-                          <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="mt-8 pt-4 border-t border-stone-200/70">
-                  <button
-                    id={`book-service-btn-${service.id}`}
-                    onClick={() =>
-                      handleOpenBooking(
-                        service,
-                        service.calSlug || liveSite.calDefaultSlug
-                      )
-                    }
-                    className={TOKENS.button.primaryFull}
-                  >
-                    <span>Book Appointment</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 4. Flexible Events & Custom Inquiry Form (Live Preview Hook) */}
-      <EventsCollaboration content={liveEvents} />
-      {liveEvents?.showForm !== false && (
-        <InquiryModule
-          formFields={processedFormFields}
-          submitButtonText={liveEvents?.formOptions?.submitButtonText}
-          recipientEmail={liveSite.email || SITE_CONFIG.email}
+      {/* Main Landmark wrapping primary content */}
+      <main id="main-content">
+        {/* 1. Primary Hero Section (LCP Optimized + Live Preview Hook) */}
+        <Hero
+          onBookAppointment={() =>
+            handleOpenBooking(null, liveSite.calDefaultSlug)
+          }
+          heroContent={liveHero}
+          heroImage={livePortfolio.heroImage || SITE_CONFIG.heroImage}
         />
-      )}
+
+        {/* 2. Signature Disciplines: Pin-Up & Curly Cuts Showcase Grid (Live Preview Hook) */}
+        <StyleShowcase images={livePortfolio?.portfolioList || []} />
+
+        {/* 3. Services Menu (Live Preview Hook) */}
+        <section
+          id="services"
+          className="py-20 md:py-28 bg-white scroll-mt-20 border-b border-stone-200"
+        >
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="max-w-2xl mx-auto text-center mb-10">
+              <h2
+                data-tina-field={tinaField(liveServices, "sectionTitle")}
+                className="text-3xl md:text-4xl font-serif font-bold text-stone-900 tracking-tight"
+              >
+                {liveServices?.sectionTitle || "Services & Pricing"}
+              </h2>
+            </div>
+
+            {/* Consolidated Scheduling Callout Banner */}
+            <div className={`mb-10 max-w-2xl mx-auto ${TOKENS.card.callout}`}>
+              <Calendar className={`w-4 h-4 ${TOKENS.accent.icon} shrink-0`} />
+              <span>
+                <strong>Scheduling Logistics:</strong>{" "}
+                {liveHero.availabilityNotice || SITE_CONFIG.logisticsNotice}
+              </span>
+            </div>
+
+            {/* Clean Core Services Cards Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 max-w-4xl mx-auto gap-8 items-stretch">
+              {(liveServices?.servicesList || []).map((service) => (
+                <div
+                  id={`service-card-${service.id}`}
+                  key={service.id}
+                  className={TOKENS.card.service}
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-end">
+                      <div
+                        data-tina-field={tinaField(service, "duration")}
+                        className="flex items-center gap-1 text-[11px] text-stone-500 shrink-0"
+                      >
+                        <Clock className="w-3 h-3 text-stone-400" />
+                        <span>{service.duration}</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h3
+                        data-tina-field={tinaField(service, "name")}
+                        className="font-serif font-bold text-2xl text-stone-900 leading-snug"
+                      >
+                        {service.name}
+                      </h3>
+                      <div
+                        data-tina-field={tinaField(service, "price")}
+                        className="font-serif font-bold text-3xl text-stone-900 mt-1"
+                      >
+                        {service.price}
+                      </div>
+                    </div>
+
+                    <p
+                      data-tina-field={tinaField(service, "description")}
+                      className="text-stone-600 text-xs font-sans leading-relaxed"
+                    >
+                      {service.description}
+                    </p>
+
+                    <div className="pt-4 border-t border-stone-200/70">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-stone-700 block mb-2.5 font-sans">
+                        Included Deliverables:
+                      </span>
+                      <ul className="space-y-2.5">
+                        {(service.deliverables || []).map((item, i) => (
+                          <li
+                            key={i}
+                            className="flex items-start gap-2 text-xs text-stone-600 font-sans"
+                          >
+                            <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="mt-8 pt-4 border-t border-stone-200/70">
+                    <button
+                      id={`book-service-btn-${service.id}`}
+                      onClick={() =>
+                        handleOpenBooking(
+                          service,
+                          service.calSlug || liveSite.calDefaultSlug
+                        )
+                      }
+                      className={TOKENS.button.primaryFull}
+                    >
+                      <span>Book Appointment</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* 4. Flexible Events & Custom Inquiry Form (Live Preview Hook) */}
+        <EventsCollaboration content={liveEvents} />
+        {liveEvents?.showForm !== false && (
+          <InquiryModule
+            formFields={processedFormFields}
+            submitButtonText={liveEvents?.formOptions?.submitButtonText}
+            recipientEmail={liveSite.email || SITE_CONFIG.email}
+          />
+        )}
+      </main>
 
       {/* Footer Branding & Navigation */}
       <Footer

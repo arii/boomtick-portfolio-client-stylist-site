@@ -351,7 +351,7 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                 .
               </p>
 
-              <p className="text-[11px] text-stone-400 text-center font-sans">
+              <p className="text-[11px] text-stone-600 text-center font-sans">
                 Direct quotes provided with travel estimates, preparation
                 guides, and timed schedules.
               </p>

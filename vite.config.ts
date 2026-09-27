@@ -166,7 +166,6 @@ export default defineConfig(({ command }) => {
         "@tinacms/bridge/tina-field",
         "tinacms/dist/client",
         "lucide-react",
-        "motion/react",
       ],
     },
     build: {
@@ -179,7 +178,6 @@ export default defineConfig(({ command }) => {
         output: {
           manualChunks: {
             vendor: ["react", "react-dom"],
-            motion: ["motion"],
             icons: ["lucide-react"],
           },
         },

@@ -102,28 +102,28 @@ export const Footer: React.FC<FooterProps> = ({
         <div className="border-t border-stone-800/60" />
 
         {/* Bottom Bar: Copyright and developer credit */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-500 font-sans">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-stone-300 font-sans">
           <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1">
             <span>
               &copy; {new Date().getFullYear()} {studioName}. All rights
               reserved.
             </span>
-            <span className="text-stone-700 select-none">•</span>
+            <span className="text-stone-600 select-none">•</span>
             <a
               id="footer-admin-link"
               href="/admin/index.html"
-              className="text-stone-500 hover:text-stone-300 transition cursor-pointer bg-transparent border-0 p-0 font-sans text-[11px]"
+              className="text-stone-300 hover:text-white transition cursor-pointer bg-transparent border-0 p-0 font-sans text-[11px]"
             >
               Admin Login
             </a>
           </div>
-          <p>
+          <p className="text-stone-300">
             Developed by{" "}
             <a
               href="https://arii.github.io"
               target="_blank"
               rel="noopener noreferrer"
-              className="underline text-stone-400 hover:text-white transition font-semibold"
+              className="underline text-stone-200 hover:text-white transition font-semibold"
             >
               Ariel Anders
             </a>
