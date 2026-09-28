@@ -24,7 +24,7 @@
       {
         "name": "Vintage Styling & Classic Updos",
         "price": "$125",
-        "duration": "75 mins",
+        "duration": "60 mins",
         "description": "Authentic victory rolls, retro waves, and pin-up styling crafted for longevity, events, swing dancing, and photo shoots.",
         "deliverables": [
           "Period-accurate styling consultation",
@@ -33,7 +33,7 @@
           "Accessories and veil placement if needed"
         ],
         "id": "vintage-set-updo",
-        "calSlug": "april-demo"
+        "calSlug": "60min"
       }
     ]
   },
