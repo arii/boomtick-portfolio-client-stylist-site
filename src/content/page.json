@@ -9,14 +9,13 @@
     "sectionTitle": "Services & Pricing",
     "servicesList": [
       {
-        "name": "Dry Curly Cut & Styled Finish",
+        "name": "Curly Cut & Styled Finish",
         "price": "$100",
         "duration": "60 mins",
         "description": "Custom dry-cutting tailored to your unique curl pattern and density. Includes detox wash, deep conditioning, and step-by-step styling coaching.",
         "deliverables": [
           "In-depth texture and lifestyle consultation",
-          "Dry precision curl-by-curl shaping",
-          "Botanical detox wash & deep hydration treatment",
+          "Combination wet and or dry precision curl-by-curl shaping",
           "Diffused styling and home maintenance coaching"
         ],
         "id": "curly-cut-finish",
