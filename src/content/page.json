@@ -1,15 +1,14 @@
 {
   "hero": {
-    "badge": "Licensed Professional • 15 Years Experience",
+    "badge": "Licensed Professional • 20 Years Experience",
     "headline": "Curly hair cuts & authentic vintage styling.",
-    "subheading": "San Francisco stylist specializing in curly cuts and classic vintage hair, with custom on-location styling available for events and productions.",
+    "subheading": "San Francisco-based stylist specializing in precision curly and fine hair cuts, as well as authentic vintage styling, with bespoke on-location services available for events and professional productions.",
     "availabilityNotice": "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays."
   },
   "services": {
     "sectionTitle": "Services & Pricing",
     "servicesList": [
       {
-        "id": "curly-cut-finish",
         "name": "Dry Curly Cut & Styled Finish",
         "price": "$175",
         "duration": "2 hours",
@@ -20,10 +19,10 @@
           "Botanical detox wash & deep hydration treatment",
           "Diffused styling and home maintenance coaching"
         ],
+        "id": "curly-cut-finish",
         "calSlug": "april-demo"
       },
       {
-        "id": "vintage-set-updo",
         "name": "Vintage Styling & Classic Updos",
         "price": "$145",
         "duration": "90 mins",
@@ -34,6 +33,7 @@
           "Longevity finish designed for all-day wear",
           "Accessories and veil placement if needed"
         ],
+        "id": "vintage-set-updo",
         "calSlug": "april-demo"
       }
     ]
@@ -44,29 +44,29 @@
     "ogImageAlt": "Hair by April - Vintage Hair Styling & Curly Hair Specialist in San Francisco",
     "portfolioList": [
       {
-        "id": "vintage-victory-rolls",
         "title": "Vintage Victory Rolls",
+        "id": "vintage-victory-rolls",
         "image": "/assets/portfolio-1.webp",
         "alt": "Classic 1940s victory rolls and retro updo styling",
         "tag": "Updos"
       },
       {
-        "id": "natural-curl-shaping",
         "title": "Natural Curl Shaping",
+        "id": "natural-curl-shaping",
         "image": "/assets/portfolio-2.webp",
         "alt": "Defined natural curls after precision dry haircut",
         "tag": "Curly Cut"
       },
       {
-        "id": "hollywood-waves",
         "title": "Hollywood Waves",
+        "id": "hollywood-waves",
         "image": "/assets/portfolio-3.webp",
         "alt": "Polished vintage Hollywood waves on dark hair",
         "tag": "Vintage Styling"
       },
       {
-        "id": "editorial-pinup",
         "title": "Editorial Pin-Up Styling",
+        "id": "editorial-pinup",
         "image": "/assets/portfolio-4.webp",
         "alt": "Vintage styled bumper bangs and victory rolls profile",
         "tag": "Events & Production"
@@ -169,8 +169,13 @@
       "latitude": 37.7749,
       "longitude": -122.4194
     },
-    "areaServed": ["San Francisco", "San Francisco Bay Area"],
-    "openingDays": ["Tuesday"],
+    "areaServed": [
+      "San Francisco",
+      "San Francisco Bay Area"
+    ],
+    "openingDays": [
+      "Tuesday"
+    ],
     "openingHours": {
       "opens": "09:00",
       "closes": "18:00"
