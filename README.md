@@ -59,13 +59,13 @@ To prevent silent failures and ensure issues are immediately visible during deve
 
 Visual styling, branding, contact info, hours, and descriptions are stored in `src/content/page.json`. Technical integrations and hosting settings remain in `.env`:
 
-| Variable Name           | Default / Example                | Purpose                                                            |
-| :---------------------- | :------------------------------- | :----------------------------------------------------------------- |
-| `VITE_SITE_URL`         | `https://hairbyapril.pages.dev/` | Production root URL for canonical tags, XML sitemap, and OpenGraph |
-| `VITE_GOOGLE_SHEET_URL` | `""`                             | Google Apps Script webhook URL for inquiry lead capture            |
-| `VITE_TINA_CLIENT_ID`   | `""`                             | Tina Cloud Client ID (from [tina.io](https://tina.io))             |
-| `TINA_TOKEN`            | `""`                             | Tina Cloud Content API Token                                       |
-| `VITE_TINA_BRANCH`      | `"main"`                         | Git branch for TinaCMS cloud synchronization                       |
+| Variable Name         | Default / Example               | Purpose                                                                   |
+| :-------------------- | :------------------------------ | :------------------------------------------------------------------------ |
+| `VITE_SITE_URL`       | `https://hairbyapril.pages.dev` | Production root URL for canonical tags, XML sitemap, and OpenGraph        |
+| `DEPLOYMENT_ID`       | `""`                            | Google Apps Script Web App Deployment ID for dynamic inquiry lead capture |
+| `VITE_TINA_CLIENT_ID` | `""`                            | Tina Cloud Client ID (from [tina.io](https://tina.io))                    |
+| `TINA_TOKEN`          | `""`                            | Tina Cloud Content API Token                                              |
+| `VITE_TINA_BRANCH`    | `"main"`                        | Git branch for TinaCMS cloud synchronization                              |
 
 ---
 
@@ -112,14 +112,56 @@ Styling utilizes Tailwind CSS v4 design tokens in `src/styles/tokens.ts`:
 
 ## 📊 Inquiry Lead Capture
 
-The **Inquiry Module** allows clients to submit event bookings and styling requests.
+The **Inquiry Module** dynamically renders all form fields defined in `src/content/page.json` (or via TinaCMS live editor).
 
-### Setup Instructions for Google Sheets:
+When a user submits the form, it POSTs a structured JSON payload:
 
-1. Create a Google Sheet with columns: `Timestamp`, `Name`, `Email`, `Phone`, `EventType`, `PartySize`, `DateLocation`, `Notes`.
-2. Go to **Extensions** > **Apps Script** and deploy a Web App with `doPost(e)` returning JSON.
-3. Set the Web App access to **Anyone**.
-4. Add the URL to `VITE_GOOGLE_SHEET_URL` in your Cloudflare Pages dashboard or `.env`.
+```json
+{
+  "recipient": "hello@hairbyapril.com",
+  "submittedAt": "2026-09-27T22:00:00.000Z",
+  "fields": [
+    { "label": "Your Name", "value": "Jane Doe" },
+    { "label": "Email Address", "value": "jane@example.com" },
+    { "label": "Phone Number", "value": "(415) 555-0192" },
+    { "label": "Event / Inquiry Type", "value": "Wedding / Bridal Party" },
+    { "label": "Estimated Party Size", "value": "5-8 People" },
+    {
+      "label": "Target Date & Location (City or Venue)",
+      "value": "October 14, 2026 • San Francisco"
+    },
+    {
+      "label": "Styling Notes / Desired Aesthetics",
+      "value": "Vintage 1940s victory rolls and natural curl styling"
+    }
+  ]
+}
+```
+
+### Google Apps Script Webhook Setup:
+
+The included `google-apps-script.js` script handles dynamic schemas automatically:
+
+- **Dynamic Columns**: Automatically detects submitted dynamic fields and creates new header columns on the fly when new fields are added in TinaCMS.
+- **Built-in Local Test**: Includes a `testDoPost()` function to test inserting lead rows directly inside the Apps Script console.
+- **Instant Email Alerts**: Dispatches an email notification to the stylist with formatted lead data.
+
+#### Setup & Deployment Steps:
+
+1. Open your target **Google Sheet**.
+2. Click **Extensions** > **Apps Script**.
+3. Paste the contents of `google-apps-script.js`.
+4. **Test within Apps Script**: Select `testDoPost` from the toolbar dropdown and click **▷ Run**. Check your spreadsheet to verify row creation!
+5. **Deploy**:
+   - Click **Deploy** > **New deployment**.
+   - Choose type: **Web app**.
+   - Set **Execute as**: `Me` and **Who has access**: `Anyone`.
+   - Click **Deploy** and copy the **Deployment ID** (e.g. `AKfycbx...`).
+6. **Set Environment Variable**:
+   - In `.env` or Cloudflare Pages, set:
+     ```env
+     DEPLOYMENT_ID="your_deployment_id_here"
+     ```
 
 ---
 
@@ -142,6 +184,7 @@ This project is tailored specifically for **Cloudflare Pages**.
    - **Build command**: `npm run build`
    - **Build output directory**: `dist`
 4. Add Environment Variables:
+   - `DEPLOYMENT_ID` = `your_deployment_id_here`
    - `VITE_SITE_URL` = `https://hairbyapril.pages.dev` (or your custom domain)
    - `VITE_TINA_CLIENT_ID`, `TINA_TOKEN`, `VITE_TINA_BRANCH` (if connecting Tina Cloud)
 5. Deploy!

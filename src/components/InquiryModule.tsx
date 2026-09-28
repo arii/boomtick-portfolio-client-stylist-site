@@ -108,7 +108,7 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
     setIsSubmitting(true);
     setSubmitError(null);
 
-    const sheetUrl = SITE_CONFIG.googleSheetUrl;
+    const webhookUrl = SITE_CONFIG.webhookUrl;
 
     const payload = {
       recipient: recipientEmail || SITE_CONFIG.email,
@@ -119,9 +119,9 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
       })),
     };
 
-    if (sheetUrl) {
+    if (webhookUrl) {
       try {
-        await fetch(sheetUrl, {
+        await fetch(webhookUrl, {
           method: "POST",
           headers: {
             "Content-Type": "text/plain;charset=utf-8",

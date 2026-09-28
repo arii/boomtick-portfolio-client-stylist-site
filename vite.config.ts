@@ -140,6 +140,9 @@ export default defineConfig(({ command }) => {
       "process.env.VITE_TINA_BRANCH": JSON.stringify(
         process.env.VITE_TINA_BRANCH || "main"
       ),
+      "process.env.DEPLOYMENT_ID": JSON.stringify(
+        process.env.DEPLOYMENT_ID || null
+      ),
     },
     plugins: [react(), tailwindcss(), dynamicSeoAndCdnPlugin()],
     resolve: {

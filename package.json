@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "node scripts/dev.js",
+    "dev": "vite",
+    "dev:tina": "node scripts/dev.js",
     "build": "node scripts/build.js",
     "preview": "vite preview",
     "clean": "rm -rf dist node_modules/.cache bun.lockb bun.lock",

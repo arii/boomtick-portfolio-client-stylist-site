@@ -46,6 +46,12 @@ function resolveSiteUrl(): string {
   return "https://hairbyapril.pages.dev";
 }
 
+const deploymentId =
+  (typeof process !== "undefined" && process.env?.DEPLOYMENT_ID?.trim()) || "";
+const webhookUrl = deploymentId
+  ? `https://script.google.com/macros/s/${deploymentId}/exec`
+  : "";
+
 const cleanSiteUrl = resolveSiteUrl().replace(/\/+$/, "");
 const canonicalUrl = `${cleanSiteUrl}/`;
 
@@ -82,9 +88,8 @@ export const SITE_CONFIG = {
   // Integrations & Logistics
   calUsername: SITE_CONTENT.calUsername || "ariel-anders",
   calDefaultSlug: SITE_CONTENT.calDefaultSlug || "april-demo",
-  googleSheetUrl:
-    (typeof process !== "undefined" && process.env?.VITE_GOOGLE_SHEET_URL) ||
-    "",
+  deploymentId,
+  webhookUrl,
   locationDisplay: SITE_CONTENT.locationDisplay,
   logisticsNotice:
     HERO_CONTENT.availabilityNotice ||
