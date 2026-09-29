@@ -142,6 +142,13 @@ export default defineConfig({
                   "Main section heading displayed above the service pricing cards",
               },
               {
+                type: "string",
+                name: "pricingNote",
+                label: "Pricing Note / Comment",
+                description:
+                  "Policy comment regarding service pricing (e.g., Pricing is SF only – additional cost for out of town)",
+              },
+              {
                 type: "object",
                 name: "servicesList",
                 label: "Service Offerings",

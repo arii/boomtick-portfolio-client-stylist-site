@@ -15,15 +15,12 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({
   onBookAppointment,
   studioName = SITE_CONFIG.studioName,
-  email = SITE_CONFIG.email,
   phone = SITE_CONFIG.phone,
   instagram = SITE_CONFIG.instagram,
   instagramUrl = SITE_CONFIG.instagramUrl,
 }) => {
   const cleanPhoneDigits = phone.replace(/[^0-9]/g, "");
-  const phoneTel = cleanPhoneDigits
-    ? `tel:${cleanPhoneDigits}`
-    : SITE_CONFIG.phoneTel;
+  const phoneSms = cleanPhoneDigits ? `sms:${cleanPhoneDigits}` : "#";
 
   return (
     <footer className="bg-stone-900 text-stone-300 py-16 md:py-20 border-t border-stone-800">
@@ -41,21 +38,15 @@ export const Footer: React.FC<FooterProps> = ({
               </span>
             </div>
 
-            {/* Tight vertically stacked contact information block */}
+            {/* Tight vertically stacked contact information block: prioritize text, hidden email */}
             <div className="flex flex-col gap-2 text-[13px] text-stone-400 font-sans">
               <a
-                id="footer-email-link"
-                href={`mailto:${email}`}
-                className="hover:text-white transition w-fit"
+                id="footer-text-link"
+                href={phoneSms}
+                className="hover:text-white transition w-fit flex items-center gap-1.5"
               >
-                {email}
-              </a>
-              <a
-                id="footer-phone-link"
-                href={phoneTel}
-                className="hover:text-white transition w-fit"
-              >
-                {phone}
+                <span className="text-stone-300 font-medium">Text:</span>
+                <span>{phone}</span>
               </a>
               <a
                 id="footer-instagram-link"

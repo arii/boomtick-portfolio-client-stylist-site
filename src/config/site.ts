@@ -46,16 +46,25 @@ function resolveSiteUrl(): string {
   return "https://hairbyapril.pages.dev";
 }
 
+const DEFAULT_DEPLOYMENT_ID =
+  "AKfycbzcKzeTp7qNkMgNk_MJkj9zjPpkkU3CI8QmJsTbIM6eY-SNEcr0V4lUVEE5xwRzdBD7Ag";
+
 const deploymentId =
-  (typeof process !== "undefined" && process.env?.DEPLOYMENT_ID?.trim()) ||
-  (typeof import.meta !== "undefined" &&
-    (
-      import.meta as unknown as { env?: Record<string, string> }
-    )?.env?.DEPLOYMENT_ID?.trim()) ||
-  "";
+  (typeof process !== "undefined" && process.env && process.env.DEPLOYMENT_ID
+    ? process.env.DEPLOYMENT_ID.trim()
+    : "") ||
+  (typeof import.meta !== "undefined" && import.meta.env
+    ? (
+        (import.meta.env.VITE_DEPLOYMENT_ID as string) ||
+        (import.meta.env.DEPLOYMENT_ID as string) ||
+        ""
+      ).trim()
+    : "") ||
+  DEFAULT_DEPLOYMENT_ID;
+
 const webhookUrl = deploymentId
   ? `https://script.google.com/macros/s/${deploymentId}/exec`
-  : "";
+  : `https://script.google.com/macros/s/${DEFAULT_DEPLOYMENT_ID}/exec`;
 
 const cleanSiteUrl = resolveSiteUrl().replace(/\/+$/, "");
 const canonicalUrl = `${cleanSiteUrl}/`;

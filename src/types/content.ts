@@ -90,6 +90,7 @@ export interface PageContent {
   hero: HeroContent;
   services: {
     sectionTitle?: string;
+    pricingNote?: string;
     servicesList: ServiceItem[];
   };
   portfolio: PortfolioContent;

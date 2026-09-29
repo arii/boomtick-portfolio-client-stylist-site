@@ -37,7 +37,9 @@ async function run() {
       `   Webhook Endpoint: https://script.google.com/macros/s/${deploymentId}/exec`
     );
   } else {
-    console.warn("⚠️  [Build Env] DEPLOYMENT_ID is NOT configured in environment!");
+    console.warn(
+      "⚠️  [Build Env] DEPLOYMENT_ID is NOT configured in environment!"
+    );
     console.warn(
       "   Inquiries submitted through the website form will NOT trigger Google Apps Script emails or sheet logging until DEPLOYMENT_ID is added to Cloudflare Pages (Settings > Environment variables).\n"
     );

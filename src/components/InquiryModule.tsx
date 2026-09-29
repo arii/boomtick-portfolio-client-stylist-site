@@ -212,17 +212,10 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                       Submission Error: {submitError}
                     </strong>
                     <p className="text-stone-600 leading-relaxed">
-                      Your inquiry could not be sent automatically. Please reach
-                      out directly to {SITE_CONFIG.stylistName} at{" "}
+                      Your inquiry could not be sent automatically. Please text{" "}
+                      {SITE_CONFIG.stylistName} directly at{" "}
                       <a
-                        href={`mailto:${SITE_CONFIG.email}`}
-                        className="underline font-semibold text-stone-900"
-                      >
-                        {SITE_CONFIG.email}
-                      </a>{" "}
-                      or text{" "}
-                      <a
-                        href={SITE_CONFIG.phoneTel}
+                        href={`sms:${SITE_CONFIG.phone.replace(/[^0-9]/g, "")}`}
                         className="underline font-semibold text-stone-900"
                       >
                         {SITE_CONFIG.phoneDisplay}
@@ -352,17 +345,10 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
               </div>
 
               <p className="text-xs text-stone-500 text-center font-sans">
-                Prefer direct reach out? Email{" "}
+                Prefer direct reach out? Text{" "}
                 <a
-                  href={`mailto:${SITE_CONFIG.email}`}
-                  className="underline text-stone-800 hover:text-stone-950 font-medium transition"
-                >
-                  {SITE_CONFIG.email}
-                </a>{" "}
-                or text{" "}
-                <a
-                  href={SITE_CONFIG.phoneTel}
-                  className="underline text-stone-800 hover:text-stone-950 font-medium transition"
+                  href={`sms:${SITE_CONFIG.phone.replace(/[^0-9]/g, "")}`}
+                  className="underline text-stone-800 hover:text-stone-950 font-semibold transition"
                 >
                   {SITE_CONFIG.phoneDisplay}
                 </a>

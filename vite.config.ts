@@ -160,7 +160,18 @@ export default defineConfig(({ command, mode }) => {
       "process.env.VITE_TINA_CLIENT_ID": JSON.stringify(tinaClientId || null),
       "process.env.TINA_TOKEN": JSON.stringify(tinaToken || null),
       "process.env.VITE_TINA_BRANCH": JSON.stringify(tinaBranch),
-      "process.env.DEPLOYMENT_ID": JSON.stringify(deploymentId || null),
+      "process.env.DEPLOYMENT_ID": JSON.stringify(
+        deploymentId ||
+          "AKfycbzcKzeTp7qNkMgNk_MJkj9zjPpkkU3CI8QmJsTbIM6eY-SNEcr0V4lUVEE5xwRzdBD7Ag"
+      ),
+      "import.meta.env.VITE_DEPLOYMENT_ID": JSON.stringify(
+        deploymentId ||
+          "AKfycbzcKzeTp7qNkMgNk_MJkj9zjPpkkU3CI8QmJsTbIM6eY-SNEcr0V4lUVEE5xwRzdBD7Ag"
+      ),
+      "import.meta.env.DEPLOYMENT_ID": JSON.stringify(
+        deploymentId ||
+          "AKfycbzcKzeTp7qNkMgNk_MJkj9zjPpkkU3CI8QmJsTbIM6eY-SNEcr0V4lUVEE5xwRzdBD7Ag"
+      ),
     },
     plugins: [react(), tailwindcss(), dynamicSeoAndCdnPlugin()],
     resolve: {

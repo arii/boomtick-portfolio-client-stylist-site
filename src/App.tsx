@@ -40,6 +40,7 @@ const PAGE_CONTENT_QUERY = `
       }
       services {
         sectionTitle
+        pricingNote
         servicesList {
           id
           name
@@ -149,6 +150,7 @@ export default function App() {
   const liveSite = (livePage?.site || cmsState.site) as SiteContent;
   const liveServices = (livePage?.services || cmsState.services) as {
     sectionTitle?: string;
+    pricingNote?: string;
     servicesList: ServiceItem[];
   };
   const livePortfolio = (livePage?.portfolio ||
@@ -182,6 +184,7 @@ export default function App() {
             site: (pageData.site || cmsState.site) as SiteContent,
             services: (pageData.services || cmsState.services) as {
               sectionTitle?: string;
+              pricingNote?: string;
               servicesList: ServiceItem[];
             },
             portfolio: (pageData.portfolio ||
@@ -290,6 +293,13 @@ export default function App() {
               >
                 {liveServices?.sectionTitle || "Services & Pricing"}
               </h2>
+              <p
+                data-tina-field={tinaField(liveServices, "pricingNote")}
+                className="mt-3 text-sm md:text-base font-medium text-stone-600 font-sans"
+              >
+                {liveServices?.pricingNote ||
+                  "Pricing is SF only – additional cost for out of town."}
+              </p>
             </div>
 
             {/* Consolidated Scheduling Callout Banner */}
