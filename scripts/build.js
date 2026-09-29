@@ -25,6 +25,24 @@ function printElevatedError(stepName, errorDetails) {
 async function run() {
   console.log("🚀 Initiating Production Build Pipeline...\n");
 
+  // 0. Environment Diagnostics
+  const deploymentId = process.env.DEPLOYMENT_ID?.trim();
+  if (deploymentId) {
+    const masked =
+      deploymentId.length > 8
+        ? `${deploymentId.slice(0, 4)}...${deploymentId.slice(-4)} (length: ${deploymentId.length})`
+        : "***";
+    console.log(`✅ [Build Env] DEPLOYMENT_ID detected: ${masked}`);
+    console.log(
+      `   Webhook Endpoint: https://script.google.com/macros/s/${deploymentId}/exec`
+    );
+  } else {
+    console.warn("⚠️  [Build Env] DEPLOYMENT_ID is NOT configured in environment!");
+    console.warn(
+      "   Inquiries submitted through the website form will NOT trigger Google Apps Script emails or sheet logging until DEPLOYMENT_ID is added to Cloudflare Pages (Settings > Environment variables).\n"
+    );
+  }
+
   // 1. Dynamic SEO & CMS Asset Generation
   console.log(
     "1️⃣ Generating dynamic SEO, sitemap, robots, and schemas from CMS config..."

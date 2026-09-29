@@ -146,8 +146,9 @@ fs.writeFileSync(path.join(rootDir, "llms.txt"), llmsContent, "utf8");
 
 // 4. Generate dynamic Schema.org HairSalon JSON-LD
 const serviceImages = {
-  "curly-cut-finish": `${siteUrl}/assets/portfolio-2.webp`,
-  "vintage-set-updo": `${siteUrl}/assets/portfolio-1.webp`,
+  "curly-cut-finish": `${siteUrl}/assets/curly-cut-natural-texture.jpeg`,
+  "vintage-set-updo": `${siteUrl}/assets/vintage-victory-rolls.jpeg`,
+  "general-haircut": `${siteUrl}/assets/fine-hair-precision-cut.jpeg`,
 };
 
 const serviceOffers = services.map((s) => ({

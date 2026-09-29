@@ -3,31 +3,44 @@
   "servicesList": [
     {
       "id": "curly-cut-finish",
-      "name": "Curly Hair Cut & Finish",
-      "price": "$175",
-      "duration": "90 mins",
-      "description": "Customized cutting, shaping, and styling tailored to your natural wave and curl pattern.",
+      "name": "Curly Cut & Styled Finish",
+      "price": "$100",
+      "duration": "60 mins",
+      "description": "Custom wet and or dry-cutting tailored to your unique curl pattern and density. Includes wash, deep conditioning, and step-by-step styling coaching.",
       "deliverables": [
-        "Customized haircut & curl styling",
-        "Cleansing & conditioning wash",
-        "Natural curl styling & finish",
-        "At-home routine guidance"
+        "In-depth texture and lifestyle consultation",
+        "Combination wet and or dry precision curl-by-curl shaping",
+        "Diffused styling and home maintenance coaching"
       ],
-      "calSlug": "april-demo"
+      "calSlug": "60min"
     },
     {
       "id": "vintage-set-updo",
-      "name": "Vintage Hair & Updos",
-      "price": "$145",
-      "duration": "90 mins",
-      "description": "Classic victory rolls, bumper bangs, waves, and pin-up styling built for longevity.",
+      "name": "Vintage Styling & Classic Updos",
+      "price": "$125",
+      "duration": "60 mins",
+      "description": "Authentic victory rolls, retro waves, and pin-up styling crafted for longevity, events, swing dancing, and photo shoots.",
       "deliverables": [
-        "Classic victory rolls, bumper bangs, or retro waves",
-        "Secure pin placement built for all-day hold",
-        "Vintage updo or brush-out",
-        "Accessories & hair flower placement"
+        "Period-accurate styling consultation",
+        "Precision pin placement and structural setting",
+        "Longevity finish designed for all-day wear",
+        "Accessories and veil placement if needed"
       ],
-      "calSlug": "april-demo"
+      "calSlug": "60min"
+    },
+    {
+      "id": "general-haircut",
+      "name": "General Haircut & Styled Finish",
+      "price": "$100",
+      "duration": "60 mins",
+      "description": "Consultation and personalized haircut. Tips for everyday styling and product recommendations.",
+      "deliverables": [
+        "Personalized hair & texture consultation",
+        "Professional washing & conditioning treatment",
+        "Precision haircut customized for your lifestyle",
+        "Expert blow-dry and finished look"
+      ],
+      "calSlug": "60min"
     }
   ]
 }

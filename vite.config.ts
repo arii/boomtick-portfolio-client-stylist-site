@@ -138,6 +138,22 @@ export default defineConfig(({ command, mode }) => {
   const tinaBranch =
     process.env.VITE_TINA_BRANCH || env.VITE_TINA_BRANCH || "main";
 
+  if (command === "build") {
+    if (deploymentId) {
+      const masked =
+        deploymentId.length > 8
+          ? `${deploymentId.slice(0, 4)}...${deploymentId.slice(-4)}`
+          : "***";
+      console.log(
+        `📦 [Vite Define] Injected DEPLOYMENT_ID (${masked}) into client bundle.`
+      );
+    } else {
+      console.warn(
+        "⚠️  [Vite Define] DEPLOYMENT_ID not found in env. Injected null into client bundle."
+      );
+    }
+  }
+
   return {
     base: command === "build" ? "./" : "/",
     define: {

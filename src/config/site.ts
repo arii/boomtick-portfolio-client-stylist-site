@@ -176,8 +176,9 @@ export function generateSiteSchema(
       : SITE_CONFIG.instagramUrl);
 
   const serviceImages: Record<string, string> = {
-    "curly-cut-finish": `${baseUrl}/assets/portfolio-2.webp`,
-    "vintage-set-updo": `${baseUrl}/assets/portfolio-1.webp`,
+    "curly-cut-finish": `${baseUrl}/assets/curly-cut-natural-texture.jpeg`,
+    "vintage-set-updo": `${baseUrl}/assets/vintage-victory-rolls.jpeg`,
+    "general-haircut": `${baseUrl}/assets/fine-hair-precision-cut.jpeg`,
   };
 
   const itemListElement = (services || SERVICES_CONTENT).map((service) => {

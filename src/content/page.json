@@ -52,37 +52,51 @@
     ]
   },
   "portfolio": {
-    "heroImage": "/assets/dd11e55a-b352-454d-b648-5353a9098ca3.jpeg",
+    "heroImage": "/assets/hero-april-styling.jpeg",
     "ogImage": "/assets/portfolio-4.webp",
-    "ogImageAlt": "Hair by April - Vintage Hair Styling & Curly Hair Specialist in San Francisco",
+    "ogImageAlt": "Hair by April - Vintage Hair Styling, Fine Cuts & Curly Hair Specialist in San Francisco",
     "portfolioList": [
       {
-        "title": "Vintage Victory Rolls",
         "id": "vintage-victory-rolls",
-        "image": "/assets/239d56f0-2b9c-47ca-8234-d43b93931444.jpeg",
-        "alt": "Classic 1940s victory rolls and retro updo styling",
+        "title": "Vintage Victory Rolls",
+        "image": "/assets/vintage-victory-rolls.jpeg",
+        "alt": "Structured 1940s vintage victory rolls updo hairstyle side profile",
         "tag": "Updos"
       },
       {
-        "title": "Natural Curl Shaping",
         "id": "natural-curl-shaping",
-        "image": "/assets/6f95b0f5-9c29-461a-a8b3-55a8ec65136e.jpeg",
-        "alt": "Defined natural curls after precision dry haircut",
+        "title": "Natural Curl Shaping",
+        "image": "/assets/curly-cut-natural-texture.jpeg",
+        "alt": "Defined natural curl shaping and layered volume cut on client with fine curly hair",
         "tag": "Curly Cut"
       },
       {
-        "title": "Hollywood Waves",
         "id": "hollywood-waves",
-        "image": "/assets/5b9c98c2-cdfe-46cb-8389-fb632f502ae2.jpeg",
-        "alt": "Polished vintage Hollywood waves on dark hair",
+        "title": "Hollywood Waves",
+        "image": "/assets/vintage-hollywood-waves.jpeg",
+        "alt": "Polished classic Hollywood s-waves styled for vintage events",
         "tag": "Vintage Styling"
       },
       {
-        "title": "Editorial Pin-Up Styling",
         "id": "editorial-pinup",
-        "image": "/assets/5a728264-76a2-49ce-be52-fc9969f6f7af.jpeg",
-        "alt": "Vintage styled bumper bangs and victory rolls profile",
+        "title": "Editorial Pin-Up Styling",
+        "image": "/assets/editorial-pinup-styling.jpeg",
+        "alt": "Pin-up bumper bangs and retro roll styling for photoshoot and editorial production",
         "tag": "Events & Production"
+      },
+      {
+        "id": "fine-hair-precision-cut",
+        "title": "Fine Hair Precision Cut",
+        "image": "/assets/fine-hair-precision-cut.jpeg",
+        "alt": "Precision blunt haircut with weightless texturizing for fine hair density",
+        "tag": "Fine Cuts"
+      },
+      {
+        "id": "bridal-retro-updo",
+        "title": "Bridal & Event Styling",
+        "image": "/assets/bridal-retro-updo.jpeg",
+        "alt": "Bespoke vintage-inspired bridal updo with romantic soft face-framing pin curls",
+        "tag": "Bridal"
       }
     ]
   },
