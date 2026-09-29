@@ -182,13 +182,8 @@
       "latitude": 37.7749,
       "longitude": -122.4194
     },
-    "areaServed": [
-      "San Francisco",
-      "San Francisco Bay Area"
-    ],
-    "openingDays": [
-      "Tuesday"
-    ],
+    "areaServed": ["San Francisco", "San Francisco Bay Area"],
+    "openingDays": ["Tuesday"],
     "openingHours": {
       "opens": "09:00",
       "closes": "18:00"

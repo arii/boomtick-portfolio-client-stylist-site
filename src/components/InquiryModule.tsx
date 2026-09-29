@@ -109,9 +109,10 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
     setSubmitError(null);
 
     const webhookUrl = SITE_CONFIG.webhookUrl;
+    const recipient = recipientEmail || SITE_CONFIG.email;
 
     const payload = {
-      recipient: recipientEmail || SITE_CONFIG.email,
+      recipient,
       submittedAt: new Date().toISOString(),
       fields: formFields.map((field) => ({
         label: field.label,
@@ -119,32 +120,49 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
       })),
     };
 
-    if (webhookUrl) {
-      try {
-        await fetch(webhookUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "text/plain;charset=utf-8",
-          },
-          body: JSON.stringify(payload),
-        });
-        setIsSubmitting(false);
-        setSubmitted(true);
-      } catch (err: unknown) {
-        const errorMsg =
-          err instanceof Error
-            ? err.message
-            : "Network error transmitting inquiry to Apps Script endpoint.";
-        console.error("Elevated Submission Error:", err);
-        setIsSubmitting(false);
-        setSubmitError(errorMsg);
-      }
-    } else {
-      // Simulate fast submission when no webhook URL is configured
-      setTimeout(() => {
-        setIsSubmitting(false);
-        setSubmitted(true);
-      }, 500);
+    console.info("📬 [InquiryModule] Submitting inquiry...", {
+      recipient,
+      deploymentId: SITE_CONFIG.deploymentId || "(empty)",
+      webhookUrl: webhookUrl || "(not configured)",
+      payload,
+    });
+
+    if (!webhookUrl) {
+      const missingMsg =
+        "Inquiry transmission failed: DEPLOYMENT_ID is not configured in your environment (.env or Cloudflare Pages).";
+      console.error(`❌ [InquiryModule] ${missingMsg}`);
+      setIsSubmitting(false);
+      setSubmitError(
+        "Inquiry form is not connected to a backend (missing DEPLOYMENT_ID). Please contact the stylist directly by email or phone."
+      );
+      return;
+    }
+
+    try {
+      console.info(
+        `📡 [InquiryModule] Transmitting payload to Apps Script endpoint: ${webhookUrl}`
+      );
+      await fetch(webhookUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8",
+        },
+        body: JSON.stringify(payload),
+      });
+      console.info(
+        "✅ [InquiryModule] Inquiry sent successfully to Google Apps Script."
+      );
+      setIsSubmitting(false);
+      setSubmitted(true);
+    } catch (err: unknown) {
+      const errorMsg =
+        err instanceof Error
+          ? err.message
+          : "Network error transmitting inquiry to Apps Script endpoint.";
+      console.error("❌ [InquiryModule] Elevated Submission Error:", err);
+      setIsSubmitting(false);
+      setSubmitError(errorMsg);
     }
   };
 

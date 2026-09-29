@@ -2,7 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import fs from "fs";
 import path from "path";
-import { defineConfig, Plugin } from "vite";
+import { defineConfig, loadEnv, Plugin } from "vite";
 import {
   SITE_CONFIG,
   SERVICES_CONTENT,
@@ -129,20 +129,22 @@ function dynamicSeoAndCdnPlugin(): Plugin {
   };
 }
 
-export default defineConfig(({ command }) => {
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const deploymentId = process.env.DEPLOYMENT_ID || env.DEPLOYMENT_ID || "";
+  const tinaClientId =
+    process.env.VITE_TINA_CLIENT_ID || env.VITE_TINA_CLIENT_ID || "";
+  const tinaToken = process.env.TINA_TOKEN || env.TINA_TOKEN || "";
+  const tinaBranch =
+    process.env.VITE_TINA_BRANCH || env.VITE_TINA_BRANCH || "main";
+
   return {
     base: command === "build" ? "./" : "/",
     define: {
-      "process.env.VITE_TINA_CLIENT_ID": JSON.stringify(
-        process.env.VITE_TINA_CLIENT_ID || null
-      ),
-      "process.env.TINA_TOKEN": JSON.stringify(process.env.TINA_TOKEN || null),
-      "process.env.VITE_TINA_BRANCH": JSON.stringify(
-        process.env.VITE_TINA_BRANCH || "main"
-      ),
-      "process.env.DEPLOYMENT_ID": JSON.stringify(
-        process.env.DEPLOYMENT_ID || null
-      ),
+      "process.env.VITE_TINA_CLIENT_ID": JSON.stringify(tinaClientId || null),
+      "process.env.TINA_TOKEN": JSON.stringify(tinaToken || null),
+      "process.env.VITE_TINA_BRANCH": JSON.stringify(tinaBranch),
+      "process.env.DEPLOYMENT_ID": JSON.stringify(deploymentId || null),
     },
     plugins: [react(), tailwindcss(), dynamicSeoAndCdnPlugin()],
     resolve: {

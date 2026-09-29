@@ -47,7 +47,12 @@ function resolveSiteUrl(): string {
 }
 
 const deploymentId =
-  (typeof process !== "undefined" && process.env?.DEPLOYMENT_ID?.trim()) || "";
+  (typeof process !== "undefined" && process.env?.DEPLOYMENT_ID?.trim()) ||
+  (typeof import.meta !== "undefined" &&
+    (
+      import.meta as unknown as { env?: Record<string, string> }
+    )?.env?.DEPLOYMENT_ID?.trim()) ||
+  "";
 const webhookUrl = deploymentId
   ? `https://script.google.com/macros/s/${deploymentId}/exec`
   : "";
