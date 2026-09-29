@@ -12,7 +12,7 @@
         "name": "Curly Cut & Styled Finish",
         "price": "$100",
         "duration": "60 mins",
-        "description": "Custom dry-cutting tailored to your unique curl pattern and density. Includes detox wash, deep conditioning, and step-by-step styling coaching.",
+        "description": "Custom wet and or dry-cutting tailored to your unique curl pattern and density. Includes wash, deep conditioning, and step-by-step styling coaching.",
         "deliverables": [
           "In-depth texture and lifestyle consultation",
           "Combination wet and or dry precision curl-by-curl shaping",
@@ -36,17 +36,17 @@
         "calSlug": "60min"
       },
       {
-        "id": "general-haircut",
         "name": "General Haircut & Styled Finish",
         "price": "$100",
         "duration": "60 mins",
-        "description": "Consultation and precision haircut tailored to your unique texture and lifestyle. Includes professional product recommendations and expert styling tips to help you maintain your look at home.",
+        "description": "Consultation and personalized haircut. TIps for everyday styling and product recommendations.",
         "deliverables": [
           "Personalized hair & texture consultation",
           "Professional washing & conditioning treatment",
           "Precision haircut customized for your lifestyle",
           "Expert blow-dry and finished look"
         ],
+        "id": "general-haircut",
         "calSlug": "60min"
       }
     ]
@@ -59,7 +59,7 @@
       {
         "title": "Vintage Victory Rolls",
         "id": "vintage-victory-rolls",
-        "image": "/assets/portfolio-1.webp",
+        "image": "/assets/239d56f0-2b9c-47ca-8234-d43b93931444.jpeg",
         "alt": "Classic 1940s victory rolls and retro updo styling",
         "tag": "Updos"
       },
@@ -73,14 +73,14 @@
       {
         "title": "Hollywood Waves",
         "id": "hollywood-waves",
-        "image": "/assets/portfolio-3.webp",
+        "image": "/assets/5b9c98c2-cdfe-46cb-8389-fb632f502ae2.jpeg",
         "alt": "Polished vintage Hollywood waves on dark hair",
         "tag": "Vintage Styling"
       },
       {
         "title": "Editorial Pin-Up Styling",
         "id": "editorial-pinup",
-        "image": "/assets/portfolio-4.webp",
+        "image": "/assets/5a728264-76a2-49ce-be52-fc9969f6f7af.jpeg",
         "alt": "Vintage styled bumper bangs and victory rolls profile",
         "tag": "Events & Production"
       }
@@ -182,8 +182,13 @@
       "latitude": 37.7749,
       "longitude": -122.4194
     },
-    "areaServed": ["San Francisco", "San Francisco Bay Area"],
-    "openingDays": ["Tuesday"],
+    "areaServed": [
+      "San Francisco",
+      "San Francisco Bay Area"
+    ],
+    "openingDays": [
+      "Tuesday"
+    ],
     "openingHours": {
       "opens": "09:00",
       "closes": "18:00"
