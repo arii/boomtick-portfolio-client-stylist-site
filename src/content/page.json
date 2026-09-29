@@ -34,6 +34,13 @@
         ],
         "id": "vintage-set-updo",
         "calSlug": "60min"
+      },
+      {
+        "name": "General hair cut",
+        "price": "Haircut & Styled Finish",
+        "duration": "60 mins",
+        "description": "Consultation and precision haircut tailored to your unique texture and lifestyle. Includes professional product recommendations and expert styling tips to help you maintain your look at home.",
+        "calSlug": "60min"
       }
     ]
   },
