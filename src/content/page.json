@@ -88,8 +88,8 @@
   },
   "events": {
     "title": "Events & Collaborations",
-    "description": "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance events, and retro pageants across the Bay Area.",
-    "showForm": true,
+    "description": "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance events, and retro pageants across the Bay Area.\n\nCall or text for more information today.",
+    "showForm": false,
     "formFields": [
       {
         "label": "Your Name",
@@ -182,8 +182,13 @@
       "latitude": 37.7749,
       "longitude": -122.4194
     },
-    "areaServed": ["San Francisco", "San Francisco Bay Area"],
-    "openingDays": ["Tuesday"],
+    "areaServed": [
+      "San Francisco",
+      "San Francisco Bay Area"
+    ],
+    "openingDays": [
+      "Tuesday"
+    ],
     "openingHours": {
       "opens": "09:00",
       "closes": "18:00"
