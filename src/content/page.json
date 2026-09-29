@@ -36,10 +36,17 @@
         "calSlug": "60min"
       },
       {
-        "name": "General hair cut",
-        "price": "Haircut & Styled Finish",
+        "id": "general-haircut",
+        "name": "General Haircut & Styled Finish",
+        "price": "$100",
         "duration": "60 mins",
         "description": "Consultation and precision haircut tailored to your unique texture and lifestyle. Includes professional product recommendations and expert styling tips to help you maintain your look at home.",
+        "deliverables": [
+          "Personalized hair & texture consultation",
+          "Professional washing & conditioning treatment",
+          "Precision haircut customized for your lifestyle",
+          "Expert blow-dry and finished look"
+        ],
         "calSlug": "60min"
       }
     ]
@@ -175,13 +182,8 @@
       "latitude": 37.7749,
       "longitude": -122.4194
     },
-    "areaServed": [
-      "San Francisco",
-      "San Francisco Bay Area"
-    ],
-    "openingDays": [
-      "Tuesday"
-    ],
+    "areaServed": ["San Francisco", "San Francisco Bay Area"],
+    "openingDays": ["Tuesday"],
     "openingHours": {
       "opens": "09:00",
       "closes": "18:00"
