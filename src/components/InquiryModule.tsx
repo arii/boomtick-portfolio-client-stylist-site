@@ -48,7 +48,7 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
       _template: "selectField",
       label: "Event / Inquiry Type",
       options: [
-        "Wedding / Bridal Party",
+        "Private Party / Celebration",
         "Editorial / Commercial Photoshoot",
         "Swing Dance Camp / Festival",
         "Retro Pageant / Special Event",
@@ -63,7 +63,7 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
         "1 Person",
         "2-4 People",
         "5-8 People",
-        "9+ People (Large Bridal / Production Group)",
+        "9+ People (Large Event / Production Group)",
       ],
       required: true,
     },

@@ -214,7 +214,7 @@ export function generateSiteSchema(
       "@type": "Service",
       name: "On-Location Events & Collaborations",
       description:
-        "Weddings, bridal parties, editorial shoots, swing dance camps, and retro pageants across the Bay Area.",
+        "Group events, editorial shoots, swing dance camps, and retro pageants across the Bay Area (travel fees apply outside SF).",
       image: `${baseUrl}/assets/portfolio-3.webp`,
     },
     priceSpecification: {

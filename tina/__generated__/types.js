@@ -18,6 +18,7 @@ export const PagePartsFragmentDoc = gql`
   services {
     __typename
     sectionTitle
+    pricingNote
     servicesList {
       __typename
       name

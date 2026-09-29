@@ -109,6 +109,7 @@ type PageServicesServicesList {
 
 type PageServices {
   sectionTitle: String
+  pricingNote: String
   servicesList: [PageServicesServicesList]
 }
 
@@ -233,6 +234,7 @@ input PageServicesServicesListFilter {
 
 input PageServicesFilter {
   sectionTitle: StringFilter
+  pricingNote: StringFilter
   servicesList: PageServicesServicesListFilter
 }
 
@@ -403,6 +405,7 @@ input PageServicesServicesListMutation {
 
 input PageServicesMutation {
   sectionTitle: String
+  pricingNote: String
   servicesList: [PageServicesServicesListMutation]
 }
 

@@ -10,6 +10,7 @@ fragment PageParts on Page {
   services {
     __typename
     sectionTitle
+    pricingNote
     servicesList {
       __typename
       name

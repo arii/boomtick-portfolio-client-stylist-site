@@ -189,6 +189,7 @@ export type PageServicesServicesList = {
 export type PageServices = {
   __typename?: 'PageServices';
   sectionTitle?: Maybe<Scalars['String']['output']>;
+  pricingNote?: Maybe<Scalars['String']['output']>;
   servicesList?: Maybe<Array<Maybe<PageServicesServicesList>>>;
 };
 
@@ -325,6 +326,7 @@ export type PageServicesServicesListFilter = {
 
 export type PageServicesFilter = {
   sectionTitle?: InputMaybe<StringFilter>;
+  pricingNote?: InputMaybe<StringFilter>;
   servicesList?: InputMaybe<PageServicesServicesListFilter>;
 };
 
@@ -543,6 +545,7 @@ export type PageServicesServicesListMutation = {
 
 export type PageServicesMutation = {
   sectionTitle?: InputMaybe<Scalars['String']['input']>;
+  pricingNote?: InputMaybe<Scalars['String']['input']>;
   servicesList?: InputMaybe<Array<InputMaybe<PageServicesServicesListMutation>>>;
 };
 
@@ -668,6 +671,7 @@ export type PageServicesServicesListFilter = {
 
 export type PageServicesFilter = {
   sectionTitle?: StringFilter | null | undefined;
+  pricingNote?: StringFilter | null | undefined;
   servicesList?: PageServicesServicesListFilter | null | undefined;
 };
 
@@ -789,7 +793,7 @@ export type PageFilter = {
   site?: PageSiteFilter | null | undefined;
 };
 
-export type PagePartsFragment = { __typename: 'Page', hero: { __typename: 'PageHero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string } | null, services: { __typename: 'PageServices', sectionTitle: string | null, servicesList: Array<{ __typename: 'PageServicesServicesList', name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, id: string, calSlug: string | null } | null> | null } | null, portfolio: { __typename: 'PagePortfolio', heroImage: string | null, ogImage: string | null, ogImageAlt: string | null, portfolioList: Array<{ __typename: 'PagePortfolioPortfolioList', title: string | null, id: string, image: string, alt: string, tag: string | null } | null> | null } | null, events: { __typename: 'PageEvents', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
+export type PagePartsFragment = { __typename: 'Page', hero: { __typename: 'PageHero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string } | null, services: { __typename: 'PageServices', sectionTitle: string | null, pricingNote: string | null, servicesList: Array<{ __typename: 'PageServicesServicesList', name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, id: string, calSlug: string | null } | null> | null } | null, portfolio: { __typename: 'PagePortfolio', heroImage: string | null, ogImage: string | null, ogImageAlt: string | null, portfolioList: Array<{ __typename: 'PagePortfolioPortfolioList', title: string | null, id: string, image: string, alt: string, tag: string | null } | null> | null } | null, events: { __typename: 'PageEvents', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
       | { __typename: 'PageEventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
       | { __typename: 'PageEventsFormFieldsSelectField', label: string, options: Array<string | null> | null, required: boolean | null }
       | { __typename: 'PageEventsFormFieldsTextareaField', label: string, placeholder: string | null, required: boolean | null }
@@ -800,7 +804,7 @@ export type PageQueryVariables = Exact<{
 }>;
 
 
-export type PageQuery = { page: { __typename: 'Page', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'PageHero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string } | null, services: { __typename: 'PageServices', sectionTitle: string | null, servicesList: Array<{ __typename: 'PageServicesServicesList', name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, id: string, calSlug: string | null } | null> | null } | null, portfolio: { __typename: 'PagePortfolio', heroImage: string | null, ogImage: string | null, ogImageAlt: string | null, portfolioList: Array<{ __typename: 'PagePortfolioPortfolioList', title: string | null, id: string, image: string, alt: string, tag: string | null } | null> | null } | null, events: { __typename: 'PageEvents', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
+export type PageQuery = { page: { __typename: 'Page', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'PageHero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string } | null, services: { __typename: 'PageServices', sectionTitle: string | null, pricingNote: string | null, servicesList: Array<{ __typename: 'PageServicesServicesList', name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, id: string, calSlug: string | null } | null> | null } | null, portfolio: { __typename: 'PagePortfolio', heroImage: string | null, ogImage: string | null, ogImageAlt: string | null, portfolioList: Array<{ __typename: 'PagePortfolioPortfolioList', title: string | null, id: string, image: string, alt: string, tag: string | null } | null> | null } | null, events: { __typename: 'PageEvents', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
         | { __typename: 'PageEventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
         | { __typename: 'PageEventsFormFieldsSelectField', label: string, options: Array<string | null> | null, required: boolean | null }
         | { __typename: 'PageEventsFormFieldsTextareaField', label: string, placeholder: string | null, required: boolean | null }
@@ -816,7 +820,7 @@ export type PageConnectionQueryVariables = Exact<{
 }>;
 
 
-export type PageConnectionQuery = { pageConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Page', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'PageHero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string } | null, services: { __typename: 'PageServices', sectionTitle: string | null, servicesList: Array<{ __typename: 'PageServicesServicesList', name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, id: string, calSlug: string | null } | null> | null } | null, portfolio: { __typename: 'PagePortfolio', heroImage: string | null, ogImage: string | null, ogImageAlt: string | null, portfolioList: Array<{ __typename: 'PagePortfolioPortfolioList', title: string | null, id: string, image: string, alt: string, tag: string | null } | null> | null } | null, events: { __typename: 'PageEvents', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
+export type PageConnectionQuery = { pageConnection: { totalCount: number, pageInfo: { hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges: Array<{ cursor: string, node: { __typename: 'Page', id: string, _sys: { filename: string, basename: string, hasReferences: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero: { __typename: 'PageHero', badge: string | null, headline: string, subheading: string | null, availabilityNotice: string } | null, services: { __typename: 'PageServices', sectionTitle: string | null, pricingNote: string | null, servicesList: Array<{ __typename: 'PageServicesServicesList', name: string, price: string, duration: string | null, description: string | null, deliverables: Array<string | null> | null, id: string, calSlug: string | null } | null> | null } | null, portfolio: { __typename: 'PagePortfolio', heroImage: string | null, ogImage: string | null, ogImageAlt: string | null, portfolioList: Array<{ __typename: 'PagePortfolioPortfolioList', title: string | null, id: string, image: string, alt: string, tag: string | null } | null> | null } | null, events: { __typename: 'PageEvents', title: string | null, description: string | null, showForm: boolean | null, formFields: Array<
             | { __typename: 'PageEventsFormFieldsInputField', label: string, fieldType: string | null, placeholder: string | null, required: boolean | null }
             | { __typename: 'PageEventsFormFieldsSelectField', label: string, options: Array<string | null> | null, required: boolean | null }
             | { __typename: 'PageEventsFormFieldsTextareaField', label: string, placeholder: string | null, required: boolean | null }
@@ -835,6 +839,7 @@ export const PagePartsFragmentDoc = gql`
   services {
     __typename
     sectionTitle
+    pricingNote
     servicesList {
       __typename
       name

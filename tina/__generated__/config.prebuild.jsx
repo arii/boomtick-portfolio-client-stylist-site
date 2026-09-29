@@ -105,6 +105,12 @@ var config_default = defineConfig({
                 description: "Main section heading displayed above the service pricing cards"
               },
               {
+                type: "string",
+                name: "pricingNote",
+                label: "Pricing Note / Comment",
+                description: "Policy comment regarding service pricing (e.g., Pricing is SF only \u2013 additional cost for out of town)"
+              },
+              {
                 type: "object",
                 name: "servicesList",
                 label: "Service Offerings",

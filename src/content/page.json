@@ -7,7 +7,7 @@
   },
   "services": {
     "sectionTitle": "Services & Pricing",
-    "pricingNote": "Pricing is SF only – additional cost for out of town.",
+    "pricingNote": "Service pricing is for San Francisco only. Additional travel fees apply for inquiries throughout the greater Bay Area.",
     "servicesList": [
       {
         "name": "Curly Cut & Styled Finish",
@@ -31,7 +31,7 @@
           "Period-accurate styling consultation",
           "Precision pin placement and structural setting",
           "Longevity finish designed for all-day wear",
-          "Accessories and veil placement if needed"
+          "Accessories and hairpiece placement if needed"
         ],
         "id": "vintage-set-updo",
         "calSlug": "60min"
@@ -94,16 +94,16 @@
       },
       {
         "id": "bridal-retro-updo",
-        "title": "Bridal & Event Styling",
+        "title": "Group & Event Styling",
         "image": "/assets/bridal-retro-updo.jpeg",
-        "alt": "Bespoke vintage-inspired bridal updo with romantic soft face-framing pin curls",
-        "tag": "Bridal"
+        "alt": "Bespoke vintage-inspired group updo with romantic soft face-framing pin curls",
+        "tag": "Events"
       }
     ]
   },
   "events": {
     "title": "Events & Collaborations",
-    "description": "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance events, and retro pageants across the Bay Area.",
+    "description": "Custom on-location styling available for group parties, editorial and commercial shoots, swing dance events, and retro pageants across the Bay Area (travel fees apply outside San Francisco).",
     "showForm": true,
     "formFields": [
       {
@@ -130,7 +130,7 @@
       {
         "label": "Event / Inquiry Type",
         "options": [
-          "Wedding / Bridal Party",
+          "Private Party / Celebration",
           "Editorial & Commercial Photoshoot",
           "Swing Dance Camp / Festival",
           "Retro Pageant / Special Event",
@@ -145,7 +145,7 @@
           "1 Person",
           "2-4 People",
           "5-8 People",
-          "9+ People (Large Bridal / Production Group)"
+          "9+ People (Large Event / Production Group)"
         ],
         "required": true,
         "_template": "selectField"
@@ -179,7 +179,7 @@
       "victory rolls",
       "pin-up hair SF",
       "natural curl specialist",
-      "bridal hair SF",
+      "event styling SF",
       "retro hair styling San Francisco"
     ],
     "email": "hair.by.april.415@gmail.com",

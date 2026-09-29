@@ -1,6 +1,6 @@
 {
   "title": "Events & Collaborations",
-  "description": "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance camps, and retro pageants across the Bay Area.",
+  "description": "Custom on-location styling available for group parties, editorial and commercial shoots, swing dance camps, and retro pageants across the Bay Area (travel fees apply outside San Francisco).",
   "showForm": true,
   "formFields": [
     {
@@ -28,7 +28,7 @@
       "_template": "selectField",
       "label": "Event / Inquiry Type",
       "options": [
-        "Wedding / Bridal Party",
+        "Private Party / Celebration",
         "Editorial & Commercial Photoshoot",
         "Swing Dance Camp / Festival",
         "Retro Pageant / Special Event",
@@ -43,7 +43,7 @@
         "1 Person",
         "2-4 People",
         "5-8 People",
-        "9+ People (Large Bridal / Production Group)"
+        "9+ People (Large Event / Production Group)"
       ],
       "required": true
     },

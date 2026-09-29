@@ -1,6 +1,6 @@
 {
   "sectionTitle": "Services & Pricing",
-  "pricingNote": "Pricing is SF only – additional cost for out of town.",
+  "pricingNote": "Service pricing is for San Francisco only. Additional travel fees apply for inquiries throughout the greater Bay Area.",
   "servicesList": [
     {
       "id": "curly-cut-finish",
@@ -25,7 +25,7 @@
         "Period-accurate styling consultation",
         "Precision pin placement and structural setting",
         "Longevity finish designed for all-day wear",
-        "Accessories and veil placement if needed"
+        "Accessories and hairpiece placement if needed"
       ],
       "calSlug": "60min"
     },
