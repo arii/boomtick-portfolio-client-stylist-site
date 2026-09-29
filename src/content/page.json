@@ -88,8 +88,8 @@
   },
   "events": {
     "title": "Events & Collaborations",
-    "description": "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance events, and retro pageants across the Bay Area.\n\nCall or text for more information today.",
-    "showForm": false,
+    "description": "Custom on-location styling available for weddings and bridal parties, editorial and commercial shoots, swing dance events, and retro pageants across the Bay Area.",
+    "showForm": true,
     "formFields": [
       {
         "label": "Your Name",
