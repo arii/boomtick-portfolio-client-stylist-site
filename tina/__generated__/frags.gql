@@ -18,6 +18,12 @@ fragment PageParts on Page {
       duration
       description
       deliverables
+      examples {
+        __typename
+        image
+        styleLabel
+        alt
+      }
       id
       calSlug
     }
@@ -34,6 +40,17 @@ fragment PageParts on Page {
       image
       alt
       tag
+      images
+    }
+  }
+  faq {
+    __typename
+    sectionTitle
+    sectionSubtitle
+    faqList {
+      __typename
+      question
+      answer
     }
   }
   events {

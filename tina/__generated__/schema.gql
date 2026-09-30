@@ -97,12 +97,19 @@ type PageHero {
   availabilityNotice: String!
 }
 
+type PageServicesServicesListExamples {
+  image: String
+  styleLabel: String
+  alt: String
+}
+
 type PageServicesServicesList {
   name: String!
   price: String!
   duration: String
   description: String
   deliverables: [String]
+  examples: [PageServicesServicesListExamples]
   id: String!
   calSlug: String
 }
@@ -119,6 +126,7 @@ type PagePortfolioPortfolioList {
   image: String!
   alt: String!
   tag: String
+  images: [String]
 }
 
 type PagePortfolio {
@@ -126,6 +134,17 @@ type PagePortfolio {
   ogImage: String
   ogImageAlt: String
   portfolioList: [PagePortfolioPortfolioList]
+}
+
+type PageFaqFaqList {
+  question: String!
+  answer: String!
+}
+
+type PageFaq {
+  sectionTitle: String
+  sectionSubtitle: String
+  faqList: [PageFaqFaqList]
 }
 
 type PageEventsFormFieldsInputField {
@@ -201,6 +220,7 @@ type Page implements Node & Document {
   hero: PageHero
   services: PageServices
   portfolio: PagePortfolio
+  faq: PageFaq
   events: PageEvents
   site: PageSite
   id: ID!
@@ -222,12 +242,26 @@ input PageHeroFilter {
   availabilityNotice: StringFilter
 }
 
+input ImageFilter {
+  startsWith: String
+  eq: String
+  exists: Boolean
+  in: [String]
+}
+
+input PageServicesServicesListExamplesFilter {
+  image: ImageFilter
+  styleLabel: StringFilter
+  alt: StringFilter
+}
+
 input PageServicesServicesListFilter {
   name: StringFilter
   price: StringFilter
   duration: StringFilter
   description: StringFilter
   deliverables: StringFilter
+  examples: PageServicesServicesListExamplesFilter
   id: StringFilter
   calSlug: StringFilter
 }
@@ -238,19 +272,13 @@ input PageServicesFilter {
   servicesList: PageServicesServicesListFilter
 }
 
-input ImageFilter {
-  startsWith: String
-  eq: String
-  exists: Boolean
-  in: [String]
-}
-
 input PagePortfolioPortfolioListFilter {
   title: StringFilter
   id: StringFilter
   image: ImageFilter
   alt: StringFilter
   tag: StringFilter
+  images: ImageFilter
 }
 
 input PagePortfolioFilter {
@@ -258,6 +286,17 @@ input PagePortfolioFilter {
   ogImage: ImageFilter
   ogImageAlt: StringFilter
   portfolioList: PagePortfolioPortfolioListFilter
+}
+
+input PageFaqFaqListFilter {
+  question: StringFilter
+  answer: StringFilter
+}
+
+input PageFaqFilter {
+  sectionTitle: StringFilter
+  sectionSubtitle: StringFilter
+  faqList: PageFaqFaqListFilter
 }
 
 input BooleanFilter {
@@ -352,6 +391,7 @@ input PageFilter {
   hero: PageHeroFilter
   services: PageServicesFilter
   portfolio: PagePortfolioFilter
+  faq: PageFaqFilter
   events: PageEventsFilter
   site: PageSiteFilter
 }
@@ -393,12 +433,19 @@ input PageHeroMutation {
   availabilityNotice: String
 }
 
+input PageServicesServicesListExamplesMutation {
+  image: String
+  styleLabel: String
+  alt: String
+}
+
 input PageServicesServicesListMutation {
   name: String
   price: String
   duration: String
   description: String
   deliverables: [String]
+  examples: [PageServicesServicesListExamplesMutation]
   id: String
   calSlug: String
 }
@@ -415,6 +462,7 @@ input PagePortfolioPortfolioListMutation {
   image: String
   alt: String
   tag: String
+  images: [String]
 }
 
 input PagePortfolioMutation {
@@ -422,6 +470,17 @@ input PagePortfolioMutation {
   ogImage: String
   ogImageAlt: String
   portfolioList: [PagePortfolioPortfolioListMutation]
+}
+
+input PageFaqFaqListMutation {
+  question: String
+  answer: String
+}
+
+input PageFaqMutation {
+  sectionTitle: String
+  sectionSubtitle: String
+  faqList: [PageFaqFaqListMutation]
 }
 
 input PageEventsFormFieldsInputFieldMutation {
@@ -501,6 +560,7 @@ input PageMutation {
   hero: PageHeroMutation
   services: PageServicesMutation
   portfolio: PagePortfolioMutation
+  faq: PageFaqMutation
   events: PageEventsMutation
   site: PageSiteMutation
 }

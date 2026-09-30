@@ -26,6 +26,12 @@ export const PagePartsFragmentDoc = gql`
       duration
       description
       deliverables
+      examples {
+        __typename
+        image
+        styleLabel
+        alt
+      }
       id
       calSlug
     }
@@ -42,6 +48,17 @@ export const PagePartsFragmentDoc = gql`
       image
       alt
       tag
+      images
+    }
+  }
+  faq {
+    __typename
+    sectionTitle
+    sectionSubtitle
+    faqList {
+      __typename
+      question
+      answer
     }
   }
   events {
