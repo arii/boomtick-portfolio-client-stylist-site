@@ -6,6 +6,12 @@ export interface HeroContent {
   [key: string]: unknown;
 }
 
+export interface ExampleItem {
+  image: string;
+  styleLabel: string;
+  alt?: string;
+}
+
 export interface ServiceItem {
   id: string;
   name: string;
@@ -14,6 +20,7 @@ export interface ServiceItem {
   description: string;
   deliverables: string[];
   calSlug?: string;
+  examples?: ExampleItem[];
   [key: string]: unknown;
 }
 
@@ -23,6 +30,7 @@ export interface PortfolioItem {
   image: string;
   alt: string;
   tag: string;
+  images?: string[];
   [key: string]: unknown;
 }
 
@@ -86,6 +94,19 @@ export interface SiteContent {
   [key: string]: unknown;
 }
 
+export interface FAQItem {
+  question: string;
+  answer: string;
+  [key: string]: unknown;
+}
+
+export interface FAQContent {
+  sectionTitle?: string;
+  sectionSubtitle?: string;
+  faqList: FAQItem[];
+  [key: string]: unknown;
+}
+
 export interface PageContent {
   hero: HeroContent;
   services: {
@@ -94,6 +115,7 @@ export interface PageContent {
     servicesList: ServiceItem[];
   };
   portfolio: PortfolioContent;
+  faq?: FAQContent;
   events: EventsContent;
   site: SiteContent;
 }

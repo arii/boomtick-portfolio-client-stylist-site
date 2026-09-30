@@ -133,7 +133,7 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
       console.error(`❌ [InquiryModule] ${missingMsg}`);
       setIsSubmitting(false);
       setSubmitError(
-        "Inquiry form is not connected to a backend (missing DEPLOYMENT_ID). Please contact the stylist directly by email or phone."
+        "Inquiry form is not connected to a backend (missing DEPLOYMENT_ID). Please contact April directly by phone or text."
       );
       return;
     }
@@ -340,24 +340,13 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                       <Send className="w-4 h-4" />
                       <span>{submitButtonText}</span>
                     </>
-                  )}
+                  )
+                  }
                 </button>
               </div>
 
-              <p className="text-xs text-stone-500 text-center font-sans">
-                Prefer direct reach out? Text{" "}
-                <a
-                  href={`sms:${SITE_CONFIG.phone.replace(/[^0-9]/g, "")}`}
-                  className="underline text-stone-800 hover:text-stone-950 font-semibold transition"
-                >
-                  {SITE_CONFIG.phoneDisplay}
-                </a>
-                .
-              </p>
-
               <p className="text-[11px] text-stone-600 text-center font-sans">
-                Direct quotes provided with travel estimates, preparation
-                guides, and timed schedules.
+                April responds directly with travel quotes, prep notes, and timing schedules.
               </p>
             </form>
           )}

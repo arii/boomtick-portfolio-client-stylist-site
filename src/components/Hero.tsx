@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight, Calendar, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { tinaField } from "../lib/useTina";
 import { TOKENS } from "../styles/tokens";
 import { HERO_CONTENT, SITE_CONFIG } from "../config/site";
@@ -52,25 +52,23 @@ export const Hero: React.FC<HeroProps> = ({
               {heroContent.subheading}
             </p>
 
-            {/* Primary CTA */}
-            <div className="pt-2 flex items-center">
-              <button
-                id="hero-book-btn"
-                onClick={onBookAppointment}
-                className={TOKENS.button.primary}
+            {/* Primary CTA Block: Paired Actions */}
+            <div className="flex flex-col sm:flex-row items-center justify-start gap-3 mt-6">
+              {/* Primary Action: Direct SMS */}
+              <a
+                href="sms:4157945772?body=Hi%20April!%20I'm%20interested%20in%20talking%20about%20a%20haircut/style..."
+                className="w-full sm:w-auto px-7 py-3.5 rounded-full bg-stone-900 text-white font-bold text-xs uppercase tracking-wider hover:bg-stone-800 transition shadow-sm text-center font-sans"
               >
-                <span>Book Appointment</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
+                TEXT APRIL (415-794-5772)
+              </a>
 
-            {/* Scheduling Availability Note */}
-            <div
-              data-tina-field={tinaField(heroContent, "availabilityNotice")}
-              className="pt-1 flex items-center gap-1.5 text-xs text-stone-500 font-sans"
-            >
-              <Calendar className={`w-3.5 h-3.5 ${TOKENS.accent.icon}`} />
-              <span>{heroContent.availabilityNotice}</span>
+              {/* Secondary Action: Interactive Booking Modal */}
+              <button
+                onClick={onBookAppointment}
+                className="w-full sm:w-auto px-7 py-3.5 rounded-full border border-stone-300 text-stone-800 font-bold text-xs uppercase tracking-wider hover:bg-stone-50 transition text-center cursor-pointer font-sans"
+              >
+                BOOK APPOINTMENT
+              </button>
             </div>
           </div>
 

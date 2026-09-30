@@ -22,8 +22,8 @@
   "phoneFallback": "415-794-5772",
   "instagramHandle": "hair.by.april_209",
   "locationDisplay": "San Francisco, CA",
-  "availabilityBanner": "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
-  "logisticsNotice": "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays.",
+  "availabilityBanner": "On-location appointments in SF. Main availability is Mondays, Tuesdays, and Thursdays (other days by special arrangement).",
+  "logisticsNotice": "On-location appointments in SF. Main availability is Mondays, Tuesdays, and Thursdays (other days by special arrangement).",
   "calUsername": "hair.by.april",
   "calDefaultSlug": "60min",
   "address": {
@@ -36,7 +36,7 @@
     "longitude": -122.4194
   },
   "areaServed": ["San Francisco", "San Francisco Bay Area"],
-  "openingDays": ["Tuesday"],
+  "openingDays": ["Monday", "Tuesday", "Thursday"],
   "openingHours": {
     "opens": "09:00",
     "closes": "18:00"

@@ -84,7 +84,7 @@ export const Footer: React.FC<FooterProps> = ({
               href="#forms"
               className="hover:text-white transition"
             >
-              Inquiry Form
+              Event Booking
             </a>
           </nav>
         </div>

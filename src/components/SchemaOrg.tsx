@@ -11,12 +11,14 @@ import type {
   SiteContent,
   PortfolioContent,
   PortfolioItem,
+  FAQContent,
 } from "../types/content";
 
 interface SchemaOrgProps {
   siteConfig?: Partial<SiteContent> & Partial<SiteConfig>;
   services?: ServiceItem[];
   portfolio?: PortfolioContent | PortfolioItem[];
+  faq?: FAQContent;
 }
 
 /**
@@ -26,6 +28,7 @@ export const SchemaOrg: React.FC<SchemaOrgProps> = ({
   siteConfig,
   services = SERVICES_CONTENT,
   portfolio,
+  faq,
 }) => {
   useEffect(() => {
     let script = document.getElementById(
@@ -45,7 +48,8 @@ export const SchemaOrg: React.FC<SchemaOrgProps> = ({
     const schemaData = generateSiteSchema(
       mergedConfig,
       services,
-      portfolioList
+      portfolioList,
+      faq
     );
     script.textContent = JSON.stringify(schemaData, null, 2);
 
@@ -80,7 +84,7 @@ export const SchemaOrg: React.FC<SchemaOrgProps> = ({
       const twDesc = document.querySelector('meta[name="twitter:description"]');
       if (twDesc) twDesc.setAttribute("content", description);
     }
-  }, [siteConfig, services, portfolio]);
+  }, [siteConfig, services, portfolio, faq]);
 
   return null;
 };

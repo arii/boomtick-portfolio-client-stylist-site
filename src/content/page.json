@@ -3,11 +3,11 @@
     "badge": "Licensed Cosmetologist • 20 Years Experience",
     "headline": "Specializing in fine cuts, curly cuts & vintage styling.",
     "subheading": "San Francisco-based stylist specializing in precision curly and fine hair cuts, as well as authentic vintage styling, with bespoke on-location services available for events and professional productions.",
-    "availabilityNotice": "On-location hair stylist appointments in San Francisco. Main availability is Tuesdays."
+    "availabilityNotice": "On-location appointments in SF. Main availability is Mondays, Tuesdays, and Thursdays (other days by special arrangement)."
   },
   "services": {
     "sectionTitle": "Services & Pricing",
-    "pricingNote": "Service pricing is for San Francisco only. Additional travel fees apply for inquiries throughout the greater Bay Area.",
+    "pricingNote": "Service pricing is for San Francisco only. Additional travel fees apply outside San Francisco.",
     "servicesList": [
       {
         "name": "Curly Cut & Styled Finish",
@@ -20,7 +20,24 @@
           "Diffused styling and home maintenance coaching"
         ],
         "id": "curly-cut-finish",
-        "calSlug": "60min"
+        "calSlug": "60min",
+        "examples": [
+          {
+            "image": "/assets/curly-cut-natural-texture.jpeg",
+            "styleLabel": "Natural Texture Shaping",
+            "alt": "Expert natural curly cut with defined curl ringlets"
+          },
+          {
+            "image": "/assets/curly-cut-layered-lob.jpeg",
+            "styleLabel": "Layered Texture Cut",
+            "alt": "Layered natural hair shaping style"
+          },
+          {
+            "image": "/assets/curly-cut-bouncy-coils.png",
+            "styleLabel": "Bouncy Spring Curls",
+            "alt": "Beautiful springy texture and volume"
+          }
+        ]
       },
       {
         "name": "Vintage Styling & Classic Updos",
@@ -34,7 +51,24 @@
           "Accessories and hairpiece placement if needed"
         ],
         "id": "vintage-set-updo",
-        "calSlug": "60min"
+        "calSlug": "60min",
+        "examples": [
+          {
+            "image": "/assets/vintage-victory-rolls.jpeg",
+            "styleLabel": "1940s Victory Rolls",
+            "alt": "Perfect precision victory rolls vintage style"
+          },
+          {
+            "image": "/assets/vintage-hollywood-waves.jpeg",
+            "styleLabel": "Classic Hollywood Waves",
+            "alt": "Glossy sculpted retro Hollywood finger waves"
+          },
+          {
+            "image": "/assets/vintage-pinup-updo-styling.jpeg",
+            "styleLabel": "Retro Pin-up Updo",
+            "alt": "Stunning vintage updo styling"
+          }
+        ]
       },
       {
         "name": "General Haircut & Styled Finish",
@@ -48,56 +82,93 @@
           "Expert blow-dry and finished look"
         ],
         "id": "general-haircut",
-        "calSlug": "60min"
+        "calSlug": "60min",
+        "examples": [
+          {
+            "image": "/assets/fine-hair-precision-cut.jpeg",
+            "styleLabel": "Blunt Cut • Fine Density",
+            "alt": "Precision blunt perimeter cut with texturizing for fine hair"
+          },
+          {
+            "image": "/assets/general-haircut-classic-bob.jpeg",
+            "styleLabel": "Classic Bob Trim",
+            "alt": "Clean customized layered bob haircut"
+          },
+          {
+            "image": "/assets/general-haircut-face-framing-layers.jpeg",
+            "styleLabel": "Soft Face-Framing Layers",
+            "alt": "Textured precision face framing cut"
+          }
+        ]
       }
     ]
   },
   "portfolio": {
     "heroImage": "/assets/hero-april-styling.jpeg",
-    "ogImage": "/assets/portfolio-4.webp",
+    "ogImage": "/assets/og-cover.png",
     "ogImageAlt": "Hair by April - Vintage Hair Styling, Fine Cuts & Curly Hair Specialist in San Francisco",
     "portfolioList": [
       {
         "id": "vintage-victory-rolls",
-        "title": "Vintage Victory Rolls",
+        "title": "Vintage Victory Rolls & Classic Updos",
         "image": "/assets/vintage-victory-rolls.jpeg",
         "alt": "Structured 1940s vintage victory rolls updo hairstyle side profile",
-        "tag": "Updos"
+        "tag": "Updos",
+        "images": [
+          "/assets/vintage-pinup-updo-styling.jpeg",
+          "/assets/bridal-retro-updo.jpeg"
+        ]
       },
       {
         "id": "natural-curl-shaping",
-        "title": "Natural Curl Shaping",
+        "title": "Natural Curl & Coil Shaping",
         "image": "/assets/curly-cut-natural-texture.jpeg",
         "alt": "Defined natural curl shaping and layered volume cut on client with fine curly hair",
-        "tag": "Curly Cut"
-      },
-      {
-        "id": "hollywood-waves",
-        "title": "Hollywood Waves",
-        "image": "/assets/vintage-hollywood-waves.jpeg",
-        "alt": "Polished classic Hollywood s-waves styled for vintage events",
-        "tag": "Vintage Styling"
-      },
-      {
-        "id": "editorial-pinup",
-        "title": "Editorial Pin-Up Styling",
-        "image": "/assets/editorial-pinup-styling.jpeg",
-        "alt": "Pin-up bumper bangs and retro roll styling for photoshoot and editorial production",
-        "tag": "Events & Production"
+        "tag": "Curly Cuts",
+        "images": [
+          "/assets/curly-cut-layered-lob.jpeg",
+          "/assets/curly-cut-bouncy-coils.png"
+        ]
       },
       {
         "id": "fine-hair-precision-cut",
-        "title": "Fine Hair Precision Cut",
+        "title": "Fine Hair Precision Cuts",
         "image": "/assets/fine-hair-precision-cut.jpeg",
         "alt": "Precision blunt haircut with weightless texturizing for fine hair density",
-        "tag": "Fine Cuts"
+        "tag": "Fine Cuts",
+        "images": [
+          "/assets/general-haircut-classic-bob.jpeg",
+          "/assets/general-haircut-face-framing-layers.jpeg"
+        ]
       },
       {
-        "id": "bridal-retro-updo",
-        "title": "Group & Event Styling",
-        "image": "/assets/bridal-retro-updo.jpeg",
-        "alt": "Bespoke vintage-inspired group updo with romantic soft face-framing pin curls",
-        "tag": "Events"
+        "id": "hollywood-waves",
+        "title": "Classic Hollywood S-Waves",
+        "image": "/assets/vintage-hollywood-waves.jpeg",
+        "alt": "Polished classic Hollywood s-waves styled for vintage events",
+        "tag": "Vintage Waves",
+        "images": [
+          "/assets/editorial-pinup-styling.jpeg",
+          "/assets/hero-april-styling.jpeg"
+        ]
+      }
+    ]
+  },
+  "faq": {
+    "sectionTitle": "Frequently Asked Questions",
+    "sectionSubtitle": "",
+    "faqList": [
+      {
+        "question": "Is service pricing restricted to San Francisco only?",
+        "answer": "Yes, all published menu rates are for appointments within San Francisco proper. A travel and logistics surcharge is added for out-of-town on-location styling throughout the greater San Francisco Bay Area."
+      },
+      {
+        "question": "What exactly is a concierge hair stylist?",
+        "answer": "A concierge stylist brings professional, high-end salon expertise directly to you. April provides bespoke on-location hair styling, vintage updos, and cuts at your private home, hotel, commercial photo set, or event venue for ultimate convenience and zero travel stress."
+      },
+      {
+        "question": "What are vintage victory rolls and retro Hollywood waves?",
+        "answer": "These are iconic, authentic mid-century hair styling techniques. Victory rolls are meticulously rolled, sculpted, and structurally set curls pinned high on the crown. S-waves (or classic Hollywood waves) are continuous, high-gloss, polished waves that create a continuous ribbon-like ripple down the hair, popular in 1940s and 50s fashion."
       }
     ]
   },
@@ -128,7 +199,7 @@
         "_template": "inputField"
       },
       {
-        "label": "Event / Inquiry Type",
+        "label": "Event or Service Type",
         "options": [
           "Private Party / Celebration",
           "Editorial & Commercial Photoshoot",
@@ -165,7 +236,7 @@
       }
     ],
     "formOptions": {
-      "submitButtonText": "Submit Booking Inquiry"
+      "submitButtonText": "REQUEST EVENT BOOKING"
     }
   },
   "site": {
@@ -198,7 +269,7 @@
       "longitude": -122.4194
     },
     "areaServed": ["San Francisco", "San Francisco Bay Area"],
-    "openingDays": ["Tuesday"],
+    "openingDays": ["Monday", "Tuesday", "Thursday"],
     "openingHours": {
       "opens": "09:00",
       "closes": "18:00"

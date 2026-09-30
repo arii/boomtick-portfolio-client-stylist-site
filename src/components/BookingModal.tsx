@@ -1,5 +1,5 @@
 import React from "react";
-import { Calendar, ExternalLink, X } from "lucide-react";
+import { Calendar, ExternalLink, X, Phone, MessageSquare } from "lucide-react";
 import { TOKENS } from "../styles/tokens";
 import { SITE_CONFIG } from "../config/site";
 
@@ -27,6 +27,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const calUrl = `https://cal.com/${calUsername}/${eventSlug}?embed=true&theme=light`;
   const directUrl = `https://cal.com/${calUsername}/${eventSlug}`;
 
+  const cleanPhoneDigits = SITE_CONFIG.phone.replace(/[^0-9]/g, "");
+
   return (
     <div
       id="booking-modal"
@@ -35,14 +37,14 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl p-6 max-h-[90vh] flex flex-col overflow-hidden">
+      <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-2xl p-6 max-h-[95vh] flex flex-col overflow-hidden">
         <div className="flex items-start justify-between mb-4">
           <div>
             <h3 className="text-2xl font-serif font-bold text-stone-900">
               Book Your Appointment
             </h3>
             <p className="text-stone-500 text-xs sm:text-sm mt-1 font-sans">
-              {logisticsNotice} Select your preferred slot below.
+              {logisticsNotice}
             </p>
           </div>
           <button
@@ -55,11 +57,39 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           </button>
         </div>
 
-        <div className="flex-1 border border-stone-200 rounded-xl overflow-hidden bg-stone-50 relative min-h-[480px]">
+        {/* Priority CTA: Call or Text Consultation for New Clients */}
+        <div className="mb-4 bg-rose-50/80 border border-rose-100 rounded-xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1">
+            <span className="inline-flex items-center text-[10px] font-bold uppercase tracking-widest text-rose-700 font-sans">
+              New Client Priority
+            </span>
+            <p className="text-stone-800 text-xs font-sans leading-relaxed">
+              April highly recommends a quick text or call before booking to align on your hair density, curl pattern, or event details.
+            </p>
+          </div>
+          <div className="flex items-center gap-2.5 shrink-0">
+            <a
+              href={`tel:${cleanPhoneDigits}`}
+              className="px-3.5 py-2 bg-stone-900 text-white font-bold font-sans text-[10px] uppercase tracking-wider rounded-lg hover:bg-stone-800 transition flex items-center gap-1.5 shadow-2xs"
+            >
+              <Phone className="w-3 h-3" />
+              <span>Call</span>
+            </a>
+            <a
+              href={`sms:${cleanPhoneDigits}`}
+              className="px-3.5 py-2 bg-rose-600 text-white font-bold font-sans text-[10px] uppercase tracking-wider rounded-lg hover:bg-rose-500 transition flex items-center gap-1.5 shadow-2xs"
+            >
+              <MessageSquare className="w-3 h-3" />
+              <span>Text</span>
+            </a>
+          </div>
+        </div>
+
+        <div className="flex-1 border border-stone-200 rounded-xl overflow-hidden bg-stone-50 relative min-h-[400px]">
           <iframe
             src={calUrl}
             title={`Book an appointment with ${stylistName}`}
-            className="w-full h-full min-h-[480px] border-0"
+            className="w-full h-full min-h-[400px] border-0"
             loading="lazy"
           />
         </div>

@@ -212,6 +212,34 @@ export default defineConfig({
                     description:
                       "Bullet points detailing consultations, treatments, or take-home coaching",
                   },
+                  {
+                    type: "object",
+                    name: "examples",
+                    label: "Photo Examples",
+                    list: true,
+                    ui: {
+                      itemProps: (item: any) => ({
+                        label: item?.styleLabel || "New Example Image",
+                      }),
+                    },
+                    fields: [
+                      {
+                        type: "image",
+                        name: "image",
+                        label: "Photo",
+                      },
+                      {
+                        type: "string",
+                        name: "styleLabel",
+                        label: "Style / Haircut Label",
+                      },
+                      {
+                        type: "string",
+                        name: "alt",
+                        label: "Alt Text",
+                      },
+                    ],
+                  },
 
                   // Low-Frequency Config Fields (Locked Slug & Cal.com Override)
                   {
@@ -319,6 +347,59 @@ export default defineConfig({
                       "Updos",
                       "Events & Production",
                     ],
+                  },
+                  {
+                    type: "image",
+                    name: "images",
+                    label: "Additional Slideshow Photos",
+                    list: true,
+                    description: "Add multiple photos to enable smooth auto-cycling slideshows on this portfolio item",
+                  },
+                ],
+              },
+            ],
+          },
+          // 3.5 FAQ SECTION
+          {
+            type: "object",
+            name: "faq",
+            label: "Frequently Asked Questions",
+            fields: [
+              {
+                type: "string",
+                name: "sectionTitle",
+                label: "Section Title",
+                description: "Main section heading for FAQs",
+              },
+              {
+                type: "string",
+                name: "sectionSubtitle",
+                label: "Section Subtitle",
+                description: "Subtitle shown under the title",
+              },
+              {
+                type: "object",
+                name: "faqList",
+                label: "FAQs List",
+                list: true,
+                ui: {
+                  itemProps: (item: any) => ({
+                    label: item?.question || "FAQ Question",
+                  }),
+                },
+                fields: [
+                  {
+                    type: "string",
+                    name: "question",
+                    label: "Question",
+                    required: true,
+                  },
+                  {
+                    type: "string",
+                    name: "answer",
+                    label: "Answer",
+                    required: true,
+                    ui: { component: "textarea" },
                   },
                 ],
               },
