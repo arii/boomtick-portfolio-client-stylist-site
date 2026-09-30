@@ -318,6 +318,13 @@ html = html.replace(
   `<script type="application/ld+json" id="schema-org-jsonld">\n${JSON.stringify(schemaOrgData, null, 2)}\n    </script>`
 );
 
+// Preload matching hero image
+const heroImageSrc = portfolio.heroImage || "/assets/hero-april-styling.jpeg";
+html = html.replace(
+  /<link\s+rel="preload"\s+as="image"\s+href="[^"]*"\s*[^>]*\/?>/i,
+  `<link rel="preload" as="image" href="${heroImageSrc}" type="image/jpeg" fetchpriority="high" />`
+);
+
 fs.writeFileSync(indexPath, html, "utf8");
 try {
   execSync("npx prettier --write index.html", { stdio: "ignore" });

@@ -19,8 +19,6 @@
           "Combination wet and or dry precision curl-by-curl shaping",
           "Diffused styling and home maintenance coaching"
         ],
-        "id": "curly-cut-finish",
-        "calSlug": "60min",
         "examples": [
           {
             "image": "/assets/curly-cut-natural-texture.jpeg",
@@ -37,7 +35,9 @@
             "styleLabel": "Bouncy Spring Curls",
             "alt": "Beautiful springy texture and volume"
           }
-        ]
+        ],
+        "id": "curly-cut-finish",
+        "calSlug": "60min"
       },
       {
         "name": "Vintage Styling & Classic Updos",
@@ -50,8 +50,6 @@
           "Longevity finish designed for all-day wear",
           "Accessories and hairpiece placement if needed"
         ],
-        "id": "vintage-set-updo",
-        "calSlug": "60min",
         "examples": [
           {
             "image": "/assets/vintage-victory-rolls.jpeg",
@@ -68,7 +66,9 @@
             "styleLabel": "Retro Pin-up Updo",
             "alt": "Stunning vintage updo styling"
           }
-        ]
+        ],
+        "id": "vintage-set-updo",
+        "calSlug": "60min"
       },
       {
         "name": "General Haircut & Styled Finish",
@@ -81,8 +81,6 @@
           "Precision haircut customized for your lifestyle",
           "Expert blow-dry and finished look"
         ],
-        "id": "general-haircut",
-        "calSlug": "60min",
         "examples": [
           {
             "image": "/assets/fine-hair-precision-cut.jpeg",
@@ -99,18 +97,20 @@
             "styleLabel": "Soft Face-Framing Layers",
             "alt": "Textured precision face framing cut"
           }
-        ]
+        ],
+        "id": "general-haircut",
+        "calSlug": "60min"
       }
     ]
   },
   "portfolio": {
     "heroImage": "/assets/hero-april-styling.jpeg",
-    "ogImage": "/assets/og-cover.png",
+    "ogImage": "/assets/hero-april-styling.jpeg",
     "ogImageAlt": "Hair by April - Vintage Hair Styling, Fine Cuts & Curly Hair Specialist in San Francisco",
     "portfolioList": [
       {
-        "id": "vintage-victory-rolls",
         "title": "Vintage Victory Rolls & Classic Updos",
+        "id": "vintage-victory-rolls",
         "image": "/assets/vintage-victory-rolls.jpeg",
         "alt": "Structured 1940s vintage victory rolls updo hairstyle side profile",
         "tag": "Updos",
@@ -120,8 +120,8 @@
         ]
       },
       {
-        "id": "natural-curl-shaping",
         "title": "Natural Curl & Coil Shaping",
+        "id": "natural-curl-shaping",
         "image": "/assets/curly-cut-natural-texture.jpeg",
         "alt": "Defined natural curl shaping and layered volume cut on client with fine curly hair",
         "tag": "Curly Cuts",
@@ -131,8 +131,8 @@
         ]
       },
       {
-        "id": "fine-hair-precision-cut",
         "title": "Fine Hair Precision Cuts",
+        "id": "fine-hair-precision-cut",
         "image": "/assets/fine-hair-precision-cut.jpeg",
         "alt": "Precision blunt haircut with weightless texturizing for fine hair density",
         "tag": "Fine Cuts",
@@ -142,8 +142,8 @@
         ]
       },
       {
-        "id": "hollywood-waves",
         "title": "Classic Hollywood S-Waves",
+        "id": "hollywood-waves",
         "image": "/assets/vintage-hollywood-waves.jpeg",
         "alt": "Polished classic Hollywood s-waves styled for vintage events",
         "tag": "Vintage Waves",

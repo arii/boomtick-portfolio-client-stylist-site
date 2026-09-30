@@ -99,7 +99,10 @@ check("Schema.org JSON-LD script tag exists", Boolean(schemaMatch));
 
 if (schemaMatch) {
   try {
-    const schemaObj = JSON.parse(schemaMatch[1]);
+    const parsed = JSON.parse(schemaMatch[1]);
+    const schemaObj = Array.isArray(parsed["@graph"])
+      ? parsed["@graph"].find((node) => node["@type"] === "HairSalon") || parsed
+      : parsed;
     check(
       "Schema.org JSON-LD is valid JSON",
       typeof schemaObj === "object" && schemaObj !== null

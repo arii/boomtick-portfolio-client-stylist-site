@@ -226,7 +226,7 @@ export default defineConfig(({ command, mode }) => {
             },
       watch: process.env.DISABLE_HMR === "true" ? null : {},
       proxy: {
-        "^/admin/(src|node_modules|@vite|@react-refresh|@id|@fs|assets)": {
+        "^/admin/(src|node_modules|@vite|@react-refresh|@id|@fs)": {
           target: "http://localhost:4001",
           changeOrigin: true,
           ws: true,

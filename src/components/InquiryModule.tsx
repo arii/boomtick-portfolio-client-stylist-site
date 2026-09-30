@@ -340,13 +340,13 @@ export const InquiryModule: React.FC<InquiryModuleProps> = ({
                       <Send className="w-4 h-4" />
                       <span>{submitButtonText}</span>
                     </>
-                  )
-                  }
+                  )}
                 </button>
               </div>
 
               <p className="text-[11px] text-stone-600 text-center font-sans">
-                April responds directly with travel quotes, prep notes, and timing schedules.
+                April responds directly with travel quotes, prep notes, and
+                timing schedules.
               </p>
             </form>
           )}

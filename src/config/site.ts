@@ -196,9 +196,14 @@ export function generateSiteSchema(
     .filter((service) => service && (service.name || service.id)) // Filter out empty placeholder cards safely
     .map((service) => {
       const name = service.name || "Bespoke Hair Service";
-      const description = service.description || "Consultation and personalized custom styling tailored to your unique hair profile.";
-      const rawPrice = service.price ? service.price.replace(/[^0-9]/g, "") : "";
-      const sId = service.id || `service-${Math.random().toString(36).substring(2, 9)}`;
+      const description =
+        service.description ||
+        "Consultation and personalized custom styling tailored to your unique hair profile.";
+      const rawPrice = service.price
+        ? service.price.replace(/[^0-9]/g, "")
+        : "";
+      const sId =
+        service.id || `service-${Math.random().toString(36).substring(2, 9)}`;
 
       return {
         "@type": "Offer",
@@ -206,9 +211,7 @@ export function generateSiteSchema(
           "@type": "Service",
           name: name,
           description: description,
-          ...(sId && serviceImages[sId]
-            ? { image: serviceImages[sId] }
-            : {}),
+          ...(sId && serviceImages[sId] ? { image: serviceImages[sId] } : {}),
         },
         price: rawPrice || "100",
         priceCurrency: "USD",
@@ -291,20 +294,27 @@ export function generateSiteSchema(
     },
   };
 
-  const faqListToUse = faq?.faqList && faq.faqList.length > 0 ? faq.faqList : [
-    {
-      question: "Is service pricing restricted to San Francisco only?",
-      answer: "Yes, all published menu rates are for appointments within San Francisco proper. A travel and logistics surcharge is added for out-of-town on-location styling throughout the greater San Francisco Bay Area.",
-    },
-    {
-      question: "What exactly is a concierge hair stylist?",
-      answer: "A concierge stylist brings professional, high-end salon expertise directly to you. April provides bespoke on-location hair styling, vintage updos, and cuts at your private home, hotel, commercial photo set, or event venue for ultimate convenience and zero travel stress.",
-    },
-    {
-      question: "What are vintage victory rolls and retro Hollywood waves?",
-      answer: "These are iconic, authentic mid-century hair styling techniques. Victory rolls are meticulously rolled, sculpted, and structurally set curls pinned high on the crown. S-waves (or classic Hollywood waves) are continuous, high-gloss, polished waves that create a continuous ribbon-like ripple down the hair, popular in 1940s and 50s fashion.",
-    },
-  ];
+  const faqListToUse =
+    faq?.faqList && faq.faqList.length > 0
+      ? faq.faqList
+      : [
+          {
+            question: "Is service pricing restricted to San Francisco only?",
+            answer:
+              "Yes, all published menu rates are for appointments within San Francisco proper. A travel and logistics surcharge is added for out-of-town on-location styling throughout the greater San Francisco Bay Area.",
+          },
+          {
+            question: "What exactly is a concierge hair stylist?",
+            answer:
+              "A concierge stylist brings professional, high-end salon expertise directly to you. April provides bespoke on-location hair styling, vintage updos, and cuts at your private home, hotel, commercial photo set, or event venue for ultimate convenience and zero travel stress.",
+          },
+          {
+            question:
+              "What are vintage victory rolls and retro Hollywood waves?",
+            answer:
+              "These are iconic, authentic mid-century hair styling techniques. Victory rolls are meticulously rolled, sculpted, and structurally set curls pinned high on the crown. S-waves (or classic Hollywood waves) are continuous, high-gloss, polished waves that create a continuous ribbon-like ripple down the hair, popular in 1940s and 50s fashion.",
+          },
+        ];
 
   const faqPageSchema = {
     "@type": "FAQPage",

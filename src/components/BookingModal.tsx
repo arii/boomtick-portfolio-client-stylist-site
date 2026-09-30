@@ -64,7 +64,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               New Client Priority
             </span>
             <p className="text-stone-800 text-xs font-sans leading-relaxed">
-              April highly recommends a quick text or call before booking to align on your hair density, curl pattern, or event details.
+              April highly recommends a quick text or call before booking to
+              align on your hair density, curl pattern, or event details.
             </p>
           </div>
           <div className="flex items-center gap-2.5 shrink-0">

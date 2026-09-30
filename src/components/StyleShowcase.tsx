@@ -126,8 +126,10 @@ function PortfolioShowcaseCard({
           {photos.map((_, i) => (
             <span
               key={i}
-              className={`h-1.5 rounded-full transition-all duration-300 ${
-                i === activeIndex ? "w-3 bg-white" : "w-1.5 bg-white/40"
+              className={`w-1.5 h-1.5 rounded-full bg-white transition-opacity duration-300 ${
+                i === activeIndex
+                  ? "opacity-100 ring-2 ring-white/30"
+                  : "opacity-40"
               }`}
             />
           ))}
@@ -146,6 +148,7 @@ export const StyleShowcase: React.FC<StyleShowcaseProps> = ({
       className="relative py-16 md:py-20 bg-stone-100/70 border-b border-stone-200 scroll-mt-16"
     >
       <span id="showcase" className="absolute -top-16" />
+      <h2 className="sr-only">Portfolio &amp; Style Showcase</h2>
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {(() => {

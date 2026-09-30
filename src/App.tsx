@@ -156,7 +156,9 @@ function ServiceCard({
   const sName = service.name || "Bespoke Styling Service";
   const sPrice = service.price || "Contact for Quote";
   const sDuration = service.duration || "60 mins";
-  const sDescription = service.description || "Consultation and personalized custom styling tailored to your unique hair profile.";
+  const sDescription =
+    service.description ||
+    "Consultation and personalized custom styling tailored to your unique hair profile.";
   const sDeliverables = service.deliverables || [];
 
   return (
@@ -424,7 +426,10 @@ export default function App() {
                 New Client or Event Planner?
               </h3>
               <p className="mt-3.5 max-w-2xl mx-auto text-stone-300 text-sm md:text-base font-sans leading-relaxed">
-                April highly recommends a quick text or call to discuss your natural texture, hair density, or event requirements before booking. It ensures the perfect service and duration are scheduled for you!
+                April highly recommends a quick text or call to discuss your
+                natural texture, hair density, or event requirements before
+                booking. It ensures the perfect service and duration are
+                scheduled for you!
               </p>
 
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 relative z-10">

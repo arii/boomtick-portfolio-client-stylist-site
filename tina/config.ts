@@ -353,7 +353,8 @@ export default defineConfig({
                     name: "images",
                     label: "Additional Slideshow Photos",
                     list: true,
-                    description: "Add multiple photos to enable smooth auto-cycling slideshows on this portfolio item",
+                    description:
+                      "Add multiple photos to enable smooth auto-cycling slideshows on this portfolio item",
                   },
                 ],
               },

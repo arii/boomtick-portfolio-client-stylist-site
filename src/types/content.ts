@@ -6,7 +6,7 @@ export interface HeroContent {
   [key: string]: unknown;
 }
 
-export interface ExampleItem {
+interface ExampleItem {
   image: string;
   styleLabel: string;
   alt?: string;
@@ -94,7 +94,7 @@ export interface SiteContent {
   [key: string]: unknown;
 }
 
-export interface FAQItem {
+interface FAQItem {
   question: string;
   answer: string;
   [key: string]: unknown;
