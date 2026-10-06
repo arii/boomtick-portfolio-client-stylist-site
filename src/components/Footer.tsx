@@ -111,12 +111,12 @@ export const Footer: React.FC<FooterProps> = ({
           <p className="text-stone-300">
             Developed by{" "}
             <a
-              href="https://arii.github.io"
+              href="https://boomtick.blog/services"
               target="_blank"
               rel="noopener noreferrer"
               className="underline text-stone-200 hover:text-white transition font-semibold"
             >
-              Ariel Anders
+              Ariel Anders Consulting
             </a>
             .
           </p>
