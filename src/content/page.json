@@ -175,7 +175,7 @@
   "events": {
     "title": "Events & Collaborations",
     "description": "Custom on-location styling available for group parties, editorial and commercial shoots, swing dance events, and retro pageants across the Bay Area (travel fees apply outside San Francisco).",
-    "showForm": true,
+    "showForm": false,
     "formFields": [
       {
         "label": "Your Name",
@@ -268,8 +268,15 @@
       "latitude": 37.7749,
       "longitude": -122.4194
     },
-    "areaServed": ["San Francisco", "San Francisco Bay Area"],
-    "openingDays": ["Monday", "Tuesday", "Thursday"],
+    "areaServed": [
+      "San Francisco",
+      "San Francisco Bay Area"
+    ],
+    "openingDays": [
+      "Monday",
+      "Tuesday",
+      "Thursday"
+    ],
     "openingHours": {
       "opens": "09:00",
       "closes": "18:00"
