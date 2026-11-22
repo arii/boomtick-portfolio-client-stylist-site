@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { PORTFOLIO_CONTENT } from "../config/site";
-import { TOKENS } from "../styles/tokens";
 import type { PortfolioItem } from "../types/content";
 
 interface StyleShowcaseProps {
@@ -9,139 +8,91 @@ interface StyleShowcaseProps {
 
 function PortfolioShowcaseCard({
   item,
-  index = 0,
   usedImageUrls = [],
 }: {
   item: PortfolioItem;
-  index: number;
   usedImageUrls?: string[];
 }) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  // 1. Deduplicate internally and exclude images already displayed on prior cards
   const photos = useMemo(() => {
-    const seen = new Set<string>();
-    const originalPhotos = [item.image, ...(item.images || [])].filter(Boolean);
-
-    // First pass: unique to this card and not already claimed by previous columns/rows
-    const available = originalPhotos.filter((img) => {
-      if (seen.has(img) || usedImageUrls.includes(img)) {
-        return false;
-      }
-      seen.add(img);
-      return true;
-    });
-
-    // Fallback: if over-filtering leaves the card empty, allow internal uniques only
-    if (available.length === 0) {
-      const fallbackSeen = new Set<string>();
-      return originalPhotos.filter((img) => {
-        if (fallbackSeen.has(img)) return false;
-        fallbackSeen.add(img);
-        return true;
-      });
-    }
-
-    return available;
+    const originalPhotos = [
+      ...new Set([item.image, ...(item.images || [])].filter(Boolean)),
+    ];
+    const available = originalPhotos.filter(
+      (photo) => !usedImageUrls.includes(photo)
+    );
+    return available.length ? available : originalPhotos;
   }, [item.image, item.images, usedImageUrls]);
-
-  // 2. Stagger starting frame so different rows don't show the identical first image
-  const initialIndex = photos.length > 0 ? index % photos.length : 0;
-  const [activeIndex, setActiveIndex] = useState(initialIndex);
-
-  // 3. Staggered rotation cadence: keep the staggered offset of 1.2s * index
-  useEffect(() => {
-    if (photos.length <= 1) return;
-
-    const initialDelayMs = (index * 1200) % 5000;
-    let intervalId: NodeJS.Timeout;
-
-    const timer = setTimeout(() => {
-      setActiveIndex((prev) => (prev + 1) % photos.length);
-
-      intervalId = setInterval(() => {
-        setActiveIndex((prev) => (prev + 1) % photos.length);
-      }, 5500);
-    }, initialDelayMs);
-
-    return () => {
-      clearTimeout(timer);
-      if (intervalId) clearInterval(intervalId);
-    };
-  }, [photos.length, index]);
-
-  // Desktop hover previews next available unique example
-  useEffect(() => {
-    if (photos.length > 1 && isHovered) {
-      const hoverTimer = setTimeout(() => {
-        setActiveIndex((initialIndex + 1) % photos.length);
-      }, 50);
-      return () => clearTimeout(hoverTimer);
-    }
-  }, [isHovered, photos.length, initialIndex]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const currentIndex = activeIndex % (photos.length || 1);
 
   if (photos.length === 0) return null;
 
   return (
-    <div
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      className={`${TOKENS.card.showcase} relative group cursor-pointer overflow-hidden rounded-2xl border border-stone-200 shadow-2xs aspect-5/4 md:aspect-4/3`}
-    >
-      {photos.map((photo, idx) => (
-        <div
-          key={photo + idx}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
-            idx === activeIndex
-              ? "opacity-100 z-10"
-              : "opacity-0 z-0 pointer-events-none"
-          }`}
-        >
+    <figure className="min-w-0">
+      <div className="relative overflow-hidden rounded-lg bg-stone-200 aspect-5/4 md:aspect-4/3">
+        {photos.map((photo, index) => (
           <img
+            key={photo}
             src={photo}
             alt={item.alt || item.title || "Portfolio Hair Style"}
-            className="w-full h-full object-cover object-top transition-transform duration-[4000ms] ease-out select-none"
-            style={{
-              transform:
-                isHovered && idx === activeIndex ? "scale(1.04)" : "scale(1)",
-            }}
+            hidden={index !== currentIndex}
+            className="absolute inset-0 w-full h-full object-cover object-top"
             loading="lazy"
           />
-        </div>
-      ))}
-
-      {/* Modern, high-end content overlay with title & tag */}
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-5 pt-12 z-20 transition-opacity duration-300">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-rose-400 block font-sans">
-          {item.tag}
-        </span>
-        <h3 className="text-lg md:text-xl font-serif font-bold text-white tracking-wide mt-1">
+        ))}
+      </div>
+      <figcaption className="pt-4">
+        <p className="text-sm text-stone-600 font-sans">{item.tag}</p>
+        <h3 className="text-xl font-serif font-bold text-stone-900 mt-1">
           {item.title}
         </h3>
-      </div>
-
-      {/* Tiny indicator dots if more than one image exists */}
-      {photos.length > 1 && (
-        <div className="absolute top-4 right-4 flex space-x-1.5 z-20 bg-black/35 backdrop-blur-[4px] px-2.5 py-1.5 rounded-full border border-white/10 shadow-xs">
-          {photos.map((_, i) => (
-            <span
-              key={i}
-              className={`w-1.5 h-1.5 rounded-full bg-white transition-opacity duration-300 ${
-                i === activeIndex
-                  ? "opacity-100 ring-2 ring-white/30"
-                  : "opacity-40"
-              }`}
-            />
-          ))}
-        </div>
-      )}
-    </div>
+        {photos.length > 1 && (
+          <div className="flex items-center gap-4 mt-2 text-sm font-sans text-stone-700">
+            <button
+              type="button"
+              aria-label={`Previous photo: ${item.title}`}
+              onClick={() =>
+                setActiveIndex(
+                  (currentIndex + photos.length - 1) % photos.length
+                )
+              }
+              className="min-h-11 cursor-pointer underline underline-offset-4 hover:text-stone-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-900"
+            >
+              Previous
+            </button>
+            <span role="status" aria-live="polite" aria-atomic="true">
+              <span className="sr-only">{item.title}, photo </span>
+              {currentIndex + 1} / {photos.length}
+            </span>
+            <button
+              type="button"
+              aria-label={`Next photo: ${item.title}`}
+              onClick={() => setActiveIndex((currentIndex + 1) % photos.length)}
+              className="min-h-11 cursor-pointer underline underline-offset-4 hover:text-stone-950 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-stone-900"
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </figcaption>
+    </figure>
   );
 }
 
 export const StyleShowcase: React.FC<StyleShowcaseProps> = ({
   images = PORTFOLIO_CONTENT,
 }) => {
+  const cards = useMemo(() => {
+    const usedImageUrls: string[] = [];
+    return images.map((item) => {
+      const used = [...usedImageUrls];
+      usedImageUrls.push(
+        ...[item.image, ...(item.images || [])].filter(Boolean)
+      );
+      return { item, used };
+    });
+  }, [images]);
+
   return (
     <section
       id="portfolio"
@@ -151,30 +102,13 @@ export const StyleShowcase: React.FC<StyleShowcaseProps> = ({
       <h2 className="sr-only">Portfolio &amp; Style Showcase</h2>
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {(() => {
-            const renderedImageUrls: string[] = [];
-            return images.map((item, index) => {
-              const currentUsed = [...renderedImageUrls];
-              const primaryImage = item.image;
-              if (primaryImage) {
-                renderedImageUrls.push(primaryImage);
-              }
-              if (item.images) {
-                item.images.forEach((img) => {
-                  if (img) renderedImageUrls.push(img);
-                });
-              }
-
-              return (
-                <PortfolioShowcaseCard
-                  key={item.id || `portfolio-${index}`}
-                  item={item}
-                  index={index}
-                  usedImageUrls={currentUsed}
-                />
-              );
-            });
-          })()}
+          {cards.map(({ item, used }, index) => (
+            <PortfolioShowcaseCard
+              key={item.id || `portfolio-${index}`}
+              item={item}
+              usedImageUrls={used}
+            />
+          ))}
         </div>
       </div>
     </section>
